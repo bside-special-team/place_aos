@@ -8,5 +8,5 @@ object Configs {
     const val versionCode = 1
     const val versionName = "0.0.1"
 
-    const val composeVersion = "1.3.0"
+    const val composeVersion = "1.3.1"
 }

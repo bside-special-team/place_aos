@@ -71,10 +71,17 @@ dependencies {
     debugImplementation(Deps.Compose.tooling)
     debugImplementation(Deps.Compose.manifest)
 
-    implementation(Deps.Coil.coilCompose)
+    implementation(Deps.Coil.coilCompose) {
+        // 'coil'과 'naverMap'이 의존성 충돌 발생.
+        exclude(group = "androidx.appcompat", module = "appcompat-resources")
+    }
 
     implementation(Deps.Hilt.android)
     kapt(Deps.Hilt.compiler)
+
+    implementation(Deps.NaverMap.sdk)
+    implementation(Deps.NaverMap.compose)
+    implementation(Deps.Google.playLocation)
 
     testImplementation("junit:junit:4.13.2")
 

@@ -10,6 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.NaverMap
 import com.special.place.ui.theme.PlaceTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,9 +28,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+    NaverMap()
 }
 
 @Preview(showBackground = true)

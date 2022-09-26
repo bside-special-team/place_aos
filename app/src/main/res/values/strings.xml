@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Place</string>
+
+    <string name="naver_map_client_id">08izpoficy</string>
+    <string name="naver_map_client_secret">y5zLfSQNy3G73CDxHm03Q4CXEair02rPfh36tBOS</string>
 </resources>

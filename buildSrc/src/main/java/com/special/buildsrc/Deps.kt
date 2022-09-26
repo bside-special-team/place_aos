@@ -96,9 +96,11 @@ object Deps {
     object Google {
         object Versions {
             const val gson = "2.8.7"
+            const val playService = "16.0.0"
         }
 
         const val gson = "com.google.code.gson:gson:${Versions.gson}"
+        const val playLocation = "com.google.android.gms:play-services-location:${Versions.playService}"
     }
 
     object Hilt {
@@ -112,6 +114,16 @@ object Deps {
 
         const val daggerCompiler = "com.google.dagger:dagger-compiler:${Versions.core}"
         const val dagger = "com.google.dagger:dagger:${Versions.core}"
+    }
+
+    object NaverMap {
+        object Versions {
+            const val sdk = "3.15.0"
+            const val compose = "1.2.1"
+        }
+
+        const val sdk = "com.naver.maps:map-sdk:${Versions.sdk}"
+        const val compose = "io.github.fornewid:naver-map-compose:${Versions.compose}"
     }
 
 }
