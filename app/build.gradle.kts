@@ -52,6 +52,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":data"))
+    implementation(project(":mock"))
+
     implementation(Deps.Android.core)
     implementation(Deps.Android.runtimeKTX)
     implementation(Deps.Android.activityCompose)

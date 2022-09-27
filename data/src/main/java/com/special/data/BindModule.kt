@@ -1,17 +1,18 @@
 package com.special.data
 
-import com.special.data.repoimpl.UserRepoImpl
-import com.special.domain.repositories.UserRepository
-import com.special.mock.UserMockDataImpl
-import com.special.remote.impls.UserRemoteDataImpl
+import com.special.mock.ApiManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-class BindModule {
-
-    fun getUserRepo(isMock: Boolean): UserRepository {
-        return if (isMock) {
-            UserRepoImpl(UserMockDataImpl())
-        } else {
-            UserRepoImpl(UserRemoteDataImpl())
-        }
+@InstallIn(SingletonComponent::class)
+@Module
+object MockupModule {
+    @Singleton
+    @Provides
+    fun provideApiManager(): ApiManager {
+        return ApiManager(baseUrl = "https://api.odcloud.kr/api/")
     }
 }
