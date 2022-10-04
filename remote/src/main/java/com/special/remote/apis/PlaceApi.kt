@@ -1,5 +1,6 @@
 package com.special.remote.apis
 
+import com.special.domain.entities.PlaceCategory
 import com.special.remote.models.PlaceResponseModel
 import com.special.domain.entities.RequestPlace
 import retrofit2.http.Body
@@ -22,4 +23,7 @@ interface PlaceApi {
         @Query("toLatitude") toLat: String,
         @Query("toLongitude") toLng: String,
     ): PlaceResponseModel
+
+    @GET("/api/v1/categories")
+    suspend fun categories(): List<PlaceCategory>
 }

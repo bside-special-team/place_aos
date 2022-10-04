@@ -15,7 +15,7 @@ import javax.inject.Inject
 class PlaceRepoImpl @Inject constructor(private val placeRemote: PlaceRemoteDataSource) :
     PlaceRepository {
 
-    private val coordinatesFlow = MutableSharedFlow<Pair<Coordinate, Coordinate>>()
+    private val coordinatesFlow: MutableStateFlow<Pair<Coordinate, Coordinate>> = MutableStateFlow(Pair(Coordinate("0", "0"), Coordinate("0", "0")))
 
     override fun updateCoordinate(coordinates: Pair<Coordinate, Coordinate>) {
         runBlocking { coordinatesFlow.emit(coordinates) }
@@ -24,11 +24,11 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: PlaceRemoteData
     @OptIn(FlowPreview::class)
     override val places: Flow<List<Place>>
         get() = coordinatesFlow.debounce(200).map {
-            placeRemote.boundsPlaces(it.first, it.second).getOrNull() ?: listOf()
+            placeRemote.allPlaces()
         }
 
-    override suspend fun registerPlace(request: RequestPlace): Result<Unit> {
-        return withContext(Dispatchers.IO) {
+    override suspend fun registerPlace(request: RequestPlace) {
+        withContext(Dispatchers.IO) {
             placeRemote.registerPlace(request)
         }
     }

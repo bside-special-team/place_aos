@@ -1,5 +1,7 @@
 package com.special.place
 
+import android.app.TimePickerDialog
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.naver.maps.geometry.LatLng
@@ -20,3 +22,11 @@ fun Place.toMarker() = Marker(
 )
 
 fun Coordinate.toLatLng(): LatLng = LatLng(latitude.toDouble(), longitude.toDouble())
+
+@Composable
+fun showTimePicker(context: Context, callback: (Int, Int) -> Unit): TimePickerDialog {
+    return TimePickerDialog(
+        context, { picker, hour, minute ->
+            callback.invoke(hour, minute)
+        }, 0, 0, true)
+}

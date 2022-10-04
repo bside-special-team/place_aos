@@ -10,9 +10,5 @@ interface PlaceRepository {
 
     val places: Flow<List<Place>>
 
-    suspend fun registerPlace(request: RequestPlace): Result<Unit>
-}
-
-abstract class BindModule {
-
+    suspend fun registerPlace(request: RequestPlace)
 }

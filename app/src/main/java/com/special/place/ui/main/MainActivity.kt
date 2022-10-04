@@ -1,12 +1,13 @@
-package com.special.place
+package com.special.place.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -16,6 +17,8 @@ import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.special.domain.entities.Place
+import com.special.place.toMarker
+import com.special.place.ui.place.PlaceRegisterActivity
 import com.special.place.ui.theme.PlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +36,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val chargerList by vm.places.observeAsState(listOf())
-                    Greeting(chargerList)
+                    MainScaffold(chargerList) {
+                        startActivity(PlaceRegisterActivity.newIntent(this))
+                    }
                 }
             }
         }
@@ -42,14 +47,24 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun Greeting(list: List<Place>) {
+fun MainScaffold(list: List<Place>, registerPlace: () -> Unit) {
     val cameraPosition = rememberCameraPositionState()
 
-    NaverMap(
-        cameraPositionState = cameraPosition
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(text = "일상의 발견") }, actions = {
+                IconButton(onClick = registerPlace) {
+                    Icon(Icons.Outlined.Add, contentDescription = "add")
+                }
+            })
+        }
     ) {
-        list.forEach {
-            it.toMarker()
+        NaverMap(
+            cameraPositionState = cameraPosition
+        ) {
+            list.forEach {
+                it.toMarker()
+            }
         }
     }
 }
@@ -58,6 +73,6 @@ fun Greeting(list: List<Place>) {
 @Composable
 fun DefaultPreview() {
     PlaceTheme {
-        Greeting(listOf())
+        MainScaffold(listOf()) {}
     }
 }

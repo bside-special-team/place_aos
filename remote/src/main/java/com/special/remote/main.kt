@@ -11,13 +11,7 @@ suspend fun main(args: Array<String>) {
 
     val result = placeData.allPlaces()
 
-    if (result.isFailure) {
-        println("is Api Failed!!")
-    } else {
-        println("api Success!!")
-    }
-
-    result.getOrNull()?.forEach {
+    result.forEach {
         println(it)
     }
 }

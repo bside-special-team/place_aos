@@ -1,4 +1,4 @@
-package com.special.place
+package com.special.place.ui.main
 
 import androidx.lifecycle.*
 import com.special.domain.entities.Coordinate
@@ -14,7 +14,8 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
 
     init {
         viewModelScope.launch {
-            placeRepo.updateCoordinate(Pair(Coordinate("0", "0"), Coordinate("0", "0")))
+
+
         }
 
     }

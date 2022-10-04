@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "553241441268",
+    "project_id": "everydaydiscovery-799c0",
+    "storage_bucket": "everydaydiscovery-799c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553241441268:android:d1e7065a645a4e43f9bfa1",
+        "android_client_info": {
+          "package_name": "com.special.place"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553241441268-sd1rrgonhsepg0vu56lp7vlrnls4pumg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0gBDxgObuyeCDKmvcSZ_52u2ewHrhaXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553241441268-sd1rrgonhsepg0vu56lp7vlrnls4pumg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
