@@ -11,5 +11,6 @@ java {
 }
 
 dependencies {
+    implementation(Deps.Kotlin.Coroutines.core)
     implementation(Deps.Google.gson)
 }

@@ -12,23 +12,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.naver.maps.map.compose.*
-import com.special.mock.model.EvCharger
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.NaverMap
+import com.naver.maps.map.compose.rememberCameraPositionState
+import com.special.domain.entities.Place
 import com.special.place.ui.theme.PlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val vm: ChargerViewModel by viewModels()
+    private val vm: PlacesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PlaceTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    val chargerList by vm.chargerList.observeAsState(listOf())
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    val chargerList by vm.places.observeAsState(listOf())
                     Greeting(chargerList)
                 }
             }
@@ -38,15 +42,14 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun Greeting(list: List<EvCharger>) {
-    NaverMap {
+fun Greeting(list: List<Place>) {
+    val cameraPosition = rememberCameraPositionState()
+
+    NaverMap(
+        cameraPositionState = cameraPosition
+    ) {
         list.forEach {
-            Marker(
-                state = MarkerState(it.toLatLnt()),
-                captionText = it.csNm,
-                captionRequestedWidth = 200.dp,
-                captionAligns = arrayOf(Align.Top),
-            )
+            it.toMarker()
         }
     }
 }

@@ -52,8 +52,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":data"))
-    implementation(project(":mock"))
 
     implementation(Deps.Android.core)
     implementation(Deps.Android.runtimeKTX)

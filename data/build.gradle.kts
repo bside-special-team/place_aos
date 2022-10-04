@@ -37,8 +37,15 @@ dependencies {
     implementation(project(":remote"))
     implementation(project(":mock"))
 
+    implementation(Deps.OkHttp.loggingInterceptor)
+
     implementation(Deps.Hilt.android)
     kapt(Deps.Hilt.compiler)
+
+    debugImplementation(Deps.Pluto.debug)
+    releaseImplementation(Deps.Pluto.release)
+    debugImplementation(Deps.Pluto.debugNetwork)
+    releaseImplementation(Deps.Pluto.releaseNetwork)
 
 //    implementation("androidx.core:core-ktx:1.9.0")
 //    implementation("androidx.appcompat:appcompat:1.5.1")

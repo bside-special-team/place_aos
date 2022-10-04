@@ -1,6 +1,9 @@
+import com.special.buildsrc.Deps
+
 plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
+    id("kotlin-kapt")
 }
 
 java {
@@ -10,4 +13,11 @@ java {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(Deps.Kotlin.Coroutines.core)
+
+    implementation(Deps.Retrofit.core)
+    implementation(Deps.Retrofit.gsonConverter)
+
+    implementation(Deps.Hilt.dagger)
+    kapt(Deps.Hilt.daggerCompiler)
 }

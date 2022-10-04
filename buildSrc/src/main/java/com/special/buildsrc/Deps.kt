@@ -126,4 +126,17 @@ object Deps {
         const val compose = "io.github.fornewid:naver-map-compose:${Versions.compose}"
     }
 
+
+    object Pluto {
+        private const val version = "2.0.5"
+
+        const val debug = "com.plutolib:pluto:$version"
+        const val release = "com.plutolib:pluto-no-op:$version"
+
+        const val debugNetwork = "com.plutolib.plugins:network:$version"
+        const val releaseNetwork = "com.plutolib.plugins:network-no-op:$version"
+
+
+
+    }
 }

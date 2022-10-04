@@ -1,8 +1,50 @@
 package com.special.domain.entities
 
+import java.time.LocalDateTime
+import java.time.LocalTime
+
+/*
+{
+  "createdAt": "2022-10-04T05:49:06.463Z",
+  "lastModifiedAt": "2022-10-04T05:49:06.463Z",
+  "id": "string",
+  "placeType": "HIDDEN",
+  "category": {
+    "id": "string",
+    "code": "string",
+    "name": "string"
+  },
+  "coordinate": {
+    "latitude": 120.12312312,
+    "longitude": 20.12312312
+  },
+  "name": "string",
+  "description": "string",
+  "imageUrls": [
+    "string"
+  ],
+  "visitCount": 0,
+  "bestStartTime": "23:00",
+  "bestEndTime": "23:00",
+  "hashTags": [
+    "string"
+  ],
+  "season": "SPRING"
+}
+ */
+
 data class Place(
-    val latitude: Double,
-    val longitude: Double,
+    val id : String,
+    val placeType: PlaceType,
+    val coordinate: Coordinate,
     val name: String,
-    val tags: List<String>
+    val description: String,
+    val imageUrls: List<String>,
+    val visitCount: Int,
+    val bestStartTime: LocalTime,
+    val bestEndTime: LocalTime,
+    val hashTags: List<String>,
+    val season: Season,
+    val createdAt: LocalDateTime,
+    val lastModifiedAt: LocalDateTime
 )
