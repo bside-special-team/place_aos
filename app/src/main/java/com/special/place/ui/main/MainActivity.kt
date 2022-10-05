@@ -18,7 +18,7 @@ import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.special.domain.entities.Place
 import com.special.place.toMarker
-import com.special.place.ui.place.PlaceRegisterActivity
+import com.special.place.ui.place.register.PlaceRegisterActivity
 import com.special.place.ui.theme.PlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
 

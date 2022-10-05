@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.place.PlaceRegisterActivity" />
+        <activity android:name=".ui.place.register.PlaceRegisterActivity" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
