@@ -26,4 +26,6 @@ interface PlaceApi {
 
     @GET("/api/v1/categories")
     suspend fun categories(): List<PlaceCategory>
+
+
 }
