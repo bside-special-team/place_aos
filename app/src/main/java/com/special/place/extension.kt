@@ -24,9 +24,9 @@ fun Place.toMarker() = Marker(
 fun Coordinate.toLatLng(): LatLng = LatLng(latitude.toDouble(), longitude.toDouble())
 
 @Composable
-fun showTimePicker(context: Context, callback: (Int, Int) -> Unit): TimePickerDialog {
+fun showTimePicker(context: Context, hour: Int = 0, minute: Int = 0, callback: (Int, Int) -> Unit): TimePickerDialog {
     return TimePickerDialog(
         context, { picker, hour, minute ->
             callback.invoke(hour, minute)
-        }, 0, 0, true)
+        }, hour, minute, true)
 }
