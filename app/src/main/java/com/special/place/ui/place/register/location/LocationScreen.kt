@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -50,8 +51,9 @@ fun NaverMapView(vm: PlaceLocationEventListener, initialCoordinate: LatLng? = nu
         )
 
         Icon(
-            painterResource(id = R.drawable.ic_target_location),
-            contentDescription = "target"
+            painterResource(id = R.drawable.ic_marker_question),
+            contentDescription = "target",
+            tint = Color.Black
         )
 
         if (cameraState.isMoving.not()) {
