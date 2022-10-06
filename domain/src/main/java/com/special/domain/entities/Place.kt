@@ -37,14 +37,15 @@ data class Place(
     val id : String,
     val placeType: PlaceType,
     val coordinate: Coordinate,
+    val category: PlaceCategory,
     val name: String,
     val description: String,
     val imageUrls: List<String>,
     val visitCount: Int,
-    val bestStartTime: String,
-    val bestEndTime: String,
+    val bestStartTime: String?,
+    val bestEndTime: String?,
     val hashTags: List<String>,
-    val season: Season,
+    val season: Season?,
     val createdAt: String,
     val lastModifiedAt: String
 )
