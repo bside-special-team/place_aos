@@ -20,11 +20,11 @@ fun VisitTimePicker(vm: BestTimeEventListener) {
     val visitTime by vm.placeVisitTime.observeAsState("00:00 - 00:00")
 
     val timeEndPicker = showTimePicker(LocalContext.current) { hour, minute ->
-        vm.setPlaceVisitTime(visitTime + String.format(" - %02d:%02d", hour, minute))
+        vm.setPlaceBestEndTime(String.format("%02d:%02d", hour, minute))
     }
 
     val timeStartPicker = showTimePicker(LocalContext.current) { hour, minute ->
-        vm.setPlaceVisitTime(String.format("%02d:%02d", hour, minute))
+        vm.setPlaceBestStartTime(String.format("%02d:%02d", hour, minute))
 
         timeEndPicker.updateTime(hour, minute)
         timeEndPicker.show()
@@ -38,9 +38,11 @@ fun VisitTimePicker(vm: BestTimeEventListener) {
     ) {
         Text(text = "방문하기 좋은 시간", modifier = Modifier.width(120.dp))
         Text(text = visitTime,
+            textAlign = TextAlign.Center,
             style = TextStyle(textAlign = TextAlign.Center),
             modifier = Modifier
                 .clickable { timeStartPicker.show() }
+                .padding(8.dp)
                 .fillMaxSize())
     }
 }

@@ -26,7 +26,7 @@ import com.special.place.R
 fun DisplayLocation(vm: PlaceLocationEventListener) {
     val displayLocation by vm.displayLocation.observeAsState("")
 
-    Text(displayLocation)
+    Text(displayLocation, modifier = Modifier.padding(horizontal = 16.dp))
 }
 
 @OptIn(ExperimentalNaverMapApi::class)

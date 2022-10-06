@@ -52,7 +52,7 @@ object MockupModule {
             if (BuildConfig.DEBUG) {
                 add(PlutoInterceptor())
                 add(HttpLoggingInterceptor().apply {
-                    setLevel(HttpLoggingInterceptor.Level.HEADERS)
+                    setLevel(HttpLoggingInterceptor.Level.BODY)
                 })
             }
         }

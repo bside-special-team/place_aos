@@ -4,5 +4,6 @@ import androidx.lifecycle.LiveData
 
 interface BestTimeEventListener {
     val placeVisitTime: LiveData<String>
-    fun setPlaceVisitTime(time: String)
+    fun setPlaceBestStartTime(time: String)
+    fun setPlaceBestEndTime(time: String)
 }

@@ -3,6 +3,7 @@ package com.special.place.ui.place.register
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -53,7 +54,14 @@ class PlaceRegisterActivity : ComponentActivity() {
 
     private fun initViewModel() {
         vm.placeRegisterResult.observe(this) {
-            //TODO: Error Handling
+            if (it.isSuccess) {
+                Toast.makeText(applicationContext, it.getOrNull(), Toast.LENGTH_SHORT).show()
+
+                finish()
+            } else {
+
+                Toast.makeText(applicationContext, "등록에 실패 하였습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

@@ -9,9 +9,9 @@ data class CoordinateToAddressModel(
 
 data class DocumentItem(
     @SerializedName("road_address")
-    val roadAddress: AddressItem,
+    val roadAddress: AddressItem?,
     @SerializedName("address")
-    val address: AddressItem
+    val address: AddressItem?
 )
 
 /*

@@ -1,56 +1,103 @@
 package com.special.place.ui.place.register
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.special.domain.entities.Coordinate
 import com.special.domain.entities.PlaceCategory
+import com.special.domain.entities.RequestPlace
+import com.special.domain.repositories.PlaceRegisterRepository
 import com.special.place.ui.place.register.besttime.BestTimeEventListener
 import com.special.place.ui.place.register.category.CategoryEventListener
 import com.special.place.ui.place.register.input.PlaceInputEventListener
 import com.special.place.ui.place.register.location.PlaceLocationEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class PlaceRegisterViewModel : ViewModel(), CategoryEventListener, BestTimeEventListener, PlaceInputEventListener, PlaceLocationEventListener {
-    private val _placeRegisterResult: MutableLiveData<Result<Unit>> = MutableLiveData()
+class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: PlaceRegisterRepository) :
+    ViewModel(), CategoryEventListener, BestTimeEventListener, PlaceInputEventListener,
+    PlaceLocationEventListener {
+    private val _placeRegisterResult: MutableLiveData<Result<String>> = MutableLiveData()
 
-    val placeRegisterResult: LiveData<Result<Unit>> = _placeRegisterResult
+    val placeRegisterResult: LiveData<Result<String>> = _placeRegisterResult
 
     private val _placeCategories: MutableLiveData<List<PlaceCategory>> = MutableLiveData()
     override val placeCategories: LiveData<List<PlaceCategory>> = _placeCategories
 
-    private val _displayLocation: MutableLiveData<String> = MutableLiveData()
-    override val displayLocation: LiveData<String> = _displayLocation
+    override val displayLocation: LiveData<String> = placeRegisterRepo.locationText.asLiveData()
 
-    private val _placeName: MutableLiveData<String> = MutableLiveData()
-    override val placeName: LiveData<String> = _placeName
+    private val _placeRequest: MutableLiveData<RequestPlace> = MutableLiveData()
+
+    override val placeName: LiveData<String> = _placeRequest.map { it.name ?: "" }
     override fun setPlaceName(name: String) {
-        _placeName.postValue(name)
+        val newRequest = _placeRequest.value?.copy(name = name)
+
+        _placeRequest.postValue(newRequest)
     }
 
-    private val _placeDescription: MutableLiveData<String> = MutableLiveData()
-    override val placeDescription: LiveData<String> = _placeDescription
+    override val placeDescription: LiveData<String> = _placeRequest.map { it.description ?: "" }
     override fun setPlaceDescription(text: String) {
-        _placeDescription.postValue(text)
+        val newRequest = _placeRequest.value?.copy(description = text)
+
+        _placeRequest.postValue(newRequest)
     }
 
-    private val _placeVisitTime: MutableLiveData<String> = MutableLiveData()
-    override val placeVisitTime: LiveData<String> = _placeVisitTime
-    override fun setPlaceVisitTime(time: String) {
-        _placeVisitTime.postValue(time)
+    override val placeVisitTime: LiveData<String> = _placeRequest.map {
+        if (it.bestStartTime == null) {
+            "선택 하여 주세요"
+        } else {
+            it.bestStartTime + " - " + it.bestEndTime
+        }
     }
 
-    private val _placeCategory: MutableLiveData<PlaceCategory> = MutableLiveData()
+    override fun setPlaceBestStartTime(time: String) {
+        val newRequest = _placeRequest.value?.copy(bestStartTime = time)
+
+        _placeRequest.postValue(newRequest)
+    }
+
+    override fun setPlaceBestEndTime(time: String) {
+        val newRequest = _placeRequest.value?.copy(bestEndTime = time)
+
+        _placeRequest.postValue(newRequest)
+    }
+
     override fun setCategory(category: PlaceCategory) {
-        _placeCategory.postValue(category)
+        val newRequest = _placeRequest.value?.copy(categoryCode = category.code)
+
+        _placeRequest.postValue(newRequest)
     }
 
     override fun updateCameraPosition(coordinate: Coordinate) {
+        // 처음으로 호출 될것을 예상하고 위치 변경 되었을 경우에만 객체를 생성 하도록 작성.
+        val newRequest = _placeRequest.value?.copy(coordinate = coordinate) ?: run {
+            RequestPlace(coordinate = coordinate)
+        }
 
+        _placeRequest.postValue(newRequest)
+        placeRegisterRepo.updateLocation(coordinate)
     }
 
     fun registerPlace() {
+        viewModelScope.launch {
+            val request = _placeRequest.value
+
+            if (request != null) {
+                val result = placeRegisterRepo.registerPlace(request).runCatching {
+                    "등록 되었습니다."
+                }
+
+                _placeRegisterResult.postValue(result)
+            } else {
+                // TODO: Throw Error Result
+            }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            _placeCategories.postValue(placeRegisterRepo.categories())
+        }
 
     }
 }

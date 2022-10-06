@@ -41,10 +41,10 @@ data class Place(
     val description: String,
     val imageUrls: List<String>,
     val visitCount: Int,
-    val bestStartTime: LocalTime,
-    val bestEndTime: LocalTime,
+    val bestStartTime: String,
+    val bestEndTime: String,
     val hashTags: List<String>,
     val season: Season,
-    val createdAt: LocalDateTime,
-    val lastModifiedAt: LocalDateTime
+    val createdAt: String,
+    val lastModifiedAt: String
 )

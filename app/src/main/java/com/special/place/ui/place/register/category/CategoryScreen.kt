@@ -32,13 +32,15 @@ fun CategoryDropdown(vm: CategoryEventListener) {
     var selectedIndex by remember { mutableStateOf(0) }
 
     val list by vm.placeCategories.observeAsState(listOf())
+    var categoryName = "선택 하여 주세요."
 
     if (list.isNotEmpty()) {
         vm.setCategory(list[selectedIndex])
+        categoryName = list[selectedIndex].name
     }
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        Text(text = list[selectedIndex].name, modifier = Modifier
+        Text(text = categoryName, modifier = Modifier
             .clickable { expanded = true }
             .padding(12.dp)
             .fillMaxWidth())

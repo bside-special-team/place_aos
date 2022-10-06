@@ -11,10 +11,19 @@ class CoordinateToAddressRemoteImpl @Inject constructor(@KakaoApiManager apiMana
     private val client = apiManager.create(KakaoApi::class.java)
 
     override suspend fun coordinateToAddress(coordinate: Coordinate): String {
-        return client.coord2Address(coordinate.longitude, coordinate.latitude)
-            .documents
-            .first()
-            .roadAddress
-            .addressName
+        return client.coord2Address(coordinate.longitude, coordinate.latitude).let {
+            if (it.documents.isEmpty()) {
+                return@let coordinate.toString()
+            }
+
+            val firstItem = it.documents.first()
+
+            if (firstItem.roadAddress != null) {
+                return@let firstItem.roadAddress.addressName
+            }
+
+            firstItem.address?.addressName ?: coordinate.toString()
+        }
+
     }
 }
