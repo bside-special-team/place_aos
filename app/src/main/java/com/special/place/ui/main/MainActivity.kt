@@ -23,6 +23,7 @@ import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.*
 import com.naver.maps.map.util.FusedLocationSource
+import com.special.domain.entities.Coordinate
 import com.special.domain.entities.Place
 import com.special.place.toMarker
 import com.special.place.ui.place.register.PlaceRegisterActivity
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val chargerList by vm.places.observeAsState(listOf())
                     MainScaffold(locationSource, chargerList) {
-                        startActivity(PlaceRegisterActivity.newIntent(this))
+                        startActivity(PlaceRegisterActivity.newIntent(this, it))
                     }
                 }
             }
@@ -100,7 +101,11 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalNaverMapApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun MainScaffold(locationSource: LocationSource, list: List<Place>, registerPlace: () -> Unit) {
+fun MainScaffold(
+    locationSource: LocationSource,
+    list: List<Place>,
+    registerPlace: (LatLng) -> Unit
+) {
     val cameraPosition = rememberCameraPositionState()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -113,7 +118,7 @@ fun MainScaffold(locationSource: LocationSource, list: List<Place>, registerPlac
         scaffoldState = bottomSheetScaffoldState,
         topBar = {
             TopAppBar(title = { Text(text = "일상의 발견") }, actions = {
-                IconButton(onClick = registerPlace) {
+                IconButton(onClick = { registerPlace.invoke(cameraPosition.position.target) }) {
                     Icon(Icons.Outlined.Add, contentDescription = "add")
                 }
             })

@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
@@ -31,9 +33,13 @@ fun DisplayLocation(vm: PlaceLocationEventListener) {
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun NaverMapView(vm: PlaceLocationEventListener) {
+fun NaverMapView(vm: PlaceLocationEventListener, initialCoordinate: LatLng? = null) {
     Box(contentAlignment = Alignment.Center) {
-        val cameraState = rememberCameraPositionState()
+        val cameraState = rememberCameraPositionState(init = {
+            if (initialCoordinate != null) {
+                position = CameraPosition(initialCoordinate, 17.0)
+            }
+        })
 
         NaverMap(
             cameraPositionState = cameraState,
