@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.special.domain.entities.Coordinate
@@ -44,6 +45,7 @@ fun NaverMapView(vm: PlaceLocationEventListener, initialCoordinate: LatLng? = nu
 
         NaverMap(
             cameraPositionState = cameraState,
+            uiSettings = MapUiSettings(isLocationButtonEnabled = true),
             modifier = Modifier
                 .height((LocalConfiguration.current.screenWidthDp * 0.6).dp)
                 .fillMaxWidth()
