@@ -4,6 +4,10 @@ buildscript {
         jcenter()
         google()
     }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.0")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.43.2")
+    }
 
 
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.

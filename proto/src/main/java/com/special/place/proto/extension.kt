@@ -1,4 +1,4 @@
-package com.special.place
+package com.special.place.proto
 
 import android.app.TimePickerDialog
 import android.content.Context
@@ -13,6 +13,7 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.special.domain.entities.Coordinate
 import com.special.domain.entities.Place
 import com.special.place.resource.R
+
 
 val marker = OverlayImage.fromResource(R.drawable.ic_marker_question)
 

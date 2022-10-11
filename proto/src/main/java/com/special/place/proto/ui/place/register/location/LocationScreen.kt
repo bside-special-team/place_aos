@@ -1,4 +1,4 @@
-package com.special.place.ui.place.register.location
+package com.special.place.proto.ui.place.register.location
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
