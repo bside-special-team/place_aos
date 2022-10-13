@@ -1,4 +1,4 @@
-package com.special.place.proto.ui.main
+package com.special.place.proto.ui.place
 
 import androidx.lifecycle.*
 import com.special.domain.entities.Coordinate

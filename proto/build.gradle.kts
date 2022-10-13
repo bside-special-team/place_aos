@@ -72,6 +72,8 @@ dependencies {
     implementation(Deps.Compose.uiPreview)
     implementation(Deps.Compose.runtimeLiveData)
 
+    implementation(Deps.Coil.coilCompose)
+
     debugImplementation(Deps.Compose.tooling)
     debugImplementation(Deps.Compose.manifest)
 
