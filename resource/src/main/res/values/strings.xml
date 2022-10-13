@@ -3,4 +3,10 @@
 
     <string name="naver_map_client_id">08izpoficy</string>
     <string name="naver_map_client_secret">y5zLfSQNy3G73CDxHm03Q4CXEair02rPfh36tBOS</string>
+
+    <string name="txt_current_level">현재 레벨 Lv %1$d</string>
+    <string name="txt_next_level_point">다음 레벨까지 %1$dp</string>
+    <!-- Button -->
+    <string name="btn_my_act">내 활동</string>
+    <string name="btn_my_badge">나의 뱃지</string>
 </resources>
