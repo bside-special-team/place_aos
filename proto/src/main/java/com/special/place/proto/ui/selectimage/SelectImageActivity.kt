@@ -3,6 +3,7 @@ package com.special.place.proto.ui.selectimage
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
