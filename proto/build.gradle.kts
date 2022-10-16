@@ -105,6 +105,8 @@ dependencies {
     implementation(Deps.Google.playLocation)
 
     implementation(Deps.Facebook.login)
+    implementation(Deps.Google.login)
+    implementation(Deps.Kakao.login)
 
     testImplementation("junit:junit:4.13.2")
 
