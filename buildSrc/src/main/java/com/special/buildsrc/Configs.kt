@@ -9,4 +9,12 @@ object Configs {
     const val versionName = "0.0.2"
 
     const val composeVersion = "1.3.1"
+
+    object Signing {
+        const val alias = "special"
+        const val storePassword = "tmvptufXla!@"
+        const val keyPassword = "tmvptufXla!@"
+
+        const val keyStorePath = "../keys/special_team.jks"
+    }
 }

@@ -3,4 +3,8 @@
 
     <string name="naver_map_client_id">08izpoficy</string>
     <string name="naver_map_client_secret">y5zLfSQNy3G73CDxHm03Q4CXEair02rPfh36tBOS</string>
+
+    <string name="facebook_app_id">3423960601263031</string>
+    <string name="fb_login_protocol_scheme">fb3423960601263031</string>
+    <string name="facebook_client_token">0e48c6d70a9414ea07392db9ffec93d9</string>
 </resources>
