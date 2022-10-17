@@ -36,9 +36,7 @@ fun MainScaffold(
         scaffoldState = bottomSheetScaffoldState,
         topBar = {
             TopAppBar(title = { Text(text = "일상의 발견") }, actions = {
-                IconButton(onClick = { registerPlace.invoke(cameraPosition.position.target) }) {
-                    Icon(Icons.Outlined.Add, contentDescription = "add")
-                }
+                Text("ZoomLevel: ${cameraPosition.position.zoom}")
             })
         },
         sheetContent = {
@@ -65,7 +63,7 @@ fun MainScaffold(
 
             }
         },
-        sheetPeekHeight = 40.dp,
+        sheetPeekHeight = 0.dp,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         sheetElevation = 5.dp
     ) {
@@ -80,7 +78,7 @@ fun MainScaffold(
             },
             properties = MapProperties(locationTrackingMode = LocationTrackingMode.NoFollow),
             locationSource = locationSource,
-            uiSettings = MapUiSettings(isLocationButtonEnabled = true)
+            uiSettings = MapUiSettings(isLocationButtonEnabled = true, isScaleBarEnabled = true)
         ) {
             list.forEach {
                 it.toMarker {
