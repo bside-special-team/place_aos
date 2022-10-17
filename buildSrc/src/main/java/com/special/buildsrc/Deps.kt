@@ -101,6 +101,7 @@ object Deps {
 
         const val gson = "com.google.code.gson:gson:${Versions.gson}"
         const val playLocation = "com.google.android.gms:play-services-location:${Versions.playService}"
+        const val login = "com.google.android.gms:play-services-auth:20.3.0"
     }
 
     object Hilt {
@@ -135,8 +136,15 @@ object Deps {
 
         const val debugNetwork = "com.plutolib.plugins:network:$version"
         const val releaseNetwork = "com.plutolib.plugins:network-no-op:$version"
+    }
 
+    object Facebook {
 
+        const val login = "com.facebook.android:facebook-login:latest.release"
+    }
 
+    object Kakao {
+
+        const val login = "com.kakao.sdk:v2-user:2.11.2"
     }
 }

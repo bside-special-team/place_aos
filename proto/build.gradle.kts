@@ -24,6 +24,21 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file(Configs.Signing.keyStorePath)
+            storePassword = Configs.Signing.storePassword
+            keyAlias = Configs.Signing.alias
+            keyPassword = Configs.Signing.keyPassword
+        }
+        create("release") {
+            storeFile = file(Configs.Signing.keyStorePath)
+            storePassword = Configs.Signing.storePassword
+            keyAlias = Configs.Signing.alias
+            keyPassword = Configs.Signing.keyPassword
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -88,6 +103,10 @@ dependencies {
     implementation(Deps.NaverMap.sdk)
     implementation(Deps.NaverMap.compose)
     implementation(Deps.Google.playLocation)
+
+    implementation(Deps.Facebook.login)
+    implementation(Deps.Google.login)
+    implementation(Deps.Kakao.login)
 
     testImplementation("junit:junit:4.13.2")
 

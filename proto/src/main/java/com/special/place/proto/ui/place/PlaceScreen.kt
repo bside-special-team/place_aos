@@ -1,5 +1,6 @@
 package com.special.place.proto.ui.place
 
+import android.location.Location
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 fun MainScaffold(
     locationSource: LocationSource,
     list: List<Place>,
+    currentLocation: Location? = null,
     registerPlace: (LatLng) -> Unit
 ) {
     val cameraPosition = rememberCameraPositionState()
@@ -80,6 +82,15 @@ fun MainScaffold(
             locationSource = locationSource,
             uiSettings = MapUiSettings(isLocationButtonEnabled = true, isScaleBarEnabled = true)
         ) {
+
+            currentLocation?.let {
+                CircleOverlay(
+                    center = LatLng(it.latitude, it.longitude),
+                    radius = 50.0,
+                    outlineWidth = 1.dp
+                )
+            }
+
             list.forEach {
                 it.toMarker {
                     selectedPlace = it
