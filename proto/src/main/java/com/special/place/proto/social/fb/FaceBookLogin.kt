@@ -4,6 +4,7 @@ import android.app.Activity
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.special.domain.entities.LoginType
 import com.special.place.proto.social.LoginCallback
 import com.special.place.proto.social.LoginResponse
 import com.special.place.proto.social.SocialLogin
@@ -13,12 +14,16 @@ class FaceBookLogin constructor(private val activity: Activity, private val call
     private val loginManager = LoginManager.getInstance()
 
     init {
+        FacebookSdk.setIsDebugEnabled(true)
+        LoginType.Facebook
         loginManager.registerCallback(CallbackManager.Factory.create(), this)
 
     }
 
     override fun doLogin() {
-        loginManager.logIn(activity, listOf("email"))
+//        loginManager.logIn(activity, listOf("email"))
+        loginManager.logInWithReadPermissions(activity, listOf("public_profile", "email"))
+
     }
 
     override fun logout() {
@@ -34,14 +39,18 @@ class FaceBookLogin constructor(private val activity: Activity, private val call
     }
 
     override fun onSuccess(result: LoginResult) {
+        println("FACEBOOK ID TOKEN :: ${result.authenticationToken?.token}")
+
         GraphRequest.newMeRequest(result.accessToken, this)
     }
 
     override fun onCompleted(obj: JSONObject?, response: GraphResponse?) {
         runCatching {
-            obj?.toMyResponse()?.let {
-                callback.onResponse(it)
-            }
+            obj!!.toMyResponse()
+        }.onSuccess {
+            callback.onResponse(it)
+        }.onFailure {
+            callback.onFailed(it)
         }
     }
 }

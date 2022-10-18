@@ -1,6 +1,10 @@
 package com.special.place.proto.ui.main
 
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -10,10 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.special.place.BuildConfig
+import com.special.place.proto.ui.login.LoginActivity
 import com.special.place.proto.ui.place.PlaceActivity
 import com.special.place.proto.ui.selectimage.SelectImageActivity
 import com.special.place.proto.ui.theme.PlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -51,7 +59,9 @@ class MainActivity : ComponentActivity() {
 
                             Button(
                                 modifier = Modifier.fillMaxWidth(),
-                                onClick = { /* TODO */ }) {
+                                onClick = {
+                                    startActivity(LoginActivity.newIntent(this@MainActivity))
+                                }) {
                                 Text("SNS 로그인")
                             }
                         }

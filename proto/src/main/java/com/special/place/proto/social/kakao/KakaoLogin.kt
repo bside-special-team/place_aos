@@ -6,14 +6,20 @@ import com.kakao.sdk.user.UserApiClient
 import com.special.place.proto.social.LoginCallback
 import com.special.place.proto.social.SocialLogin
 
-class KakaoLogin constructor(private val context: Context, private val callback: LoginCallback): SocialLogin {
+class KakaoLogin constructor(private val context: Context, private val callback: LoginCallback) :
+    SocialLogin {
     override fun doLogin() {
         kakaoLogin(context) { token, error ->
             token?.let {
+                println("KAKAO ID TOKEN :: ${it.idToken}")
+
                 UserApiClient.instance.me { user, error ->
-//                    user?.let { callback.onResponse(KakaoLoginResponse(user)) } ?: run {
-//                        callback.onFailed(error!!)
-//                    }
+                    user?.let {
+
+
+                    } ?: run {
+                        callback.onFailed(error!!)
+                    }
                 }
             } ?: run { callback.onFailed(error!!) }
         }
@@ -28,6 +34,8 @@ class KakaoLogin constructor(private val context: Context, private val callback:
     }
 
     override fun logout() {
+        UserApiClient.instance.logout {
 
+        }
     }
 }
