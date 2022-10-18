@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -29,18 +31,22 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.special.place.proto.toast
 import com.special.place.proto.ui.theme.PlaceTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SelectImageActivity : ComponentActivity() {
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, SelectImageActivity::class.java)
     }
+    
+    private val vm : SelectImageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PlaceTheme {
                 Surface {
-                    SelectImageSkeleton()
+                    SelectImageSkeleton(vm)
                 }
             }
         }
@@ -48,14 +54,15 @@ class SelectImageActivity : ComponentActivity() {
 }
 
 @Composable
-fun SelectImageSkeleton() {
+fun SelectImageSkeleton(vm : SelectImageViewModel) {
     val context = LocalContext.current
-    var imageUriList by remember { mutableStateOf<List<Uri>>(listOf()) }
+    val imageBitmapList by vm.imageBitmapList.observeAsState(listOf())
 
     val imageSelectorLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                imageUriList = imageUriList.plus(uri)
+                val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
+                vm.updateBitmap(bitmap)
             } else {
                 context.toast("No image selected!")
             }
@@ -82,12 +89,12 @@ fun SelectImageSkeleton() {
             }
         }) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            itemsIndexed(imageUriList) { index, uri ->
+            itemsIndexed(imageBitmapList) { index, bitmap ->
                 Image(
                     painter = rememberAsyncImagePainter(
                         ImageRequest
                             .Builder(LocalContext.current)
-                            .data(data = uri)
+                            .data(data = bitmap)
                             .build()
                     ),
                     contentDescription = "image",

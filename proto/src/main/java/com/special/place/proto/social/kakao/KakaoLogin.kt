@@ -1,6 +1,8 @@
 package com.special.place.proto.social.kakao
 
 import android.content.Context
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.user.UserApiClient
 import com.special.place.proto.social.LoginCallback
 import com.special.place.proto.social.SocialLogin
 
@@ -9,9 +11,9 @@ class KakaoLogin constructor(private val context: Context, private val callback:
         kakaoLogin(context) { token, error ->
             token?.let {
                 UserApiClient.instance.me { user, error ->
-                    user?.let { callback.onResponse(KakaoLoginResponse(user)) } ?: run {
-                        callback.onFailed(error!!)
-                    }
+//                    user?.let { callback.onResponse(KakaoLoginResponse(user)) } ?: run {
+//                        callback.onFailed(error!!)
+//                    }
                 }
             } ?: run { callback.onFailed(error!!) }
         }
