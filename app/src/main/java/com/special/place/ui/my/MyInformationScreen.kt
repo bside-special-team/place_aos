@@ -1,6 +1,8 @@
 package com.special.place.ui.my
 
 import android.content.Intent
+import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -20,7 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.special.place.resource.R
+import com.special.place.ui.my.act.MyActActivity
+import com.special.place.ui.place.register.PlaceRegisterActivity
 
 @Preview
 @Composable
@@ -116,7 +121,7 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
 
 
 @Composable
-fun MyButton(buttonText: String, intentText: String) {
+fun MyButton(buttonText: String, intentText:String) {
     val ctx = LocalContext.current
 
     Button(
@@ -127,8 +132,14 @@ fun MyButton(buttonText: String, intentText: String) {
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
         onClick = {
-            val intent = Intent(ctx, intentText::class.java)
-            ContextCompat.startActivity(ctx, intent, null)
+            if(intentText=="MyAct"){
+                val intent = Intent(ctx, MyActActivity::class.java)
+                startActivity(ctx, intent, null)
+            }
+            if(intentText=="MyBadge"){
+
+            }
+
         }
     ) {
         Text(text = buttonText)
