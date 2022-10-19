@@ -32,6 +32,9 @@
 
         <activity android:name=".ui.place.register.PlaceRegisterActivity" />
         <activity android:name=".ui.my.MyInformationActivity"/>
+        <activity android:name=".ui.my.setting.SettingActivity"/>
+        <activity android:name=".ui.my.setting.NicknameModifyActivity"/>
+        <activity android:name=".ui.my.act.MyActActivity"/>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

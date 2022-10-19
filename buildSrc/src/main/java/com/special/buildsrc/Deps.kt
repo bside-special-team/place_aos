@@ -139,4 +139,10 @@ object Deps {
 
 
     }
+
+    object Pager{
+        private const val version = "0.20.1"
+        const val pager = "com.google.accompanist:accompanist-pager:$version"
+        const val indicators = "com.google.accompanist:accompanist-pager-indicators:$version"
+    }
 }
