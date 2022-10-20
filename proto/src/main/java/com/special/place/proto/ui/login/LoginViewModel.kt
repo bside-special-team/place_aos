@@ -2,6 +2,7 @@ package com.special.place.proto.ui.login
 
 import android.app.Activity
 import android.content.Context
+import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.lifecycle.ViewModel
 import com.special.place.proto.social.LoginCallback
 import com.special.place.proto.social.LoginResponse
@@ -20,7 +21,7 @@ class LoginViewModel @Inject constructor() : ViewModel(), LoginCallback {
     fun initLogin(context: Context) {
         socialLogin["kakao"] = KakaoLogin(context, this)
 
-        (context as? Activity)?.let { activity ->
+        (context as? ActivityResultRegistryOwner)?.let { activity ->
             socialLogin["facebook"] = FaceBookLogin(activity, this)
         }
 

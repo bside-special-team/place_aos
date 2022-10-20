@@ -1,29 +1,27 @@
 package com.special.place.proto.social.fb
 
-import android.app.Activity
+import androidx.activity.result.ActivityResultRegistryOwner
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.special.domain.entities.LoginType
 import com.special.place.proto.social.LoginCallback
 import com.special.place.proto.social.LoginResponse
 import com.special.place.proto.social.SocialLogin
 import org.json.JSONObject
 
-class FaceBookLogin constructor(private val activity: Activity, private val callback: LoginCallback) : SocialLogin, FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
+class FaceBookLogin constructor(private val activity: ActivityResultRegistryOwner, private val callback: LoginCallback) : SocialLogin, FacebookCallback<LoginResult>, GraphRequest.GraphJSONObjectCallback {
     private val loginManager = LoginManager.getInstance()
+    private val callbackManager = CallbackManager.Factory.create()
 
     init {
         FacebookSdk.setIsDebugEnabled(true)
-        LoginType.Facebook
-        loginManager.registerCallback(CallbackManager.Factory.create(), this)
+
+        loginManager.registerCallback(callbackManager, this)
 
     }
 
     override fun doLogin() {
-//        loginManager.logIn(activity, listOf("email"))
-        loginManager.logInWithReadPermissions(activity, listOf("public_profile", "email"))
-
+        loginManager.logInWithReadPermissions(activity, callbackManager, listOf("public_profile", "email"))
     }
 
     override fun logout() {

@@ -3,7 +3,6 @@ package com.special.place.proto.ui.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -14,8 +13,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.special.place.proto.ui.theme.PlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
