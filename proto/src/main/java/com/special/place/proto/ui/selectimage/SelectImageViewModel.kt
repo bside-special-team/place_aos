@@ -15,18 +15,15 @@ import javax.inject.Inject
 class SelectImageViewModel @Inject constructor() : ViewModel() {
 
     private val _bitmap: MutableLiveData<Bitmap> = MutableLiveData()
+    private val _imageBitmapList : MutableLiveData<List<Bitmap>> = MutableLiveData()
 
-
-    val imageBitmapList: LiveData<List<Bitmap>> = _bitmap.map {
-        listOf(it)
-    }
+    val imageBitmapList: LiveData<List<Bitmap>> = _imageBitmapList
 
     fun updateBitmap(bitmap: Bitmap) {
-        _bitmap.postValue(bitmap)
-    }
+        viewModelScope.launch {
+            val webpBitmap = BitmapConverter.convertWebpBitmap(bitmap)
 
-    init {
-
-
+            _imageBitmapList.postValue(listOf(bitmap, webpBitmap))
+        }
     }
 }
