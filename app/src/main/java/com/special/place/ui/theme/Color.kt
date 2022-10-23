@@ -4,7 +4,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.LinearGradientShader
 
+val Purple700 = Color(0xFF5720E5)
 val Purple500 = Color(0xFF8953FF)
+val Purple300 = Color(0xFFBE9FFF)
+val Purple100 = Color(0xFFF6F0FF)
 
 val Grey900 = Color(0xFF191E28)
 val Grey800 = Color(0xFF333B4B)
@@ -20,5 +23,8 @@ val SkyBlue900 = Color(0xFF0055A9)
 val SkyBlue600 = Color(0xFF0099EE)
 val SkyBlue300 = Color(0xFF21D4FD)
 val SkyBlue100 = Color(0xFFD7F6FE)
+
+val Warning = Color(0xFFd22030)
+
 
 val Gradient = LinearGradientShader(from = Offset(40f, 70f), to = Offset(120f, 70f), colors = listOf(SkyBlue300, Purple500))
