@@ -84,7 +84,7 @@ fun SelectImageSkeleton(vm : SelectImageViewModel) {
         }
     },
         floatingActionButton = {
-            IconButton(onClick = { requestStoragePermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE) }) {
+            FloatingActionButton(onClick = { requestStoragePermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE) }) {
                 Icon(Icons.Filled.Add, "fab")
             }
         }) {
