@@ -24,6 +24,8 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     private val _localMarker: MutableLiveData<List<LocalMarker>> = MutableLiveData()
     val localMarkers: LiveData<List<LocalMarker>> = _localMarker
 
+    private val imageMaps: MutableMap<Int, OverlayImage> = mutableMapOf()
+
     init {
         viewModelScope.launch {
 
@@ -42,13 +44,23 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
 
     fun updateBitmap(bitmap: Bitmap) {
         viewModelScope.launch {
-            val mergedBitmap = BitmapConverter.mergedMarker(baseBitmap, bitmap)
+            val mergedOverlay = getMergedOverlay(bitmap)
 
             val origin = _localMarker.value ?: listOf()
 
-            _localMarker.postValue(origin.plus(OverlayImage.fromBitmap(mergedBitmap) to lastCoordinate))
+            _localMarker.postValue(origin.plus(mergedOverlay to lastCoordinate))
         }
 
+    }
+
+    private suspend fun getMergedOverlay(bitmap: Bitmap): OverlayImage {
+        return imageMaps[bitmap.hashCode()] ?: run {
+            val mergedBitmap = BitmapConverter.mergedMarker(baseBitmap, bitmap)
+            val overlayImage = OverlayImage.fromBitmap(mergedBitmap)
+            imageMaps[bitmap.hashCode()] = overlayImage
+
+            overlayImage
+        }
     }
 }
 
