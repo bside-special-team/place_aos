@@ -55,6 +55,7 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(vertical = 16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -63,7 +64,10 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
                 modifier = Modifier.width(48.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column() {
+            Column(
+                modifier = Modifier
+                    .width(176.dp)
+            ) {
                 Text(
                     text = list[index].placeType,
                     fontSize = 14.sp,
@@ -75,33 +79,27 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
                     color = colorResource(id = R.color.grey_900)
                 )
             }
+            Spacer(modifier = Modifier.width(16.dp))
             if (list[index].bookmark) {
                 // 보라
                 Image(
                     painter = painterResource(id = R.drawable.ic_bookmark_purple),
-                    contentDescription = "bookmark",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .width(14.17.dp)
+                    contentDescription = "bookmark"
                 )
             } else {
                 // 회색
                 Image(
-                    painter = painterResource(id = R.drawable.ic_bookmark_gray),
-                    contentDescription = "bookmark",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .width(14.17.dp)
+                    painter = painterResource(id = R.drawable.ic_bookmark_grey),
+                    contentDescription = "bookmark"
                 )
             }
+            Spacer(modifier = Modifier.width(16.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_dots),
-                contentDescription = "dots",
-                modifier = Modifier
-                    .width(20.dp)
+                contentDescription = "dots"
             )
-
         }
+
         TagList(list[index].hashTag)
     }
 }
