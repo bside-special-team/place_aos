@@ -74,9 +74,11 @@ object BitmapConverter {
 
             val resizeImage = resizeCircleCropBitmap(image)
 
+            val offset = (baseMarker.width - resizeImage.width) / 2f
+
             Canvas(resultMarker).apply {
                 drawBitmap(baseMarker, 0f, 0f, null)
-                drawBitmap(resizeImage, 19f, 19f, null)
+                drawBitmap(resizeImage, offset, offset, null)
             }
 
             resultMarker
