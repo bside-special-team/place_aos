@@ -48,6 +48,9 @@ class PlaceActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        vm.initContext(this)
+
         setContent {
             PlaceTheme {
                 // A surface container using the 'background' color from the theme
@@ -55,10 +58,9 @@ class PlaceActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val chargerList by vm.places.observeAsState(listOf())
-                    MainScaffold(locationSource, chargerList) {
-                        startActivity(PlaceRegisterActivity.newIntent(this, it))
-                    }
+//                    val chargerList by vm.places.observeAsState(listOf())
+//                    MainScaffold(locationSource, chargerList)
+                    ImageMarkerAppend(vm = vm, locationSource = locationSource)
                 }
             }
         }
