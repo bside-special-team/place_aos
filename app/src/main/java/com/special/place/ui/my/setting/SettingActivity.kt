@@ -19,7 +19,7 @@ class SettingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val onBack:() -> Unit ={
+        val onBack: () -> Unit = {
             finish()
         }
         setContent {
@@ -54,7 +54,7 @@ fun SettingTopAppBar(onBack: () -> Unit) {
             }
         },
         navigationIcon = {
-            IconButton(onClick = {onBack()}) {
+            IconButton(onClick = { onBack() }) {
                 Icon(Icons.Filled.ArrowBack, "backIcon")
             }
         },

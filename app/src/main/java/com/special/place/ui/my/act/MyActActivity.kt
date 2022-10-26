@@ -4,13 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -21,9 +18,9 @@ import kotlinx.coroutines.launch
 import androidx.compose.material.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.special.place.resource.R
+import com.special.place.ui.my.postlist.PostScreen
+
 // 임의 데이터
 data class MyPostData(
     val placeType: String,
@@ -31,6 +28,7 @@ data class MyPostData(
     val hashTag: List<String>,
     val bookmark: Boolean
 )
+
 val postList = ArrayList<MyPostData>()
 val postList2 = ArrayList<MyPostData>()
 
@@ -95,11 +93,11 @@ class MyActActivity : ComponentActivity() {
                             count = pages.size,
                             state = pagerState,
                         ) { page ->
-                            when(page){
-                                0->PostScreen(postList) // 내 게시물
-                                1->MyCommentScreen() // 내 댓글
-                                2->PostScreen(postList2) // 추천
-                                3->PostScreen(postList) // 북마크
+                            when (page) {
+                                0 -> PostScreen(postList) // 내 게시물
+                                1 -> MyCommentScreen() // 내 댓글
+                                2 -> PostScreen(postList2) // 추천
+                                3 -> PostScreen(postList) // 북마크
                             }
                         }
                     }

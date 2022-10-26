@@ -1,15 +1,10 @@
 package com.special.place.ui.my.setting
 
-import android.content.Context
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -28,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.special.place.ui.theme.PlaceTheme
 
 var isTextFieldFocused = false
+
 class NicknameModifyActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

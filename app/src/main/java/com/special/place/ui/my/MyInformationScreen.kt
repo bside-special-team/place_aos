@@ -1,42 +1,36 @@
 package com.special.place.ui.my
 
 import android.content.Intent
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.special.place.resource.R
 import com.special.place.ui.my.act.MyActActivity
-import com.special.place.ui.place.register.PlaceRegisterActivity
+import com.special.place.ui.theme.Grey100
+import com.special.place.ui.theme.Purple100
+import com.special.place.ui.theme.Purple700
 
 @Preview
 @Composable
 fun MyInformationScreen() {
-
     // 임의 데이터
     val name: String = "유저 이름"
     val level: Int = 7
     val point: Int = 250
     val progress: Float = 0.7f
-    val badge: String = "우리동네 백패커"
+    val badge: String = "외지인"
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,18 +41,23 @@ fun MyInformationScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 임시 이미지
-        Image(
-            painter = painterResource(R.drawable.ic_logo),
-            contentDescription = "avatar",
-            contentScale = ContentScale.Crop,            // crop the image if it's not a square
+        Column(
             modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)                       // clip to the circle shape
-                .border(2.dp, Color.Black, CircleShape)   // add a border (optional)
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+                .width(80.dp)
+                .height(80.dp)
+                .background(color = Grey100, shape = RoundedCornerShape(30.dp))
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_logo),
+                contentDescription = "avatar",
+                contentScale = ContentScale.Crop,            // crop the image if it's not a square
+
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
         BadgeCard(badge)
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Text(text = name)
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -70,9 +69,13 @@ fun MyInformationScreen() {
             modifier = Modifier.fillMaxWidth(),
             Arrangement.SpaceBetween
         ) {
-            MyButton(stringResource(id = R.string.btn_my_act), "MyAct")
-            Spacer(modifier = Modifier.height(50.dp))
-            MyButton(stringResource(id = R.string.btn_my_badge), "MyBadge")
+            MyButton(stringResource(id = R.string.btn_my_act), "MyAct", R.drawable.ic_fire_solid)
+            Spacer(modifier = Modifier.height(20.dp))
+            MyButton(
+                stringResource(id = R.string.btn_my_badge),
+                "MyBadge",
+                R.drawable.ic_trophy_star_solid
+            )
         }
 
     }
@@ -80,25 +83,21 @@ fun MyInformationScreen() {
 
 @Composable
 fun BadgeCard(badge: String) {
-    Card(
-        border = BorderStroke(2.dp, Color.Black),
-        shape = RoundedCornerShape(25.dp),
-        elevation = 5.dp
-    ) {
-        Text(
-            modifier = Modifier.padding(10.dp),
-            text = badge
-        )
-    }
+    Text(
+        modifier = Modifier
+            .background(color = Grey100, shape = RoundedCornerShape(12.dp))
+            .padding(10.dp),
+        text = badge
+
+    )
 }
 
 @Composable
 fun LevelCard(level: Int, point: Int, progress: Float) {
     Card(
-        border = BorderStroke(2.dp, Color.Black),
         modifier = Modifier
             .fillMaxWidth(),
-        shape = RoundedCornerShape(15.dp),
+        shape = RoundedCornerShape(28.dp),
         elevation = 5.dp,
 
         ) {
@@ -109,7 +108,7 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
 
         ) {
             Row() {
-                Text(text = stringResource(id = R.string.txt_current_level, level))
+                Text(text = stringResource(id = R.string.txt_current_level))
                 Spacer(modifier = Modifier.width(30.dp))
                 Text(text = stringResource(id = R.string.txt_next_level_point, point))
             }
@@ -121,27 +120,35 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
 
 
 @Composable
-fun MyButton(buttonText: String, intentText:String) {
+fun MyButton(buttonText: String, intentText: String, icon: Int) {
     val ctx = LocalContext.current
 
     Button(
-        border = BorderStroke(2.dp, Color.Black),
         modifier = Modifier
-            .height(90.dp)
-            .width(150.dp),
-        shape = RoundedCornerShape(15.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+            .height(80.dp)
+            .width(146.dp),
+        shape = RoundedCornerShape(28.dp),
+        colors = ButtonDefaults.buttonColors(Purple100),
         onClick = {
-            if(intentText=="MyAct"){
+            if (intentText == "MyAct") {
                 val intent = Intent(ctx, MyActActivity::class.java)
                 startActivity(ctx, intent, null)
             }
-            if(intentText=="MyBadge"){
+            if (intentText == "MyBadge") {
 
             }
-
         }
     ) {
-        Text(text = buttonText)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val iconResource = painterResource(id = icon)
+            Image(
+                painter = iconResource,
+                contentDescription = "fire"
+            )
+            Text(text = buttonText, color = Purple700)
+        }
+
     }
 }
