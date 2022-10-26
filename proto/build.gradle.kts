@@ -24,10 +24,35 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file(Configs.Signing.keyStorePath)
+            storePassword = Configs.Signing.storePassword
+            keyAlias = Configs.Signing.alias
+            keyPassword = Configs.Signing.keyPassword
+        }
+        create("release") {
+            storeFile = file(Configs.Signing.keyStorePath)
+            storePassword = Configs.Signing.storePassword
+            keyAlias = Configs.Signing.alias
+            keyPassword = Configs.Signing.keyPassword
+
+            enableV1Signing = true
+            enableV2Signing = true
+        }
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -72,6 +97,8 @@ dependencies {
     implementation(Deps.Compose.uiPreview)
     implementation(Deps.Compose.runtimeLiveData)
 
+    implementation(Deps.Coil.coilCompose)
+
     debugImplementation(Deps.Compose.tooling)
     debugImplementation(Deps.Compose.manifest)
 
@@ -86,6 +113,10 @@ dependencies {
     implementation(Deps.NaverMap.sdk)
     implementation(Deps.NaverMap.compose)
     implementation(Deps.Google.playLocation)
+
+    implementation(Deps.Facebook.login)
+    implementation(Deps.Google.login)
+    implementation(Deps.Kakao.login)
 
     testImplementation("junit:junit:4.13.2")
 

@@ -24,7 +24,7 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: PlaceRemoteData
     @OptIn(FlowPreview::class)
     override val places: Flow<List<Place>>
         get() = coordinatesFlow.debounce(200).map {
-            placeRemote.allPlaces()
+            runCatching { placeRemote.allPlaces() }.getOrNull() ?: listOf()
         }
 
     override suspend fun registerPlace(request: RequestPlace) {

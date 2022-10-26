@@ -50,4 +50,5 @@ dependencies {
     implementation("com.android.tools.build:gradle-api:7.2.2")
 
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.43.2")
+
 }

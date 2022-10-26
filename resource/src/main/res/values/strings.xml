@@ -23,4 +23,14 @@
     <string name="btn_my_badge">나의 뱃지</string>
     <string name="btn_modify">수정</string>
     <string name="btn_logout">로그아웃</string>
+
+    <string name="kakao_app_key">956938d802549951b192881b3f106a74</string>
+    <string name="kakao_scheme">kakao956938d802549951b192881b3f106a74</string>
+
+    <string name="facebook_app_id">3423960601263031</string>
+    <string name="fb_login_protocol_scheme">fb3423960601263031</string>
+    <string name="facebook_client_token">0e48c6d70a9414ea07392db9ffec93d9</string>
+
+    <string name="google_client_id">553241441268-mm92utt2laasq5bvbeq5r6s4b7lu8d7j.apps.googleusercontent.com</string>
+
 </resources>
