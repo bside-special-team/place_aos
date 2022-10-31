@@ -74,6 +74,7 @@ android {
             add("META-INF/LGPL2.1")
         }
     }
+    namespace = "com.special.place"
 }
 
 dependencies {
