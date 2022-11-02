@@ -1,27 +1,22 @@
-package com.special.place.proto.social.kakao
+package com.special.data.social.kakao
 
 import android.content.Context
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
-import com.special.place.proto.social.LoginCallback
-import com.special.place.proto.social.SocialLogin
+import com.special.data.social.LoginCallback
+import com.special.domain.entities.user.LoginType
+import com.special.domain.entities.user.SocialLoginResponse
+import com.special.data.social.SocialLogin
 
 class KakaoLogin constructor(private val context: Context, private val callback: LoginCallback) :
     SocialLogin {
     override fun doLogin() {
         kakaoLogin(context) { token, error ->
-            token?.let {
-                println("KAKAO ID TOKEN :: ${it.idToken}")
+            token?.idToken?.let { idToken ->
+                println("KAKAO ID TOKEN :: $idToken")
 
-                UserApiClient.instance.me { user, error ->
-                    user?.let {
-
-
-                    } ?: run {
-                        callback.onFailed(error!!)
-                    }
-                }
-            } ?: run { callback.onFailed(error!!) }
+                callback.onResponse(SocialLoginResponse.success(type = LoginType.Kakao, idToken = idToken))
+            } ?: run { callback.onResponse(SocialLoginResponse.notLogin()) }
         }
     }
 
@@ -35,7 +30,7 @@ class KakaoLogin constructor(private val context: Context, private val callback:
 
     override fun logout() {
         UserApiClient.instance.logout {
-
+            callback.onResponse(SocialLoginResponse.notLogin())
         }
     }
 }

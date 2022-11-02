@@ -1,15 +1,12 @@
 package com.special.place.proto.ui.login
 
-import android.app.Activity
 import android.content.Context
-import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.lifecycle.ViewModel
-import com.special.place.proto.social.LoginCallback
-import com.special.place.proto.social.LoginResponse
-import com.special.place.proto.social.SocialLogin
-import com.special.place.proto.social.fb.FaceBookLogin
-import com.special.place.proto.social.google.GoogleLogin
-import com.special.place.proto.social.kakao.KakaoLogin
+import com.special.data.social.LoginCallback
+import com.special.data.social.SocialLogin
+import com.special.domain.entities.user.SocialLoginResponse
+import com.special.data.social.google.GoogleLogin
+import com.special.data.social.kakao.KakaoLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -20,10 +17,6 @@ class LoginViewModel @Inject constructor() : ViewModel(), LoginCallback {
 
     fun initLogin(context: Context) {
         socialLogin["kakao"] = KakaoLogin(context, this)
-
-        (context as? ActivityResultRegistryOwner)?.let { activity ->
-            socialLogin["facebook"] = FaceBookLogin(activity, this)
-        }
 
         socialLogin["google"] = GoogleLogin(context, this)
     }
@@ -55,11 +48,8 @@ class LoginViewModel @Inject constructor() : ViewModel(), LoginCallback {
 
 
 
-    override fun onResponse(loginResponse: LoginResponse) {
-        println("login result :: $loginResponse")
+    override fun onResponse(response: SocialLoginResponse) {
+        println("login status :: $response")
     }
 
-    override fun onFailed(error: Throwable) {
-        error.printStackTrace()
-    }
 }

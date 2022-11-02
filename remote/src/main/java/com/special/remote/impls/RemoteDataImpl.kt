@@ -1,18 +1,16 @@
 package com.special.remote.impls
 
-import com.special.domain.datasources.PlaceRemoteDataSource
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.Place
-import com.special.domain.entities.PlaceCategory
-import com.special.domain.entities.RequestPlace
+import com.special.domain.datasources.RemoteDataSource
+import com.special.domain.entities.*
+import com.special.domain.entities.user.LoginToken
 import com.special.remote.ApiManager
 import com.special.remote.PlaceAppApiManager
 import com.special.remote.apis.PlaceApi
 import javax.inject.Inject
 
-class PlaceRemoteDataImpl @Inject constructor(
+class RemoteDataImpl @Inject constructor(
     @PlaceAppApiManager apiManager: ApiManager
-) : PlaceRemoteDataSource {
+) : RemoteDataSource {
     private val client = apiManager.create(PlaceApi::class.java)
 
     override suspend fun allPlaces(): List<Place> {
@@ -30,5 +28,9 @@ class PlaceRemoteDataImpl @Inject constructor(
 
     override suspend fun categories(): List<PlaceCategory> {
         return client.categories()
+    }
+
+    override suspend fun socialLogin(idToken: String): LoginToken {
+        return client.socialLogin(idToken)
     }
 }

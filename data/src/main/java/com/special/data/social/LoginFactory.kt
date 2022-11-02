@@ -1,8 +1,10 @@
-package com.special.place.proto.social
+package com.special.data.social
 
 import androidx.activity.ComponentActivity
-import com.special.place.proto.social.google.GoogleLogin
-import com.special.place.proto.social.kakao.KakaoLogin
+import com.special.data.social.google.GoogleLogin
+import com.special.data.social.kakao.KakaoLogin
+import com.special.domain.entities.user.LoginType
+import com.special.domain.entities.user.SocialLoginResponse
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.CoroutineScope
@@ -12,13 +14,19 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+interface LoginFactory {
+    fun doLogin(type: LoginType)
+    fun logout(type: LoginType)
+    val loginStatus: Flow<SocialLoginResponse>
+}
+
 @ActivityScoped
 class LoginFactoryImpl @Inject constructor(
     @ActivityContext activity: ComponentActivity
 ) : LoginFactory, LoginCallback {
     private val loginMap: Map<LoginType, SocialLogin> = mapOf(
-        LoginType.KakaoLoginType to KakaoLogin(activity, this),
-        LoginType.GoogleLoginType to GoogleLogin(activity, this),
+        LoginType.Kakao to KakaoLogin(activity, this),
+        LoginType.Google to GoogleLogin(activity, this),
     )
 
     override fun doLogin(type: LoginType) {
@@ -29,18 +37,12 @@ class LoginFactoryImpl @Inject constructor(
         loginMap[type]?.logout()
     }
 
-    private val _result: MutableSharedFlow<Result<LoginResponse>> = MutableSharedFlow()
-    override val result: Flow<Result<LoginResponse>> = _result
+    private val _loginStatus: MutableSharedFlow<SocialLoginResponse> = MutableSharedFlow()
+    override val loginStatus: Flow<SocialLoginResponse> = _loginStatus
 
-    override fun onResponse(loginResponse: LoginResponse) {
+    override fun onResponse(response: SocialLoginResponse) {
         CoroutineScope(Dispatchers.Default).launch {
-            _result.emit(Result.success(loginResponse))
-        }
-    }
-
-    override fun onFailed(error: Throwable) {
-        CoroutineScope(Dispatchers.Default).launch {
-            _result.emit(Result.failure(error))
+            _loginStatus.emit(response)
         }
     }
 

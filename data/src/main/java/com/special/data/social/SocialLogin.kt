@@ -1,4 +1,4 @@
-package com.special.place.proto.social
+package com.special.data.social
 
 interface SocialLogin {
     fun doLogin()

@@ -1,7 +1,7 @@
 package com.special.data.repoimpl
 
 import com.special.domain.datasources.CoordinateToAddressDataSource
-import com.special.domain.datasources.PlaceRemoteDataSource
+import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.entities.Coordinate
 import com.special.domain.entities.PlaceCategory
 import com.special.domain.entities.RequestPlace
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PlaceRegisterRepoImpl @Inject constructor(
-    private val placeRemote: PlaceRemoteDataSource,
+    private val placeRemote: RemoteDataSource,
     private val coord2AddrRemote: CoordinateToAddressDataSource
 ): PlaceRegisterRepository {
     private val coordinateFlow: MutableSharedFlow<Coordinate> = MutableSharedFlow()

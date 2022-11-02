@@ -1,11 +1,9 @@
 package com.special.domain.datasources
 
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.Place
-import com.special.domain.entities.PlaceCategory
-import com.special.domain.entities.RequestPlace
+import com.special.domain.entities.*
+import com.special.domain.entities.user.LoginToken
 
-interface PlaceRemoteDataSource {
+interface RemoteDataSource {
     suspend fun allPlaces(): List<Place>
 
     suspend fun boundsPlaces(from: Coordinate, to: Coordinate): List<Place>
@@ -13,4 +11,6 @@ interface PlaceRemoteDataSource {
     suspend fun registerPlace(request: RequestPlace)
 
     suspend fun categories(): List<PlaceCategory>
+
+    suspend fun socialLogin(idToken: String): LoginToken
 }

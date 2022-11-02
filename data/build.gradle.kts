@@ -1,3 +1,4 @@
+import com.special.buildsrc.Configs
 import com.special.buildsrc.Deps
 
 plugins {
@@ -7,11 +8,11 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = Configs.compileSdkVersion
 
     defaultConfig {
-        minSdk = 23
-        targetSdk = 32
+        minSdk = Configs.minSdkVersion
+        targetSdk = Configs.targetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -36,6 +37,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":remote"))
     implementation(project(":mock"))
+    implementation(project(":resource"))
 
     implementation(Deps.OkHttp.loggingInterceptor)
 
@@ -46,6 +48,9 @@ dependencies {
     releaseImplementation(Deps.Pluto.release)
     debugImplementation(Deps.Pluto.debugNetwork)
     releaseImplementation(Deps.Pluto.releaseNetwork)
+
+    implementation(Deps.Google.login)
+    implementation(Deps.Kakao.login)
 
 //    implementation("androidx.core:core-ktx:1.9.0")
 //    implementation("androidx.appcompat:appcompat:1.5.1")

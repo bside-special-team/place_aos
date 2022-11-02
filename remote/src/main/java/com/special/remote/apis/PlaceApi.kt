@@ -1,5 +1,6 @@
 package com.special.remote.apis
 
+import com.special.domain.entities.user.LoginToken
 import com.special.domain.entities.PlaceCategory
 import com.special.remote.models.PlaceResponseModel
 import com.special.domain.entities.RequestPlace
@@ -27,5 +28,6 @@ interface PlaceApi {
     @GET("/api/v1/categories")
     suspend fun categories(): List<PlaceCategory>
 
-
+    @GET("/login/oauth2/id-token")
+    suspend fun socialLogin(@Query("idToken") idToken: String): LoginToken
 }

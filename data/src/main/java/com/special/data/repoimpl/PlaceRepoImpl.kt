@@ -1,6 +1,6 @@
 package com.special.data.repoimpl
 
-import com.special.domain.datasources.PlaceRemoteDataSource
+import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.entities.Coordinate
 import com.special.domain.entities.Place
 import com.special.domain.entities.RequestPlace
@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class PlaceRepoImpl @Inject constructor(private val placeRemote: PlaceRemoteDataSource) :
+class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSource) :
     PlaceRepository {
 
     private val coordinatesFlow: MutableStateFlow<Pair<Coordinate, Coordinate>> = MutableStateFlow(Pair(Coordinate("0", "0"), Coordinate("0", "0")))

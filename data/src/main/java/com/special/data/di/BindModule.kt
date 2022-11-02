@@ -6,7 +6,7 @@ import com.special.data.KAKAO_API_KEY
 import com.special.data.repoimpl.PlaceRegisterRepoImpl
 import com.special.data.repoimpl.PlaceRepoImpl
 import com.special.domain.datasources.CoordinateToAddressDataSource
-import com.special.domain.datasources.PlaceRemoteDataSource
+import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.repositories.PlaceRegisterRepository
 import com.special.domain.repositories.PlaceRepository
 import com.special.remote.ApiManager
@@ -14,7 +14,7 @@ import com.special.remote.KakaoApiKeyInterceptor
 import com.special.remote.KakaoApiManager
 import com.special.remote.PlaceAppApiManager
 import com.special.remote.impls.CoordinateToAddressRemoteImpl
-import com.special.remote.impls.PlaceRemoteDataImpl
+import com.special.remote.impls.RemoteDataImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -73,7 +73,7 @@ abstract class RepoBinds {
 @Module
 abstract class RemoteBinds {
     @Binds
-    abstract fun bindPlaceRemote(impl: PlaceRemoteDataImpl): PlaceRemoteDataSource
+    abstract fun bindPlaceRemote(impl: RemoteDataImpl): RemoteDataSource
 
     @Binds
     abstract fun bindCoord2AddrRemote(impl: CoordinateToAddressRemoteImpl): CoordinateToAddressDataSource
