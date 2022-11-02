@@ -87,6 +87,9 @@ dependencies {
     implementation(Deps.NaverMap.compose)
     implementation(Deps.Google.playLocation)
 
+    implementation(Deps.Pager.pager)
+    implementation(Deps.Pager.indicators)
+
     testImplementation("junit:junit:4.13.2")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

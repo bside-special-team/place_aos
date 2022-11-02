@@ -1,8 +1,28 @@
 <resources>
-    <string name="app_name">일상의 발견</string>
+    <string name="app_name" translatable="false">일상의 발견</string>
 
     <string name="naver_map_client_id">08izpoficy</string>
     <string name="naver_map_client_secret">y5zLfSQNy3G73CDxHm03Q4CXEair02rPfh36tBOS</string>
+
+    <string name="txt_current_level">나의 레벨</string>
+    <string name="txt_next_level_point">다음 레벨까지 %1$dp</string>
+    <string name="txt_current_visited">최근 방문한 장소</string>
+    <string name="item_nickname">닉네임</string>
+    <string name="item_social">소셜 계정 회원</string>
+    <string name="item_notification_setting">알림 설정</string>
+    <string name="item_terms_agreement">약관 및 동의 관리</string>
+    <string name="item_withdrawal">회원 탈퇴</string>
+
+    <string name="tab_my_post">내 게시물</string>
+    <string name="tab_my_comment">내 댓글</string>
+    <string name="tab_recommend">추천</string>
+    <string name="tab_bookmark">북마크</string>
+
+    <!-- Button -->
+    <string name="btn_my_act">내 활동</string>
+    <string name="btn_my_badge">나의 뱃지</string>
+    <string name="btn_modify">수정</string>
+    <string name="btn_logout">로그아웃</string>
 
     <string name="kakao_app_key">956938d802549951b192881b3f106a74</string>
     <string name="kakao_scheme">kakao956938d802549951b192881b3f106a74</string>
@@ -12,4 +32,5 @@
     <string name="facebook_client_token">0e48c6d70a9414ea07392db9ffec93d9</string>
 
     <string name="google_client_id">553241441268-mm92utt2laasq5bvbeq5r6s4b7lu8d7j.apps.googleusercontent.com</string>
+
 </resources>
