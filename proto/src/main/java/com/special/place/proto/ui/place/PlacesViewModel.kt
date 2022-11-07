@@ -2,7 +2,8 @@ package com.special.place.proto.ui.place
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.applyCanvas
 import androidx.lifecycle.*
 import com.naver.maps.map.overlay.OverlayImage
 import com.special.data.utils.BitmapConverter
@@ -19,6 +20,7 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     val places: LiveData<List<Place>> = placeRepo.places.asLiveData()
 
     private lateinit var baseBitmap: Bitmap
+    private lateinit var decoratedBitmap: Bitmap
     private var lastCoordinate: Coordinate = Coordinate("0", "0")
 
     private val _localMarker: MutableLiveData<List<LocalMarker>> = MutableLiveData()
@@ -35,7 +37,18 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     }
 
     fun initContext(context: Context) {
-        baseBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_marker_base)
+        val baseDrawable = ContextCompat.getDrawable(context, R.drawable.ic_landmark_background) ?: return
+        val decoDrawable = ContextCompat.getDrawable(context, R.drawable.ic_landmark_badge) ?: return
+
+        baseBitmap = Bitmap.createBitmap(baseDrawable.intrinsicWidth, baseDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888).applyCanvas {
+            baseDrawable.setBounds(0, 0, width, height)
+            baseDrawable.draw(this)
+        }
+
+        decoratedBitmap = Bitmap.createBitmap(decoDrawable.intrinsicWidth, decoDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888).applyCanvas {
+            decoDrawable.setBounds(0, 0, width, height)
+            decoDrawable.draw(this)
+        }
     }
 
     fun updateCameraPosition(coordinate: Coordinate) {
@@ -55,7 +68,7 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
 
     private suspend fun getMergedOverlay(bitmap: Bitmap): OverlayImage {
         return imageMaps[bitmap.hashCode()] ?: run {
-            val mergedBitmap = BitmapConverter.mergedMarker(baseBitmap, bitmap)
+            val mergedBitmap = BitmapConverter.mergedMarker(baseBitmap, decoratedBitmap, bitmap)
             val overlayImage = OverlayImage.fromBitmap(mergedBitmap)
             imageMaps[bitmap.hashCode()] = overlayImage
 

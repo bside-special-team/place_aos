@@ -1,7 +1,6 @@
 package com.special.place.proto
 
 import android.app.Application
-import com.kakao.sdk.common.KakaoSdk
 import com.special.place.resource.R
 import dagger.hilt.android.HiltAndroidApp
 
@@ -15,7 +14,7 @@ class MyApplication: Application() {
 
 
 
-        KakaoSdk.init(this, getString(R.string.kakao_app_key))
+//        KakaoSdk.init(this, getString(R.string.kakao_app_key))
     }
 
 
