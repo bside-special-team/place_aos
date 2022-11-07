@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.special.place.ui.my.MyInformationActivity
-import com.special.place.ui.place.hidden.HiddenPlacePreActivity
 import com.special.place.ui.utils.CustomDialog
 
 @Composable
@@ -38,8 +37,8 @@ fun MainButtonScreen() {
             Toast.makeText(ctx,it,Toast.LENGTH_SHORT)
         }
     if(selectedHidden.value){
-        val intent = Intent(ctx, HiddenPlacePreActivity::class.java)
-        startActivity(ctx,intent,null)
+//        val intent = Intent(ctx, HiddenPlacePreActivity::class.java)
+//        startActivity(ctx,intent,null)
     }
 
     Column(
