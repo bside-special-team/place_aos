@@ -5,10 +5,12 @@ import com.special.data.BuildConfig
 import com.special.data.KAKAO_API_KEY
 import com.special.data.repoimpl.PlaceRegisterRepoImpl
 import com.special.data.repoimpl.PlaceRepoImpl
+import com.special.data.repoimpl.UserRepoImpl
 import com.special.domain.datasources.CoordinateToAddressDataSource
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.repositories.PlaceRegisterRepository
 import com.special.domain.repositories.PlaceRepository
+import com.special.domain.repositories.UserRepository
 import com.special.remote.ApiManager
 import com.special.remote.KakaoApiKeyInterceptor
 import com.special.remote.KakaoApiManager
@@ -67,6 +69,9 @@ abstract class RepoBinds {
 
     @Binds
     abstract fun bindPlaceRegisterRepo(impl: PlaceRegisterRepoImpl): PlaceRegisterRepository
+
+    @Binds
+    abstract fun bindUserRepo(impl: UserRepoImpl): UserRepository
 }
 
 @InstallIn(SingletonComponent::class)
