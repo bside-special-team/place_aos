@@ -13,19 +13,16 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.*
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-import com.special.domain.entities.Coordinate
 import com.special.domain.entities.Place
-import com.special.place.toMarker
 import com.special.place.ui.place.register.PlaceRegisterActivity
 import com.special.place.ui.theme.PlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,14 +55,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val chargerList by vm.places.observeAsState(listOf())
-                    MainScaffold(locationSource, chargerList) {
+//                    val chargerList by vm.places.observeAsState(listOf())
+                    MainScaffold(locationSource) {
                         startActivity(PlaceRegisterActivity.newIntent(this, it))
                     }
+                    MainButtonScreen()
                 }
+
             }
         }
     }
+
+    val onClick = { /* Do something */ }
 
     override fun onStart() {
         super.onStart()
@@ -103,8 +104,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScaffold(
     locationSource: LocationSource,
-    list: List<Place>,
-    registerPlace: (LatLng) -> Unit
+    registerPlace: (LatLng) -> Unit,
 ) {
     val cameraPosition = rememberCameraPositionState()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -164,20 +164,29 @@ fun MainScaffold(
             locationSource = locationSource,
             uiSettings = MapUiSettings(isLocationButtonEnabled = true)
         ) {
-            list.forEach {
-                it.toMarker {
-                    selectedPlace = it
+            Marker(
+                state = MarkerState(position = LatLng(37.559050, 126.960802)),
+                icon = OverlayImage.fromResource(com.special.place.resource.R.drawable.ic_marker_question),
+                width = 20.dp,
+                height = 20.dp
+            )
 
-                    coroutineScope.launch {
-                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        } else {
-                            bottomSheetScaffoldState.bottomSheetState.collapse()
-                        }
-                    }
-
-                }
-            }
+//            list.forEach {
+//                it.toMarker {
+//                    selectedPlace = it
+//
+//                    coroutineScope.launch {
+//                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+//                            bottomSheetScaffoldState.bottomSheetState.expand()
+//                        } else {
+//                            bottomSheetScaffoldState.bottomSheetState.collapse()
+//                        }
+//                    }
+//
+//                }
+//            }
         }
     }
+
+
 }

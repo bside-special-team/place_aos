@@ -12,12 +12,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.special.place.resource.R
 import com.special.place.ui.theme.PlaceTheme
+import com.special.place.ui.utils.MyTopAppBar
 
 class SettingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.none)
 
         val onBack: () -> Unit = {
             finish()
@@ -31,7 +36,13 @@ class SettingActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         topBar = {
-                            SettingTopAppBar(onBack)
+                            MyTopAppBar(
+                                title = stringResource(R.string.top_app_bar_my_setting),
+                                navigationType = "back",
+                                navigationListener = { onBack() },
+                                actionType = "",
+                                actionListener = {}
+                            )
                         }, content = {
                             SettingScreen()
                         })

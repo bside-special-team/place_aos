@@ -5,7 +5,7 @@
     <string name="naver_map_client_secret">y5zLfSQNy3G73CDxHm03Q4CXEair02rPfh36tBOS</string>
 
     <string name="txt_current_level">나의 레벨</string>
-    <string name="txt_next_level_point">다음 레벨까지 %1$dp</string>
+    <string name="txt_next_level_point">다음 레벨까지 %1$dP</string>
     <string name="txt_current_visited">최근 방문한 장소</string>
     <string name="item_nickname">닉네임</string>
     <string name="item_social">소셜 계정 회원</string>
@@ -18,11 +18,17 @@
     <string name="tab_recommend">추천</string>
     <string name="tab_bookmark">북마크</string>
 
+    <!-- TopAppBar -->
+    <string name="top_app_bar_my_information">내 정보</string>
+    <string name="top_app_bar_my_setting">설정</string>
+    <string name="top_app_bar_my_nickname_modify">닉네임 수정</string>
+
     <!-- Button -->
     <string name="btn_my_act">내 활동</string>
     <string name="btn_my_badge">나의 뱃지</string>
     <string name="btn_modify">수정</string>
     <string name="btn_logout">로그아웃</string>
+    <string name="btn_modify_done">수정 완료</string>
 
     <string name="kakao_app_key">956938d802549951b192881b3f106a74</string>
     <string name="kakao_scheme">kakao956938d802549951b192881b3f106a74</string>

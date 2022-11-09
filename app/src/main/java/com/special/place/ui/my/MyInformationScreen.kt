@@ -9,25 +9,27 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.special.place.resource.R
 import com.special.place.ui.my.act.MyActActivity
-import com.special.place.ui.theme.Grey100
-import com.special.place.ui.theme.Purple100
-import com.special.place.ui.theme.Purple700
+import com.special.place.ui.theme.*
 
 @Preview
 @Composable
 fun MyInformationScreen() {
     // 임의 데이터
     val name: String = "유저 이름"
-    val level: Int = 7
+    val level: Int = 2
     val point: Int = 250
     val progress: Float = 0.7f
     val badge: String = "외지인"
@@ -36,10 +38,11 @@ fun MyInformationScreen() {
             .fillMaxSize()
             .fillMaxHeight()
             .fillMaxWidth()
-            .padding(20.dp),
+            .padding(23.5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(18.5.dp))
         // 임시 이미지
         Column(
             modifier = Modifier
@@ -58,7 +61,7 @@ fun MyInformationScreen() {
         Spacer(modifier = Modifier.height(16.dp))
         BadgeCard(badge)
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = name)
+        Text(text = name, style = Title2)
 
         Spacer(modifier = Modifier.height(40.dp))
 
@@ -78,6 +81,7 @@ fun MyInformationScreen() {
             )
         }
 
+
     }
 }
 
@@ -85,9 +89,11 @@ fun MyInformationScreen() {
 fun BadgeCard(badge: String) {
     Text(
         modifier = Modifier
-            .background(color = Grey100, shape = RoundedCornerShape(12.dp))
+            .background(color = Grey100, shape = RoundedCornerShape(16.dp))
             .padding(10.dp),
-        text = badge
+        text = badge,
+        style = Title1,
+        fontSize = 14.sp
 
     )
 }
@@ -98,7 +104,8 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
         modifier = Modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(28.dp),
-        elevation = 5.dp,
+        elevation = 0.dp,
+        backgroundColor = Purple500,
 
         ) {
         Column(
@@ -107,13 +114,67 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            Row() {
-                Text(text = stringResource(id = R.string.txt_current_level))
-                Spacer(modifier = Modifier.width(30.dp))
-                Text(text = stringResource(id = R.string.txt_next_level_point, point))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(id = R.string.txt_current_level),
+                    color = Color.White,
+                    style = Title1,
+                    fontSize = 14.sp
+                )
+                Row() {
+                    Text(
+                        text = stringResource(id = R.string.txt_next_level_point, point),
+                        color = Color.White,
+                        style = Title1,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Image(
+                        painter = painterResource(R.drawable.ic_info_circle),
+                        contentDescription = "info",
+                        colorFilter = ColorFilter.tint(Purple100)
+                    )
+                }
+
             }
             Spacer(modifier = Modifier.height(30.dp))
-            LinearProgressIndicator(progress = progress)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = level.toString(),
+                    modifier = Modifier
+                        .height(28.dp)
+                        .width(28.dp)
+                        .background(color = Color.White, shape = RoundedCornerShape(16.dp)),
+//                        .padding(5.dp, 6.dp, 7.dp, 6.dp),
+                    color = Purple700,
+                    textAlign = TextAlign.Center,
+                    style = Subtitle4
+                )
+                LinearProgressIndicator(
+                    progress = progress,
+                    backgroundColor = Purple300,
+                    color = Color.White,
+                    modifier = Modifier
+                        .height(6.dp)
+                        .weight(1f)
+                )
+                Text(
+                    text = (level + 1).toString(),
+                    modifier = Modifier
+                        .height(28.dp)
+                        .width(28.dp)
+                        .background(color = Purple300, shape = RoundedCornerShape(16.dp)),
+//                        .padding(5.dp, 6.dp, 7.dp, 6.dp),
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = Subtitle4
+                )
+            }
         }
     }
 }
@@ -135,9 +196,12 @@ fun MyButton(buttonText: String, intentText: String, icon: Int) {
                 startActivity(ctx, intent, null)
             }
             if (intentText == "MyBadge") {
-
+                // 나의 뱃지
             }
-        }
+        },
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -147,7 +211,8 @@ fun MyButton(buttonText: String, intentText: String, icon: Int) {
                 painter = iconResource,
                 contentDescription = "fire"
             )
-            Text(text = buttonText, color = Purple700)
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(text = buttonText, color = Purple700, style = Subtitle2)
         }
 
     }
