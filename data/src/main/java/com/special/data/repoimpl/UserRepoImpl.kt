@@ -32,7 +32,7 @@ class UserRepoImpl @Inject constructor(
         LoginType.Google to GoogleLogin(activity, this),
     )
 
-    val loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow()
+    override val loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow()
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
@@ -43,8 +43,6 @@ class UserRepoImpl @Inject constructor(
                 loginStatus.emit(LoginStatus.success(prefs.loginType, loadToken()))
             }
         }
-
-
     }
 
     override fun onResponse(response: SocialLoginResponse) {
@@ -58,11 +56,11 @@ class UserRepoImpl @Inject constructor(
         }
     }
 
-    fun kakaoLogin() {
+    override fun kakaoLogin() {
         loginMap[LoginType.Kakao]?.doLogin()
     }
 
-    fun googleLogin() {
+    override fun googleLogin() {
         loginMap[LoginType.Google]?.doLogin()
     }
 

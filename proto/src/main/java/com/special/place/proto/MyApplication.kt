@@ -11,10 +11,6 @@ class MyApplication: Application() {
         super.onCreate()
 
         Initializer.initPluto(this)
-
-
-
-//        KakaoSdk.init(this, getString(R.string.kakao_app_key))
     }
 
 
