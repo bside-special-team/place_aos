@@ -1,9 +1,9 @@
 package com.special.remote.apis
 
 import com.special.domain.entities.user.LoginToken
-import com.special.domain.entities.PlaceCategory
+import com.special.domain.entities.place.PlaceCategory
 import com.special.remote.models.PlaceResponseModel
-import com.special.domain.entities.RequestPlace
+import com.special.domain.entities.place.RequestPlace
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

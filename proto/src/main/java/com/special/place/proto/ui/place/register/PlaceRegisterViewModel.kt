@@ -1,9 +1,9 @@
 package com.special.place.proto.ui.place.register
 
 import androidx.lifecycle.*
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.PlaceCategory
-import com.special.domain.entities.RequestPlace
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.PlaceCategory
+import com.special.domain.entities.place.RequestPlace
 import com.special.domain.repositories.PlaceRegisterRepository
 import com.special.place.proto.ui.place.register.besttime.BestTimeEventListener
 import com.special.place.proto.ui.place.register.category.CategoryEventListener

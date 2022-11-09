@@ -22,7 +22,7 @@ import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
-import com.special.domain.entities.Coordinate
+import com.special.domain.entities.place.Coordinate
 import com.special.place.resource.R
 
 

@@ -1,4 +1,4 @@
-package com.special.domain.entities
+package com.special.domain.entities.place
 
 data class Coordinate(
     val latitude: String,

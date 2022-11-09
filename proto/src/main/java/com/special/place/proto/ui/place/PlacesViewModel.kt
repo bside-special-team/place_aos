@@ -7,8 +7,8 @@ import androidx.core.graphics.applyCanvas
 import androidx.lifecycle.*
 import com.naver.maps.map.overlay.OverlayImage
 import com.special.data.utils.BitmapConverter
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.Place
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.Place
 import com.special.domain.repositories.PlaceRepository
 import com.special.place.resource.R
 import dagger.hilt.android.lifecycle.HiltViewModel

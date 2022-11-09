@@ -1,8 +1,8 @@
 package com.special.domain.repositories
 
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.PlaceCategory
-import com.special.domain.entities.RequestPlace
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.PlaceCategory
+import com.special.domain.entities.place.RequestPlace
 import kotlinx.coroutines.flow.Flow
 
 interface PlaceRegisterRepository {
@@ -13,4 +13,8 @@ interface PlaceRegisterRepository {
     val locationText: Flow<String>
 
     suspend fun categories(): List<PlaceCategory>
+
+    suspend fun uploadImage(targetId: String, imagePath: String)
+
+
 }

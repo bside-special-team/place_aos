@@ -1,9 +1,10 @@
 package com.special.data.repoimpl
 
 import com.special.domain.datasources.RemoteDataSource
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.Place
-import com.special.domain.entities.RequestPlace
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.Place
+import com.special.domain.entities.place.RequestPlace
+import com.special.domain.entities.place.comment.Comment
 import com.special.domain.repositories.PlaceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -31,5 +32,25 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
         withContext(Dispatchers.IO) {
             placeRemote.registerPlace(request)
         }
+    }
+
+    override suspend fun visitPlace(targetId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun likePlace(targetId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun commentList(placeId: String): List<Comment> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun reportComment(commentId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun reportPlace(placeId: String) {
+        TODO("Not yet implemented")
     }
 }

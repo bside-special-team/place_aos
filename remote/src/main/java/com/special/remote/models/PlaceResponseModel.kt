@@ -1,6 +1,6 @@
 package com.special.remote.models
 
-import com.special.domain.entities.Place
+import com.special.domain.entities.place.Place
 
 data class PlaceResponseModel(
     val hiddenPlaces: List<Place>,

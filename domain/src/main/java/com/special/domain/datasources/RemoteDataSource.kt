@@ -1,6 +1,9 @@
 package com.special.domain.datasources
 
-import com.special.domain.entities.*
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.Place
+import com.special.domain.entities.place.PlaceCategory
+import com.special.domain.entities.place.RequestPlace
 import com.special.domain.entities.user.LoginToken
 
 interface RemoteDataSource {

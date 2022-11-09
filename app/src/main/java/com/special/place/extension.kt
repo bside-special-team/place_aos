@@ -10,8 +10,8 @@ import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.MarkerState
 import com.naver.maps.map.overlay.OverlayImage
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.Place
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 
 val marker = OverlayImage.fromResource(R.drawable.ic_marker_question)

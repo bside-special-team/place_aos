@@ -1,7 +1,7 @@
 package com.special.remote.impls
 
 import com.special.domain.datasources.CoordinateToAddressDataSource
-import com.special.domain.entities.Coordinate
+import com.special.domain.entities.place.Coordinate
 import com.special.remote.ApiManager
 import com.special.remote.KakaoApiManager
 import com.special.remote.apis.KakaoApi

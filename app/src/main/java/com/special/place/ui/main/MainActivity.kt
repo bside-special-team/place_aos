@@ -19,12 +19,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.*
 import com.naver.maps.map.util.FusedLocationSource
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.Place
+import com.special.domain.entities.place.Place
 import com.special.place.toMarker
 import com.special.place.ui.place.register.PlaceRegisterActivity
 import com.special.place.ui.theme.PlaceTheme
@@ -131,7 +129,7 @@ fun MainScaffold(
                     .height(200.dp)
             ) {
                 Row(modifier = Modifier.padding(bottom = 16.dp)) {
-                    Text(selectedPlace?.category?.name ?: "", style = TextStyle())
+//                    Text(selectedPlace?.category?.name ?: "", style = TextStyle())
                     Text(
                         text = selectedPlace?.name ?: "TITLE",
                         modifier = Modifier.padding(start = 16.dp)
@@ -139,11 +137,11 @@ fun MainScaffold(
                 }
 
                 Text(
-                    text = selectedPlace?.description ?: "DESCRIPTION",
+                    text = "DESCRIPTION",
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
-                Text(text = "${selectedPlace?.bestStartTime}에서 ${selectedPlace?.bestEndTime}사이에 방문 하기 좋아요.")
+//                Text(text = "${selectedPlace?.bestStartTime}에서 ${selectedPlace?.bestEndTime}사이에 방문 하기 좋아요.")
 
             }
         },

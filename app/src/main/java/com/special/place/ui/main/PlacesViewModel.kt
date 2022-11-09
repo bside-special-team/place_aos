@@ -1,8 +1,7 @@
 package com.special.place.ui.main
 
 import androidx.lifecycle.*
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.Place
+import com.special.domain.entities.place.Place
 import com.special.domain.repositories.PlaceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

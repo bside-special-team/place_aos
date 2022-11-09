@@ -1,7 +1,7 @@
 package com.special.place.proto.ui.place.register.location
 
 import androidx.lifecycle.LiveData
-import com.special.domain.entities.Coordinate
+import com.special.domain.entities.place.Coordinate
 
 interface PlaceLocationEventListener {
     val displayLocation: LiveData<String>

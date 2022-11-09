@@ -1,7 +1,10 @@
 package com.special.remote.impls
 
 import com.special.domain.datasources.RemoteDataSource
-import com.special.domain.entities.*
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.Place
+import com.special.domain.entities.place.PlaceCategory
+import com.special.domain.entities.place.RequestPlace
 import com.special.domain.entities.user.LoginToken
 import com.special.remote.ApiManager
 import com.special.remote.PlaceAppApiManager

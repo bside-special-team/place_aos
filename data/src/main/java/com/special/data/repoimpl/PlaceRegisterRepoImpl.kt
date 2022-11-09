@@ -2,9 +2,9 @@ package com.special.data.repoimpl
 
 import com.special.domain.datasources.CoordinateToAddressDataSource
 import com.special.domain.datasources.RemoteDataSource
-import com.special.domain.entities.Coordinate
-import com.special.domain.entities.PlaceCategory
-import com.special.domain.entities.RequestPlace
+import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.PlaceCategory
+import com.special.domain.entities.place.RequestPlace
 import com.special.domain.repositories.PlaceRegisterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -39,5 +39,9 @@ class PlaceRegisterRepoImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             placeRemote.categories()
         }
+    }
+
+    override suspend fun uploadImage(targetId: String, imagePath: String) {
+        TODO("Not yet implemented")
     }
 }

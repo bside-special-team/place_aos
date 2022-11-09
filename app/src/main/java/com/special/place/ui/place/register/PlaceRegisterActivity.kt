@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.naver.maps.geometry.LatLng
-import com.special.domain.entities.Coordinate
 import com.special.place.ui.place.register.besttime.VisitTimePicker
 import com.special.place.ui.place.register.category.SelectCategory
 import com.special.place.ui.place.register.input.InputPlaceDescription

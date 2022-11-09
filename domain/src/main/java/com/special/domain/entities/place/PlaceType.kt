@@ -1,4 +1,4 @@
-package com.special.domain.entities
+package com.special.domain.entities.place
 
 import com.google.gson.annotations.SerializedName
 
