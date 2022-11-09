@@ -8,22 +8,25 @@ import androidx.compose.material.ButtonDefaults.elevation
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.special.place.ui.theme.*
+import com.special.place.ui.theme.Purple500
+import com.special.place.ui.theme.Subtitle1
+import com.special.place.ui.theme.Subtitle2
+import com.special.place.ui.theme.Title1
 
 @Composable
 fun CustomDialog(
-    value: String, subValue: String, buttonValue:String, subButtonValue:String, setShowDialog: (Boolean) -> Unit, setValue: (String) -> Unit) {
+    value: String,
+    subValue: String,
+    buttonValue: String,
+    subButtonValue: String,
+    setShowDialog: (Boolean) -> Unit,
+    setValue: (String) -> Unit
+) {
 
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
@@ -33,14 +36,21 @@ fun CustomDialog(
             Box(
                 contentAlignment = Alignment.Center
             ) {
-                Column(modifier = Modifier.padding(start = 24.dp,top = 36.dp, end = 24.dp, bottom = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.padding(
+                        start = 24.dp,
+                        top = 36.dp,
+                        end = 24.dp,
+                        bottom = 24.dp
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
                     Text(
                         text = value,
                         style = Title1
                     )
-                    if(subValue!=""){
+                    if (subValue != "") {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = subValue,
@@ -63,8 +73,10 @@ fun CustomDialog(
                                 defaultElevation = 0.dp
                             )
                         ) {
-                            Text(text = buttonValue,
-                                style = Subtitle2,)
+                            Text(
+                                text = buttonValue,
+                                style = Subtitle2,
+                            )
                         }
                         Button(
                             onClick = {
@@ -76,9 +88,11 @@ fun CustomDialog(
                                 .width(124.dp)
                                 .height(56.dp)
                         ) {
-                            Text(text = subButtonValue,
-                            style = Subtitle2,
-                            color = Color.White)
+                            Text(
+                                text = subButtonValue,
+                                style = Subtitle2,
+                                color = Color.White
+                            )
                         }
                     }
 
