@@ -1,7 +1,9 @@
 package com.special.data.repoimpl
 
 import com.special.domain.datasources.RemoteDataSource
+import com.special.domain.entities.Paging
 import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.NearPlaces
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.RequestPlace
 import com.special.domain.entities.place.comment.Comment
@@ -42,15 +44,15 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
         TODO("Not yet implemented")
     }
 
-    override suspend fun commentList(placeId: String): List<Comment> {
+    override suspend fun unLikePlace(targetId: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun reportComment(commentId: String) {
+    override suspend fun commentList(placeId: String, page: Int): Paging<Comment> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun reportPlace(placeId: String) {
+    override suspend fun nearPlaceCount(coordinate: Coordinate): NearPlaces {
         TODO("Not yet implemented")
     }
 }

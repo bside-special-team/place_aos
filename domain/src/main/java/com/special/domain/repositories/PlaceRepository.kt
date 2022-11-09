@@ -1,6 +1,8 @@
 package com.special.domain.repositories
 
+import com.special.domain.entities.Paging
 import com.special.domain.entities.place.Coordinate
+import com.special.domain.entities.place.NearPlaces
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.RequestPlace
 import com.special.domain.entities.place.comment.Comment
@@ -17,11 +19,9 @@ interface PlaceRepository {
 
     suspend fun likePlace(targetId: String)
 
-    suspend fun commentList(placeId: String): List<Comment>
+    suspend fun unLikePlace(targetId: String)
 
-    suspend fun reportComment(commentId: String)
+    suspend fun commentList(placeId: String, page: Int): Paging<Comment>
 
-    suspend fun reportPlace(placeId: String)
-
-
+    suspend fun nearPlaceCount(coordinate: Coordinate): NearPlaces
 }
