@@ -5,7 +5,7 @@ import com.special.domain.entities.Paging
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.NearPlaces
 import com.special.domain.entities.place.Place
-import com.special.domain.entities.place.RequestPlace
+import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.entities.place.comment.Comment
 import com.special.domain.repositories.PlaceRepository
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
             runCatching { placeRemote.allPlaces() }.getOrNull() ?: listOf()
         }
 
-    override suspend fun registerPlace(request: RequestPlace) {
+    override suspend fun registerPlace(request: RequestRegisterPlace) {
         withContext(Dispatchers.IO) {
             placeRemote.registerPlace(request)
         }

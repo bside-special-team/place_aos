@@ -4,7 +4,7 @@ import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.PlaceCategory
-import com.special.domain.entities.place.RequestPlace
+import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.entities.user.LoginToken
 import com.special.remote.ApiManager
 import com.special.remote.PlaceAppApiManager
@@ -25,7 +25,7 @@ class RemoteDataImpl @Inject constructor(
             .let { it.landMarkPlaces + it.hiddenPlaces }
     }
 
-    override suspend fun registerPlace(request: RequestPlace) {
+    override suspend fun registerPlace(request: RequestRegisterPlace) {
         client.registerPlaces(request)
     }
 

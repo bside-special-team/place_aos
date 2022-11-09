@@ -1,13 +1,12 @@
 package com.special.remote.apis
 
-import com.special.domain.entities.user.LoginToken
 import com.special.domain.entities.place.PlaceCategory
+import com.special.domain.entities.place.RequestRegisterPlace
+import com.special.domain.entities.place.RequestVisitPlace
+import com.special.domain.entities.user.LoginToken
 import com.special.remote.models.PlaceResponseModel
-import com.special.domain.entities.place.RequestPlace
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import okhttp3.MultipartBody
+import retrofit2.http.*
 
 interface PlaceApi {
 
@@ -15,7 +14,7 @@ interface PlaceApi {
     suspend fun allPlaces(): PlaceResponseModel
 
     @POST("/api/v1/places")
-    suspend fun registerPlaces(@Body request: RequestPlace)
+    suspend fun registerPlaces(@Body request: RequestRegisterPlace)
 
     @GET("/api/v1/places/coordinate")
     suspend fun coordinatePlaces(
@@ -25,9 +24,17 @@ interface PlaceApi {
         @Query("toLongitude") toLng: String,
     ): PlaceResponseModel
 
+    @POST("/api/v1/places/check-in")
+    suspend fun visitPlace(@Body request: RequestVisitPlace): String
+
     @GET("/api/v1/categories")
     suspend fun categories(): List<PlaceCategory>
 
+    @Multipart
+    @POST("/api/v1/images")
+    suspend fun uploadImage(@Part file: MultipartBody.Part): String
+
     @GET("/login/oauth2/id-token")
     suspend fun socialLogin(@Query("idToken") idToken: String): LoginToken
+
 }

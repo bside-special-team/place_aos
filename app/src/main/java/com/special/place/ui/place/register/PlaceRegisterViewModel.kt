@@ -3,7 +3,7 @@ package com.special.place.ui.place.register
 import androidx.lifecycle.*
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.PlaceCategory
-import com.special.domain.entities.place.RequestPlace
+import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
 import com.special.place.ui.place.register.besttime.BestTimeEventListener
 import com.special.place.ui.place.register.category.CategoryEventListener
@@ -26,7 +26,7 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
 
     override val displayLocation: LiveData<String> = placeRegisterRepo.locationText.asLiveData()
 
-    private val _placeRequest: MutableLiveData<RequestPlace> = MutableLiveData()
+    private val _placeRequest: MutableLiveData<RequestRegisterPlace> = MutableLiveData()
 
     override val placeName: LiveData<String> = _placeRequest.map { it.name ?: "" }
     override fun setPlaceName(name: String) {
@@ -71,7 +71,7 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
     override fun updateCameraPosition(coordinate: Coordinate) {
         // 처음으로 호출 될것을 예상하고 위치 변경 되었을 경우에만 객체를 생성 하도록 작성.
         val newRequest = _placeRequest.value?.copy(coordinate = coordinate) ?: run {
-            RequestPlace(coordinate = coordinate)
+            RequestRegisterPlace(coordinate = coordinate)
         }
 
         _placeRequest.postValue(newRequest)

@@ -4,7 +4,7 @@ import com.special.domain.datasources.CoordinateToAddressDataSource
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.PlaceCategory
-import com.special.domain.entities.place.RequestPlace
+import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -19,7 +19,7 @@ class PlaceRegisterRepoImpl @Inject constructor(
 ): PlaceRegisterRepository {
     private val coordinateFlow: MutableSharedFlow<Coordinate> = MutableSharedFlow()
 
-    override suspend fun registerPlace(request: RequestPlace) {
+    override suspend fun registerPlace(request: RequestRegisterPlace) {
         withContext(Dispatchers.IO) {
             placeRemote.registerPlace(request)
         }

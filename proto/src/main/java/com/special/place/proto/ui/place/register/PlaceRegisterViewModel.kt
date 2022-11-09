@@ -3,7 +3,7 @@ package com.special.place.proto.ui.place.register
 import androidx.lifecycle.*
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.PlaceCategory
-import com.special.domain.entities.place.RequestPlace
+import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
 import com.special.place.proto.ui.place.register.besttime.BestTimeEventListener
 import com.special.place.proto.ui.place.register.category.CategoryEventListener
@@ -26,7 +26,7 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
 
     override val displayLocation: LiveData<String> = placeRegisterRepo.locationText.asLiveData()
 
-    private val _placeRequest: MutableLiveData<RequestPlace> = MutableLiveData()
+    private val _placeRequest: MutableLiveData<RequestRegisterPlace> = MutableLiveData()
 
     override val placeName: LiveData<String> = _placeRequest.map { it.name ?: "" }
     override fun setPlaceName(name: String) {
@@ -35,43 +35,39 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
         _placeRequest.postValue(newRequest)
     }
 
-    override val placeDescription: LiveData<String> = _placeRequest.map { it.description ?: "" }
+    override val placeDescription: LiveData<String> = _placeRequest.map { "" }
     override fun setPlaceDescription(text: String) {
-        val newRequest = _placeRequest.value?.copy(description = text)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(description = text)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override val placeVisitTime: LiveData<String> = _placeRequest.map {
-        if (it.bestStartTime == null) {
-            "선택 하여 주세요"
-        } else {
-            it.bestStartTime + " - " + it.bestEndTime
-        }
+        "선택 하여 주세요"
     }
 
     override fun setPlaceBestStartTime(time: String) {
-        val newRequest = _placeRequest.value?.copy(bestStartTime = time)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(bestStartTime = time)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override fun setPlaceBestEndTime(time: String) {
-        val newRequest = _placeRequest.value?.copy(bestEndTime = time)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(bestEndTime = time)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override fun setCategory(category: PlaceCategory) {
-        val newRequest = _placeRequest.value?.copy(categoryCode = category.code)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(categoryCode = category.code)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override fun updateCameraPosition(coordinate: Coordinate) {
         // 처음으로 호출 될것을 예상하고 위치 변경 되었을 경우에만 객체를 생성 하도록 작성.
         val newRequest = _placeRequest.value?.copy(coordinate = coordinate) ?: run {
-            RequestPlace(coordinate = coordinate)
+            RequestRegisterPlace(coordinate = coordinate)
         }
 
         _placeRequest.postValue(newRequest)
