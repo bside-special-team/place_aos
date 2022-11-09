@@ -2,22 +2,21 @@ package com.special.data.repoimpl
 
 import androidx.activity.ComponentActivity
 import com.special.data.social.LoginCallback
-import com.special.data.social.LoginFactory
 import com.special.data.social.SocialLogin
 import com.special.data.social.google.GoogleLogin
 import com.special.data.social.kakao.KakaoLogin
-import com.special.domain.entities.user.SocialLoginResponse
 import com.special.data.utils.PrefsHelper
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.entities.user.LoginStatus
 import com.special.domain.entities.user.LoginToken
 import com.special.domain.entities.user.LoginType
+import com.special.domain.entities.user.SocialLoginResponse
+import com.special.domain.entities.user.badge.Badge
 import com.special.domain.repositories.UserRepository
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -62,6 +61,30 @@ class UserRepoImpl @Inject constructor(
 
     override fun googleLogin() {
         loginMap[LoginType.Google]?.doLogin()
+    }
+
+    override suspend fun unregister() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun myBadges(): List<Badge> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun logout() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updatePushAlarm(enable: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateMarketingAlarm(enable: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun modifyNickName(nickName: String) {
+        TODO("Not yet implemented")
     }
 
     private fun loadToken(): LoginToken {
