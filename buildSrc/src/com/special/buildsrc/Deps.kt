@@ -69,6 +69,7 @@ object Deps {
         const val tooling = "androidx.compose.ui:ui-tooling:${Versions.core}"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
         const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:1.2.1"
+        const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
     }
 
     object Coil {

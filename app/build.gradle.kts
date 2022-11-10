@@ -72,6 +72,7 @@ dependencies {
     implementation(Deps.Compose.material)
     implementation(Deps.Compose.uiPreview)
     implementation(Deps.Compose.runtimeLiveData)
+    implementation(Deps.Compose.systemUiController)
 
     debugImplementation(Deps.Compose.tooling)
     debugImplementation(Deps.Compose.manifest)
