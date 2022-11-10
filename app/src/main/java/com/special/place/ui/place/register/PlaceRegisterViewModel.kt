@@ -35,37 +35,33 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
         _placeRequest.postValue(newRequest)
     }
 
-    override val placeDescription: LiveData<String> = _placeRequest.map { it.description ?: "" }
+    override val placeDescription: LiveData<String> = _placeRequest.map { "" }
     override fun setPlaceDescription(text: String) {
-        val newRequest = _placeRequest.value?.copy(description = text)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(description = text)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override val placeVisitTime: LiveData<String> = _placeRequest.map {
-        if (it.bestStartTime == null) {
-            "선택 하여 주세요"
-        } else {
-            it.bestStartTime + " - " + it.bestEndTime
-        }
+        "선택 하여 주세요"
     }
 
     override fun setPlaceBestStartTime(time: String) {
-        val newRequest = _placeRequest.value?.copy(bestStartTime = time)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(bestStartTime = time)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override fun setPlaceBestEndTime(time: String) {
-        val newRequest = _placeRequest.value?.copy(bestEndTime = time)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(bestEndTime = time)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override fun setCategory(category: PlaceCategory) {
-        val newRequest = _placeRequest.value?.copy(categoryCode = category.code)
-
-        _placeRequest.postValue(newRequest)
+//        val newRequest = _placeRequest.value?.copy(categoryCode = category.code)
+//
+//        _placeRequest.postValue(newRequest)
     }
 
     override fun updateCameraPosition(coordinate: Coordinate) {

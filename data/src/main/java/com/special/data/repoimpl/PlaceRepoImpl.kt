@@ -55,4 +55,28 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
     override suspend fun nearPlaceCount(coordinate: Coordinate): NearPlaces {
         TODO("Not yet implemented")
     }
+
+    override suspend fun modifyPlace(request: RequestRegisterPlace) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun removePlace(targetId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun reportPlace(placeId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun myPlaces(page: Int): Paging<Place> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun visitedPlaces(page: Int): Paging<Place> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun myLikePlace(page: Int): Paging<Place> {
+        TODO("Not yet implemented")
+    }
 }

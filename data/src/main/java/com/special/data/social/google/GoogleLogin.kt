@@ -8,12 +8,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.special.data.social.LoginCallback
-import com.special.domain.entities.user.LoginType
 import com.special.data.social.SocialLogin
+import com.special.domain.entities.user.LoginType
 import com.special.domain.entities.user.SocialLoginResponse
 import com.special.place.resource.R
 
-class GoogleLogin constructor(context: Context, val callback: LoginCallback) : SocialLogin {
+class GoogleLogin constructor(context: Context, private val callback: LoginCallback) : SocialLogin {
 
     private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken(context.getString(R.string.google_client_id))

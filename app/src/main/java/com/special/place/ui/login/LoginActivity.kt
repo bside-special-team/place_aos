@@ -4,17 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.special.data.usecases.LoginUseCase
 import com.special.domain.entities.user.LoginStatus
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
+    @Inject
+    lateinit var loginUseCase: LoginUseCase
 
     val vm: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { LoginScreen(eventListener = vm) }
+        setContent { LoginScreen(eventListener = loginUseCase) }
 
         initViewModel()
     }

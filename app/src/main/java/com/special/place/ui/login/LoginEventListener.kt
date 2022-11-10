@@ -1,14 +1,13 @@
 package com.special.place.ui.login
 
+import com.special.data.usecases.LoginUseCase
+
 interface LoginEventListener {
-    fun doKakaoLogin()
-    fun doGoogleLogin()
-
     companion object {
-        fun empty(): LoginEventListener = object : LoginEventListener {
-            override fun doKakaoLogin() {}
+        fun empty(): LoginUseCase = object : LoginUseCase {
+            override fun kakaoLogin() {}
 
-            override fun doGoogleLogin() {}
+            override fun googleLogin() {}
         }
     }
 }

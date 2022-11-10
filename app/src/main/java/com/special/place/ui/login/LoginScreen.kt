@@ -21,11 +21,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.special.data.usecases.LoginUseCase
 import com.special.place.resource.R
 import com.special.place.ui.theme.Purple500
 
 @Composable
-fun LoginScreen(eventListener: LoginEventListener) {
+fun LoginScreen(eventListener: LoginUseCase) {
     ConstraintLayout(
         modifier = Modifier
             .background(Purple500)
@@ -35,13 +36,14 @@ fun LoginScreen(eventListener: LoginEventListener) {
 
         createVerticalChain(logo, title, chainStyle = ChainStyle.Packed)
 
-        Box(modifier = Modifier
-            .size(72.dp)
-            .background(Color.White, shape = RoundedCornerShape(24.dp))
-            .constrainAs(logo) {
-                linkTo(start = parent.start, end = parent.end)
-                linkTo(top = parent.top, bottom = title.top)
-            }) {
+        Box(
+            modifier = Modifier
+                .size(72.dp)
+                .background(Color.White, shape = RoundedCornerShape(24.dp))
+                .constrainAs(logo) {
+                    linkTo(start = parent.start, end = parent.end)
+                    linkTo(top = parent.top, bottom = title.top)
+                }) {
             Image(
                 painter = painterResource(id = R.drawable.icon_foreground),
                 contentDescription = "icon",
@@ -66,7 +68,7 @@ fun LoginScreen(eventListener: LoginEventListener) {
 
         Box(modifier = Modifier
             .clickable {
-                eventListener.doKakaoLogin()
+                eventListener.kakaoLogin()
             }
             .height(56.dp)
             .background(Color.White.copy(alpha = 0.5F), RoundedCornerShape(20.dp))
@@ -91,7 +93,7 @@ fun LoginScreen(eventListener: LoginEventListener) {
 
         Box(modifier = Modifier
             .clickable {
-                eventListener.doGoogleLogin()
+                eventListener.kakaoLogin()
             }
             .height(56.dp)
             .background(Color.White.copy(alpha = 0.5F), RoundedCornerShape(20.dp))

@@ -6,6 +6,8 @@ import com.special.data.KAKAO_API_KEY
 import com.special.data.repoimpl.PlaceRegisterRepoImpl
 import com.special.data.repoimpl.PlaceRepoImpl
 import com.special.data.repoimpl.UserRepoImpl
+import com.special.data.usecases.LoginUseCase
+import com.special.data.usecases.LoginUseCaseImpl
 import com.special.domain.datasources.CoordinateToAddressDataSource
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.repositories.PlaceRegisterRepository
@@ -21,6 +23,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
@@ -82,4 +85,11 @@ abstract class RemoteBinds {
 
     @Binds
     abstract fun bindCoord2AddrRemote(impl: CoordinateToAddressRemoteImpl): CoordinateToAddressDataSource
+}
+
+@InstallIn(ActivityComponent::class)
+@Module
+abstract class UseCaseBinds {
+    @Binds
+    abstract fun bindLoginUseCase(impl: LoginUseCaseImpl): LoginUseCase
 }

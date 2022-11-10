@@ -1,14 +1,14 @@
 package com.special.domain.repositories
 
 import com.special.domain.entities.user.LoginStatus
+import com.special.domain.entities.user.SocialLoginResponse
 import com.special.domain.entities.user.badge.Badge
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 interface UserRepository {
     val loginStatus: MutableSharedFlow<LoginStatus>
 
-    fun kakaoLogin()
-    fun googleLogin()
+    suspend fun socialLogin(response: SocialLoginResponse)
 
     suspend fun unregister()
 
