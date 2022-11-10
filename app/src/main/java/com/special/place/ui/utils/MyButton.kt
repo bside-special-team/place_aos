@@ -21,6 +21,9 @@ fun PrimaryButton(text: String, clickListener: () -> Unit) {
             .height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Purple500),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
         onClick = { clickListener() }) {
         Text(text = text, style = Subtitle2, color = Color.White)
     }
@@ -34,6 +37,9 @@ fun PrimaryButtonPressed(text: String, clickListener: () -> Unit) {
             .height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Purple700),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
         onClick = { clickListener() }) {
         Text(text = text, style = Subtitle2, color = Color.White)
     }
@@ -47,6 +53,9 @@ fun PrimaryButtonDisable(text: String, clickListener: () -> Unit) {
             .height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Grey300),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
         onClick = { clickListener() }) {
         Text(text = text, style = Subtitle2, color = Color.White)
     }
@@ -60,6 +69,9 @@ fun SecondaryButton(text: String, clickListener: () -> Unit) {
             .height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Grey200),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
         onClick = { clickListener() }) {
         Text(text = text, style = Subtitle2, color = Color.Black)
     }
@@ -73,6 +85,9 @@ fun SecondaryButtonPressed(text: String, clickListener: () -> Unit) {
             .height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Grey300),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
         onClick = { clickListener() }) {
         Text(text = text, style = Subtitle2, color = Color.Black)
     }
@@ -86,6 +101,9 @@ fun SecondaryButtonSelected(text: String, clickListener: () -> Unit) {
             .height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Purple100),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
         border = BorderStroke(2.dp, Purple700),
         onClick = { clickListener() }) {
         Text(text = text, style = Subtitle2, color = Purple700)

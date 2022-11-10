@@ -13,10 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.special.place.ui.theme.Purple500
-import com.special.place.ui.theme.Subtitle1
-import com.special.place.ui.theme.Subtitle2
-import com.special.place.ui.theme.Title1
+import com.special.place.ui.theme.*
 
 @Composable
 fun CustomDialog(
@@ -65,7 +62,10 @@ fun CustomDialog(
                             onClick = {
                                 setShowDialog(false)
                             },
-                            colors = ButtonDefaults.buttonColors(Color.White),
+                            shape = RoundedCornerShape(20.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                Grey200
+                            ),
                             modifier = Modifier
                                 .width(124.dp)
                                 .height(56.dp),
