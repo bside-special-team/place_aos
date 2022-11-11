@@ -19,6 +19,7 @@ import javax.inject.Inject
 class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository) : ViewModel() {
     val places: LiveData<List<Place>> = placeRepo.places.asLiveData()
 
+    // TODO: normal 0.75
     private lateinit var baseBitmap: Bitmap
     private lateinit var decoratedBitmap: Bitmap
     private var lastCoordinate: Coordinate = Coordinate("0", "0")

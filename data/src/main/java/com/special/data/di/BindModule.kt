@@ -37,7 +37,7 @@ object MockupModule {
     @Provides
     fun provideApiManager(): ApiManager {
         return ApiManager(
-            baseUrl = "http://115.85.181.70:8080/",
+            baseUrl = "http://www.special-dev.xyz/",
             interceptors = interceptors()
         )
     }
