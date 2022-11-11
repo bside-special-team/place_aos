@@ -121,7 +121,9 @@ fun MainScaffold(
     list: List<Place>,
     registerPlace: (LatLng) -> Unit
 ) {
-    val cameraPosition = rememberCameraPositionState()
+    val cameraPosition = rememberCameraPositionState(init = {
+
+    })
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )

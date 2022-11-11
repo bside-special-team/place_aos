@@ -50,32 +50,16 @@ fun LoginScreen(eventListener: LoginUseCase) {
             )
         }
 
-        // TODO: 벡터 깨짐..
         Icon(painter = painterResource(id = R.drawable.text_logo_title),
             contentDescription = null,
+            tint = Color.White,
             modifier = Modifier
                 .padding(top = 24.dp)
                 .constrainAs(title) {
                     linkTo(start = parent.start, end = parent.end)
                     top.linkTo(logo.bottom)
                     bottom.linkTo(kakaoLoginButton.top)
-//                    linkTo(top = logo.bottom, bottom = kakaoLoginButton.top)
-
                 })
-
-//        Text(text = "일상의 발견",
-//            color = Color.White,
-//            fontSize = 20.sp,
-//            fontWeight = FontWeight.Bold,
-//            modifier = Modifier
-//                .padding(top = 24.dp)
-//                .constrainAs(title) {
-//                    linkTo(start = parent.start, end = parent.end)
-//                    top.linkTo(logo.bottom)
-//                    bottom.linkTo(kakaoLoginButton.top)
-////                    linkTo(top = logo.bottom, bottom = kakaoLoginButton.top)
-//
-//                })
 
         Box(modifier = Modifier
             .clickable {
@@ -97,7 +81,7 @@ fun LoginScreen(eventListener: LoginUseCase) {
                     .padding(start = 20.dp)
             ) {
                 // TODO: 벡터 깨짐..
-                Icon(painter = painterResource(id = R.drawable.ic_kakao_login), contentDescription = "kakao_icon")
+                Image(painter = painterResource(id = R.drawable.ic_kakao_login), contentDescription = "kakao_icon")
                 Spacer(modifier = Modifier.width(16.dp))
                 Text("카카오톡으로 시작하기")
             }
@@ -123,7 +107,7 @@ fun LoginScreen(eventListener: LoginUseCase) {
                     .padding(start = 20.dp)
             ) {
                 // TODO: 벡터 깨짐..
-                Icon(painter = painterResource(id = R.drawable.ic_google_login), contentDescription = "google_icon")
+                Image(painter = painterResource(id = R.drawable.ic_google_login), contentDescription = "google_icon")
                 Spacer(modifier = Modifier.width(16.dp))
                 Text("구글로 시작하기")
             }
