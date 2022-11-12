@@ -17,6 +17,7 @@
     <string name="tab_my_comment">내 댓글</string>
     <string name="tab_recommend">추천</string>
     <string name="tab_bookmark">북마크</string>
+    <string name="tab_my_act">내 활동</string>
 
     <!-- TopAppBar -->
     <string name="top_app_bar_my_information">내 정보</string>

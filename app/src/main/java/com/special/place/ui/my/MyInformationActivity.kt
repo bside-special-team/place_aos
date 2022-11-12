@@ -18,6 +18,7 @@ import com.special.place.ui.my.postlist.PostItem
 import com.special.place.ui.my.setting.SettingActivity
 import com.special.place.ui.theme.Grey100
 import com.special.place.ui.theme.PlaceTheme
+import com.special.place.ui.theme.Title1
 import com.special.place.ui.utils.MyTopAppBar
 
 class MyInformationActivity : ComponentActivity() {
@@ -81,11 +82,17 @@ class MyInformationActivity : ComponentActivity() {
                                             .fillMaxWidth()
                                             .padding(23.5.dp),
                                         textAlign = TextAlign.Left,
-                                        text = stringResource(id = R.string.txt_current_visited)
+                                        text = stringResource(id = R.string.txt_current_visited),
+                                        style = Title1
                                     )
                                 }
                                 items(myPostList.size) {
-                                    PostItem(list = myPostList, index = it)
+                                    Column(
+                                        modifier = Modifier.padding(horizontal = 24.dp)
+                                    ) {
+                                        PostItem(list = myPostList, index = it)
+                                    }
+
                                 }
                             }
                         })

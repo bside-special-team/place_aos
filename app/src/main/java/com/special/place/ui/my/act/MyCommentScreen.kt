@@ -18,9 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.special.place.resource.R
 import com.special.place.ui.my.postlist.PostItem
 import com.special.place.ui.my.setting.addFocusCleaner
-import com.special.place.ui.theme.Grey200
-import com.special.place.ui.theme.Grey600
-import com.special.place.ui.theme.Grey900
+import com.special.place.ui.theme.*
 
 // 임의 데이터
 data class Comment(
@@ -81,14 +79,15 @@ fun CommentItem(list: ArrayList<Comment>, index: Int) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = list[index].nickname + "님", fontSize = 14.sp, color = Grey900
+                text = list[index].nickname + "님", fontSize = 14.sp, color = Grey900,
+                style = Subtitle2
             )
             Row(
                 modifier = Modifier.padding(end = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = list[index].date, color = Grey600
+                    text = list[index].date, color = Grey600, style = Caption
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Image(
@@ -102,7 +101,8 @@ fun CommentItem(list: ArrayList<Comment>, index: Int) {
             modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 18.dp, 20.dp),
             text = list[index].text,
             fontSize = 18.sp,
-            color = Grey900
+            color = Grey900,
+            style = BodyLong2
         )
     }
 
