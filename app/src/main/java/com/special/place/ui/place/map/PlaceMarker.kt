@@ -1,4 +1,4 @@
-package com.special.place.ui.main
+package com.special.place.ui.place.map
 
 import com.naver.maps.map.overlay.OverlayImage
 import com.special.place.resource.R

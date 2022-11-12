@@ -31,7 +31,7 @@ package com.special.domain.entities.place
  */
 
 data class Place(
-    val id : String,
+    val id: String,
     val placeType: PlaceType,
     val coordinate: Coordinate,
     val name: String,
@@ -40,4 +40,18 @@ data class Place(
     val hashTags: List<String>,
     val createdAt: String,
     val lastModifiedAt: String
-)
+) {
+    companion object {
+        fun mock() = Place(
+            id = "id",
+            placeType = PlaceType.Hidden,
+            coordinate = Coordinate("37.5666102", "126.9783881"),
+            name = "목업 플레이스",
+            imageUrls = listOf(),
+            visitCount = 0,
+            hashTags = listOf(),
+            createdAt = "",
+            lastModifiedAt = ""
+        )
+    }
+}

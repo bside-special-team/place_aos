@@ -31,13 +31,13 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-object MockupModule {
+object ApiModule {
     @PlaceAppApiManager
     @Singleton
     @Provides
     fun provideApiManager(): ApiManager {
         return ApiManager(
-            baseUrl = "http://www.special-dev.xyz/",
+            baseUrl = "https://www.special-dev.xyz/",
             interceptors = interceptors()
         )
     }

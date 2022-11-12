@@ -122,7 +122,7 @@ object Deps {
     object NaverMap {
         object Versions {
             const val sdk = "3.15.0"
-            const val compose = "1.2.1"
+            const val compose = "1.2.2"
         }
 
         const val sdk = "com.naver.maps:map-sdk:${Versions.sdk}"
