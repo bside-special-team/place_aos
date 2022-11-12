@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.naver.maps.geometry.LatLng
 import com.special.place.ui.place.register.besttime.VisitTimePicker
 import com.special.place.ui.place.register.category.SelectCategory
 import com.special.place.ui.place.register.input.InputPlaceDescription
@@ -33,25 +32,15 @@ const val LONGITUDE = "lng"
 @AndroidEntryPoint
 class PlaceRegisterActivity : ComponentActivity() {
     companion object {
-        fun newIntent(context: Context, latLng: LatLng? = null): Intent = Intent(context, PlaceRegisterActivity::class.java).apply {
-            if (latLng != null) {
-                putExtra(LATITUDE, latLng.latitude)
-                putExtra(LONGITUDE, latLng.longitude)
-            }
+        fun newIntent(context: Context): Intent = Intent(context, PlaceRegisterActivity::class.java).apply {
+//            if (latLng != null) {
+//                putExtra(LATITUDE, latLng.latitude)
+//                putExtra(LONGITUDE, latLng.longitude)
+//            }
         }
     }
 
     private val vm: PlaceRegisterViewModel by viewModels()
-    private val coordinate: LatLng? by lazy {
-        val lat = intent.getDoubleExtra(LATITUDE, -1.0)
-        val lng = intent.getDoubleExtra(LONGITUDE, -1.0)
-
-        if (lat > 0 && lng > 0) {
-            LatLng(lat, lng)
-        } else {
-            null
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +52,7 @@ class PlaceRegisterActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RegisterScreen(vm, coordinate)
+                    RegisterScreen(vm)
                 }
             }
         }
@@ -86,13 +75,13 @@ class PlaceRegisterActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegisterScreen(vm: PlaceRegisterViewModel, initialCoordinate: LatLng? = null) {
+fun RegisterScreen(vm: PlaceRegisterViewModel) {
     Scaffold(topBar = { TopAppBar(title = { Text("플레이스 등록") }) }) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            NaverMapView(vm, initialCoordinate)
+            NaverMapView(vm)
 
             DisplayLocation(vm)
 

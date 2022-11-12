@@ -4,11 +4,11 @@ import android.location.Location
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.compose.LocationTrackingMode
 import com.special.domain.entities.place.Place
 import com.special.domain.repositories.PlaceRepository
 import com.special.place.ui.place.map.PlaceEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +17,9 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     private val _currentLocation: MutableLiveData<Location> = MutableLiveData()
 
     override val places: LiveData<List<Place>> = placeRepo.places.asLiveData()
+
+    private val _trackingMode: MutableLiveData<LocationTrackingMode> = MutableLiveData()
+    override val trackingMode: LiveData<LocationTrackingMode> = _trackingMode
 
     override val visibleCurrentLocationButton: LiveData<Boolean> = Transformations.map(_cameraPosition) {
 //        val currentLocation = _currentLocation.value?.toLatLnt()
@@ -37,19 +40,16 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
 
     override fun clickTourStart() {
 
-        TODO("Not yet implemented")
     }
 
     override fun clickVisitPlace(placeId: String) {
-        TODO("Not yet implemented")
+
     }
 
-    init {
-        viewModelScope.launch {
-
-
+    override fun updateTrackingMode(mode: LocationTrackingMode) {
+        if (_trackingMode.value != mode) {
+            _trackingMode.postValue(mode)
         }
-
     }
 
 }

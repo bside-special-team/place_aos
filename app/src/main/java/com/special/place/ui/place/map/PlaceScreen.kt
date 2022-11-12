@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -21,43 +23,28 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.flowlayout.FlowRow
 import com.naver.maps.map.LocationSource
-import com.naver.maps.map.compose.*
+import com.naver.maps.map.compose.LocationTrackingMode
 import com.special.domain.entities.place.Place
 import com.special.place.base.RouteListener
 import com.special.place.resource.R
-import com.special.place.toMarker
 import com.special.place.ui.Route
 import com.special.place.ui.theme.*
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalNaverMapApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PlaceScreen(
     locationSource: LocationSource,
     eventListener: PlaceEventListener,
     routeListener: RouteListener,
 ) {
-    val cameraPosition = rememberCameraPositionState()
-    val position by remember { derivedStateOf { cameraPosition.position } }
 
-    val places by eventListener.places.observeAsState(initial = listOf())
     val placeCount by eventListener.hiddenPlaceCount.observeAsState(initial = 0)
     val landmarkCount by eventListener.landmarkCount.observeAsState(initial = 0)
 
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
-
     val coroutineScope = rememberCoroutineScope()
 
-    var selectedPlace by remember { mutableStateOf<Place?>(null) }
-
-//    if (cameraPosition.isMoving.not()) {
-////        position.let { eventListener.updateCameraPosition(it) }
-//
-//        Log.d(
-//            "CameraState",
-//            "Lat=${position.target.latitude}, Lng=${position.target.longitude}, ZoomLevel=${position.zoom}"
-//        )
-//    }
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -72,44 +59,16 @@ fun PlaceScreen(
         ) {
             val (map, bottomBackground, tourButton, myInfoButton, registerButton, myLocationButton, placeCountRef, guideButton) = createRefs()
 
-            NaverMap(
-                cameraPositionState = cameraPosition,
-                onMapClick = { _, _ ->
-                    coroutineScope.launch {
-
-                        if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
-                            bottomSheetScaffoldState.bottomSheetState.collapse()
-                        }
-                    }
-                },
-                properties = MapProperties(locationTrackingMode = LocationTrackingMode.Follow),
+            PlacesMapScreen(
                 locationSource = locationSource,
-                onLocationChange = { location ->
-                    eventListener.updateCurrentLocation(location)
-                },
-                uiSettings = MapUiSettings(isLocationButtonEnabled = false, isScaleBarEnabled = false, isZoomControlEnabled = false, isLogoClickEnabled = false),
+                eventListener = eventListener,
+                bottomSheetState = bottomSheetScaffoldState.bottomSheetState,
                 modifier = Modifier.constrainAs(map) {
                     linkTo(start = parent.start, end = parent.end)
                     linkTo(top = parent.top, bottom = parent.bottom)
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
-                }
-            ) {
-                places.forEach {
-                    it.toMarker {
-                        selectedPlace = it
-
-                        coroutineScope.launch {
-                            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            } else {
-                                bottomSheetScaffoldState.bottomSheetState.collapse()
-                            }
-                        }
-
-                    }
-                }
-            }
+                })
 
             /* 하단 그라디언트 배경 */
             Box(modifier = Modifier
@@ -126,6 +85,13 @@ fun PlaceScreen(
                 .clickable {
                     //TODO : 여정 시작 상태로
                     eventListener.clickTourStart()
+
+                    coroutineScope.launch {
+
+                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
+                    }
                 }
                 .size(80.dp)
                 .background(color = Purple500, shape = RoundedCornerShape(26.dp))
@@ -240,6 +206,9 @@ fun PlaceScreen(
             }
 
             Icon(painter = painterResource(id = R.drawable.ic_location_crosshair), contentDescription = "location", tint = Grey500, modifier = Modifier
+                .clickable {
+                    eventListener.updateTrackingMode(LocationTrackingMode.Follow)
+                }
                 .size(32.dp)
                 .constrainAs(myLocationButton) {
                     bottom.linkTo(tourButton.top, margin = 24.dp)

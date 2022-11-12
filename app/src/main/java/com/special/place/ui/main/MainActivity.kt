@@ -70,7 +70,7 @@ class MainActivity : BaseActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     MainScaffold(locationSource, vm, routeVM) {
-                        startActivity(PlaceRegisterActivity.newIntent(this, it))
+                        startActivity(PlaceRegisterActivity.newIntent(this))
                     }
                 }
             }

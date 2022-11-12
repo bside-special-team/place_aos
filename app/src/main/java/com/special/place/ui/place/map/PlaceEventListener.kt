@@ -3,10 +3,14 @@ package com.special.place.ui.place.map
 import android.location.Location
 import androidx.lifecycle.LiveData
 import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.compose.LocationTrackingMode
 import com.special.domain.entities.place.Place
 
 interface PlaceEventListener {
     val places: LiveData<List<Place>>
+
+    val trackingMode: LiveData<LocationTrackingMode>
+
     val visibleCurrentLocationButton: LiveData<Boolean>
 
     fun updateCameraPosition(camera: CameraPosition)
@@ -18,4 +22,6 @@ interface PlaceEventListener {
     fun clickTourStart()
 
     fun clickVisitPlace(placeId: String)
+
+    fun updateTrackingMode(mode: LocationTrackingMode)
 }
