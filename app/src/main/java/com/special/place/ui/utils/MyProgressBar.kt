@@ -53,9 +53,9 @@ fun VisitPlaceProgressBar(progress: Float, startIcon: Int, endIcon: Int) {
 fun LandMarkProgressBar(progress: Float, startIcon: Int, endIcon: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         val iconResource1 =
-            painterResource(id = com.special.place.resource.R.drawable.ic_location_solid)
+            painterResource(id = startIcon)
         val iconResource2 =
-            painterResource(id = com.special.place.resource.R.drawable.ic_hidden_place)
+            painterResource(id = endIcon)
         Box(
             modifier = Modifier
                 .height(28.dp)
