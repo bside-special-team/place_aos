@@ -1,4 +1,4 @@
-package com.special.place.base
+package com.special.place.ui.base
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

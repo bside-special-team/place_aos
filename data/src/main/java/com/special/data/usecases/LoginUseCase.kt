@@ -38,9 +38,18 @@ class LoginUseCaseImpl @Inject constructor(
         loginMap[LoginType.Google]?.doLogin()
     }
 
+    override fun logout() {
+        CoroutineScope(Dispatchers.Default).launch {
+            userRepo.logout()
+            loginMap[LoginType.Google]?.logout()
+        }
+    }
+
 }
 
 interface LoginUseCase {
     fun kakaoLogin()
     fun googleLogin()
+
+    fun logout()
 }

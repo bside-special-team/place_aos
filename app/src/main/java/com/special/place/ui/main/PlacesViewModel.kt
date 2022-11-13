@@ -22,9 +22,7 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     override val trackingMode: LiveData<LocationTrackingMode> = _trackingMode
 
     override val visibleCurrentLocationButton: LiveData<Boolean> = Transformations.map(_cameraPosition) {
-//        val currentLocation = _currentLocation.value?.toLatLnt()
-//        currentLocation != null && it.target != currentLocation
-        false
+        _trackingMode.value == LocationTrackingMode.NoFollow
     }
 
     override fun updateCameraPosition(camera: CameraPosition) {

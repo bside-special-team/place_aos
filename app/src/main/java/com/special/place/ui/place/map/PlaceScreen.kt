@@ -25,9 +25,9 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.special.domain.entities.place.Place
-import com.special.place.base.RouteListener
 import com.special.place.resource.R
 import com.special.place.ui.Route
+import com.special.place.ui.base.RouteListener
 import com.special.place.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -38,7 +38,7 @@ fun PlaceScreen(
     eventListener: PlaceEventListener,
     routeListener: RouteListener,
 ) {
-
+    val myLocationVisible by eventListener.visibleCurrentLocationButton.observeAsState(false)
     val placeCount by eventListener.hiddenPlaceCount.observeAsState(initial = 0)
     val landmarkCount by eventListener.landmarkCount.observeAsState(initial = 0)
 
@@ -190,7 +190,8 @@ fun PlaceScreen(
             Box(modifier = Modifier
                 .clickable {
                     //TODO: 가이드 화면 노출 (온보딩??)
-                    routeListener.requestRoute(Route.TutorialPage)
+
+                    routeListener.requestRoute(Route.LoginPage)
                 }
                 .background(Grey900, shape = CircleShape)
                 .size(36.dp)
@@ -205,15 +206,17 @@ fun PlaceScreen(
                 )
             }
 
-            Icon(painter = painterResource(id = R.drawable.ic_location_crosshair), contentDescription = "location", tint = Grey500, modifier = Modifier
-                .clickable {
-                    eventListener.updateTrackingMode(LocationTrackingMode.Follow)
-                }
-                .size(32.dp)
-                .constrainAs(myLocationButton) {
-                    bottom.linkTo(tourButton.top, margin = 24.dp)
-                    linkTo(parent.start, parent.end)
-                })
+            if (myLocationVisible) {
+                Icon(painter = painterResource(id = R.drawable.ic_location_crosshair), contentDescription = "location", tint = Grey500, modifier = Modifier
+                    .clickable {
+                        eventListener.updateTrackingMode(LocationTrackingMode.Follow)
+                    }
+                    .size(32.dp)
+                    .constrainAs(myLocationButton) {
+                        bottom.linkTo(tourButton.top, margin = 24.dp)
+                        linkTo(parent.start, parent.end)
+                    })
+            }
 
         }
 

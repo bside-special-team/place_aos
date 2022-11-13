@@ -89,7 +89,7 @@ fun LoginScreen(eventListener: LoginUseCase) {
 
         Box(modifier = Modifier
             .clickable {
-                eventListener.kakaoLogin()
+                eventListener.googleLogin()
             }
             .height(56.dp)
             .background(Color.White.copy(alpha = 0.5F), RoundedCornerShape(20.dp))

@@ -24,10 +24,34 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file(Configs.Signing.keyStorePath)
+            storePassword = Configs.Signing.storePassword
+            keyAlias = Configs.Signing.alias
+            keyPassword = Configs.Signing.keyPassword
+        }
+        create("release") {
+            storeFile = file(Configs.Signing.keyStorePath)
+            storePassword = Configs.Signing.storePassword
+            keyAlias = Configs.Signing.alias
+            keyPassword = Configs.Signing.keyPassword
+
+            enableV1Signing = true
+            enableV2Signing = true
+        }
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

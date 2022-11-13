@@ -22,8 +22,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
-import com.special.place.base.BaseActivity
-import com.special.place.base.RouteListener
+import com.special.place.ui.base.BaseActivity
+import com.special.place.ui.base.RouteListener
 import com.special.place.ui.place.map.PlaceEventListener
 import com.special.place.ui.place.map.PlaceScreen
 import com.special.place.ui.place.register.PlaceRegisterActivity
