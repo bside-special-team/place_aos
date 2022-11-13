@@ -8,6 +8,8 @@ interface LoginEventListener {
             override fun kakaoLogin() {}
 
             override fun googleLogin() {}
+
+            override fun logout() {}
         }
     }
 }
