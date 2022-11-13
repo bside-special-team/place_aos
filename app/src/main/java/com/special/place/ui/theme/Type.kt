@@ -33,7 +33,7 @@ val Title2 = TextStyle(
 val Title1 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
-    fontSize = 32.sp,
+    fontSize = 20.sp,
     lineHeight = 40.sp,
     letterSpacing = 0.01.em
 )

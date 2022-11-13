@@ -31,7 +31,7 @@ fun MainButtonScreen() {
     val selectedHidden = remember { mutableStateOf(false) }
 
     if(showDialog.value)
-        CustomDialog(value = "정보가 감춰져있어요", subValue = "직접 방문해야 정보를 열람할 수 있어요.", buttonValue = "방문하기",setShowDialog = {
+        CustomDialog(value = "정보가 감춰져있어요", subValue = "직접 방문해야 정보를 열람할 수 있어요.", buttonValue = "방문하기", subButtonValue = "아니요", setShowDialog = {
             showDialog.value = it
         }) {
             Toast.makeText(ctx,it,Toast.LENGTH_SHORT)
