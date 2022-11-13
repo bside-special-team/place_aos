@@ -73,7 +73,14 @@ fun PlaceScreen(
             /* 하단 그라디언트 배경 */
             Box(modifier = Modifier
                 .height(218.dp)
-                .background(brush = Brush.verticalGradient(listOf(Color.White.copy(alpha = 0.2f), Color.White)))
+                .background(
+                    brush = Brush.verticalGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.2f),
+                            Color.White
+                        )
+                    )
+                )
                 .constrainAs(bottomBackground) {
                     linkTo(start = parent.start, end = parent.end)
                     bottom.linkTo(parent.bottom)
@@ -103,7 +110,11 @@ fun PlaceScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.align(Alignment.Center)
                 ) {
-                    Icon(painterResource(id = R.drawable.ic_tour_start), contentDescription = "tour", tint = Color.White)
+                    Icon(
+                        painterResource(id = R.drawable.ic_tour_start),
+                        contentDescription = "tour",
+                        tint = Color.White
+                    )
                     Box(modifier = Modifier.height(4.dp))
                     Text(text = "시작", color = Color.White)
                 }
@@ -125,7 +136,11 @@ fun PlaceScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.align(Alignment.Center)
                 ) {
-                    Icon(painterResource(id = R.drawable.ic_my_info), contentDescription = "tour", tint = Color.White)
+                    Icon(
+                        painterResource(id = R.drawable.ic_my_info),
+                        contentDescription = "tour",
+                        tint = Color.White
+                    )
                     Box(modifier = Modifier.height(4.dp))
                     Text(text = "내 정보", color = Grey500, fontSize = 10.sp)
                 }
@@ -147,7 +162,11 @@ fun PlaceScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.align(Alignment.Center)
                 ) {
-                    Icon(painterResource(id = R.drawable.ic_place_register), contentDescription = "tour", tint = Color.White)
+                    Icon(
+                        painterResource(id = R.drawable.ic_place_register),
+                        contentDescription = "tour",
+                        tint = Color.White
+                    )
                     Box(modifier = Modifier.height(4.dp))
                     Text(text = "작성", color = Grey500, fontSize = 10.sp)
                 }
@@ -169,8 +188,7 @@ fun PlaceScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_place_count),
                         contentDescription = null,
-                        tint = Grey500,
-                        modifier = Modifier.size(width = 12.dp, height = 15.dp)
+                        tint = Grey500
                     )
                     Box(modifier = Modifier.width(4.dp))
                     Text("$placeCount", color = Grey400, fontSize = 11.sp)
@@ -178,8 +196,7 @@ fun PlaceScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_landmark_count),
                         contentDescription = null,
-                        tint = Grey500,
-                        modifier = Modifier.size(width = 12.dp, height = 15.dp)
+                        tint = Grey500
                     )
                     Box(modifier = Modifier.width(4.dp))
                     Text("$landmarkCount", color = Grey400, fontSize = 11.sp)
@@ -200,22 +217,27 @@ fun PlaceScreen(
                     linkTo(top = placeCountRef.top, bottom = placeCountRef.bottom)
                 }) {
                 Icon(
-                    painterResource(id = R.drawable.ic_guide_button), contentDescription = "guide", tint = Grey500, modifier = Modifier
+                    painterResource(id = R.drawable.ic_guide_button),
+                    contentDescription = "guide",
+                    tint = Grey500,
+                    modifier = Modifier
                         .align(Alignment.Center)
                         .size(16.dp)
                 )
             }
 
             if (myLocationVisible) {
-                Icon(painter = painterResource(id = R.drawable.ic_location_crosshair), contentDescription = "location", tint = Grey500, modifier = Modifier
-                    .clickable {
-                        eventListener.updateTrackingMode(LocationTrackingMode.Follow)
-                    }
-                    .size(32.dp)
-                    .constrainAs(myLocationButton) {
-                        bottom.linkTo(tourButton.top, margin = 24.dp)
-                        linkTo(parent.start, parent.end)
-                    })
+                Icon(painter = painterResource(id = R.drawable.ic_current_location_button),
+                    contentDescription = "location",
+                    modifier = Modifier
+                        .clickable {
+                            eventListener.updateTrackingMode(LocationTrackingMode.Follow)
+                        }
+                        .size(32.dp)
+                        .constrainAs(myLocationButton) {
+                            bottom.linkTo(tourButton.top, margin = 24.dp)
+                            linkTo(parent.start, parent.end)
+                        })
             }
 
         }
@@ -227,7 +249,11 @@ fun PlaceScreen(
 
 
 @Composable
-fun PlaceBottomSheet(place: Place, eventListener: PlaceEventListener, routeListener: RouteListener) {
+fun PlaceBottomSheet(
+    place: Place,
+    eventListener: PlaceEventListener,
+    routeListener: RouteListener
+) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -253,7 +279,11 @@ fun PlaceBottomSheet(place: Place, eventListener: PlaceEventListener, routeListe
                 top.linkTo(parent.top)
                 end.linkTo(parent.end)
             }) {
-            Image(painter = painterResource(id = R.drawable.ic_empty_image), contentDescription = null, modifier = Modifier.align(Alignment.Center))
+            Image(
+                painter = painterResource(id = R.drawable.ic_empty_image),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
 
         FlowRow(
@@ -264,7 +294,13 @@ fun PlaceBottomSheet(place: Place, eventListener: PlaceEventListener, routeListe
                 top.linkTo(title.bottom, margin = 16.dp)
                 width = Dimension.fillToConstraints
             }) {
-            listOf("\uD83E\uDD2B 조용한", "\uD83D\uDE0E 힙한", "⚡ 신비한", "\uD83D\uDE06 재밌는", "\uD83E\uDD44 음식점").forEach() {
+            listOf(
+                "\uD83E\uDD2B 조용한",
+                "\uD83D\uDE0E 힙한",
+                "⚡ 신비한",
+                "\uD83D\uDE06 재밌는",
+                "\uD83E\uDD44 음식점"
+            ).forEach() {
                 HashtagChip(content = it)
             }
         }
@@ -299,7 +335,12 @@ fun PlaceBottomSheet(place: Place, eventListener: PlaceEventListener, routeListe
                 bottom.linkTo(parent.bottom)
                 width = Dimension.fillToConstraints
             }) {
-            Text("자세히 보기", color = Grey900, fontSize = 16.sp, modifier = Modifier.align(Alignment.Center))
+            Text(
+                "자세히 보기",
+                color = Grey900,
+                fontSize = 16.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
 
         Box(modifier = Modifier
@@ -315,7 +356,12 @@ fun PlaceBottomSheet(place: Place, eventListener: PlaceEventListener, routeListe
                 bottom.linkTo(parent.bottom)
                 width = Dimension.fillToConstraints
             }) {
-            Text("방문하기", color = Color.White, fontSize = 16.sp, modifier = Modifier.align(Alignment.Center))
+            Text(
+                "방문하기",
+                color = Color.White,
+                fontSize = 16.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
@@ -328,6 +374,11 @@ fun HashtagChip(content: String) {
             .border(1.dp, Grey200, RoundedCornerShape(12.dp))
             .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
-        Text(content, color = Grey800, fontSize = 13.sp, modifier = Modifier.align(Alignment.Center))
+        Text(
+            content,
+            color = Grey800,
+            fontSize = 13.sp,
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
