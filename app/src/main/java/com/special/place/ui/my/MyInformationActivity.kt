@@ -1,38 +1,42 @@
 package com.special.place.ui.my
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import com.special.place.ui.my.act.MyPostData
-import com.special.place.ui.my.setting.SettingActivity
-import com.special.place.ui.theme.PlaceTheme
 import com.special.place.resource.R
+import com.special.place.ui.my.act.MyPostData
 import com.special.place.ui.my.postlist.PostItem
+import com.special.place.ui.my.setting.SettingActivity
+import com.special.place.ui.theme.Grey100
+import com.special.place.ui.theme.PlaceTheme
+import com.special.place.ui.theme.Title1
+import com.special.place.ui.utils.MyTopAppBar
 
 class MyInformationActivity : ComponentActivity() {
+    companion object {
+        fun settingNewIntent(context: Context): Intent =
+            Intent(context, SettingActivity::class.java)
+
+        fun newIntent(context: Context) = Intent(context, MyInformationActivity::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val onBack: () -> Unit = {
+        val onClose: () -> Unit = {
             finish()
+        }
+        val onSetting: () -> Unit = {
+            startActivity(settingNewIntent(this))
         }
         val myPostList = ArrayList<MyPostData>()
         myPostList.add(MyPostData("히든플레이스", "가로수길 아래", listOf("조용한", "힙한", "신기한"), true))
@@ -50,27 +54,48 @@ class MyInformationActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         topBar = {
-                            MyTopAppBar(onBack)
+                            MyTopAppBar(
+                                title = stringResource(id = R.string.top_app_bar_my_information),
+                                navigationType = "close",
+                                navigationListener = { onClose() },
+                                actionType = "setting",
+                                actionListener = { onSetting() }
+                            )
                         }, content = {
 
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(horizontal = 24.dp, vertical = 32.dp)
                             ) {
                                 items(1) {
                                     MyInformationScreen()
+                                    Spacer(modifier = Modifier.height(28.dp))
+
                                 }
                                 items(1) {
+                                    Divider(
+                                        color = Grey100,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.height(32.dp))
                                     Text(
                                         modifier = Modifier
-                                            .fillMaxWidth(),
+                                            .fillMaxWidth()
+                                            .padding(23.5.dp),
                                         textAlign = TextAlign.Left,
-                                        text = stringResource(id = R.string.txt_current_visited)
+                                        text = stringResource(id = R.string.txt_current_visited),
+                                        style = Title1
                                     )
                                 }
                                 items(myPostList.size) {
-                                    PostItem(list = myPostList, index = it)
+                                    Column(
+                                        modifier = Modifier.padding(horizontal = 24.dp)
+                                    ) {
+                                        PostItem(list = myPostList, index = it)
+                                    }
+
                                 }
                             }
                         })
@@ -82,34 +107,3 @@ class MyInformationActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun MyTopAppBar(onBack: () -> Unit) {
-    val ctx = LocalContext.current
-    TopAppBar(
-        title = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "")
-            }
-
-        },
-        navigationIcon = {
-            IconButton(onClick = { onBack() }) {
-                Icon(Icons.Filled.ArrowBack, "backIcon")
-            }
-        },
-        actions = {
-            IconButton(onClick = {
-                val intent = Intent(ctx, SettingActivity::class.java)
-                ContextCompat.startActivity(ctx, intent, null)
-            }) {
-                Text(text = "설정")
-            }
-        },
-        backgroundColor = MaterialTheme.colors.primary,
-        contentColor = Color.White,
-        elevation = 10.dp
-    )
-}

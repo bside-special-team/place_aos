@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import com.special.place.ui.Route
 import com.special.place.ui.login.LoginActivity
 import com.special.place.ui.main.MainActivity
+import com.special.place.ui.my.MyInformationActivity
 import com.special.place.ui.place.register.PlaceRegisterActivity
 
 open class BaseActivity : ComponentActivity() {
@@ -20,9 +21,7 @@ open class BaseActivity : ComponentActivity() {
         routeVM.route.observe(this) {
             when (it) {
                 Route.MainPage -> startActivity(MainActivity.newIntent(this))
-                Route.MyInfoPage -> {
-                    // TODO: 마이 페이지 연결
-                }
+                Route.MyInfoPage -> startActivity(MyInformationActivity.newIntent(this))
                 Route.PlaceRegisterPage -> startActivity(PlaceRegisterActivity.newIntent(this))
                 Route.LoginPage -> startActivity(LoginActivity.newIntent(this))
                 is Route.PlaceDetailPage -> {

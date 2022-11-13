@@ -61,7 +61,10 @@ class MainActivity : BaseActivity() {
             PlaceTheme {
                 val systemUiController = rememberSystemUiController()
                 SideEffect {
-                    systemUiController.setStatusBarColor(color = Color.Transparent, darkIcons = true)
+                    systemUiController.setStatusBarColor(
+                        color = Color.Transparent,
+                        darkIcons = true
+                    )
                 }
 
                 // A surface container using the 'background' color from the theme
@@ -69,13 +72,18 @@ class MainActivity : BaseActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+
                     MainScaffold(locationSource, vm, routeVM) {
                         startActivity(PlaceRegisterActivity.newIntent(this))
+
                     }
                 }
+
             }
         }
     }
+
+    val onClick = { /* Do something */ }
 
     override fun onStart() {
         super.onStart()
@@ -117,5 +125,10 @@ fun MainScaffold(
     routeListener: RouteListener,
     registerPlace: (LatLng) -> Unit
 ) {
-    PlaceScreen(locationSource = locationSource, eventListener = eventListener, routeListener = routeListener)
+    PlaceScreen(
+        locationSource = locationSource,
+        eventListener = eventListener,
+        routeListener = routeListener
+    )
+
 }
