@@ -91,9 +91,9 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
     }
 
     init {
-        viewModelScope.launch {
-            _placeCategories.postValue(placeRegisterRepo.categories())
-        }
+//        viewModelScope.launch {
+//            _placeCategories.postValue(placeRegisterRepo.categories())
+//        }
 
     }
 }
