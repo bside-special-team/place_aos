@@ -2,11 +2,8 @@ package com.special.place.ui.place.register
 
 import androidx.lifecycle.*
 import com.special.domain.entities.place.Coordinate
-import com.special.domain.entities.place.PlaceCategory
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
-import com.special.place.ui.place.register.besttime.BestTimeEventListener
-import com.special.place.ui.place.register.category.CategoryEventListener
 import com.special.place.ui.place.register.input.PlaceInputEventListener
 import com.special.place.ui.place.register.location.PlaceLocationEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,14 +12,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: PlaceRegisterRepository) :
-    ViewModel(), CategoryEventListener, BestTimeEventListener, PlaceInputEventListener,
+    ViewModel(), PlaceInputEventListener,
     PlaceLocationEventListener {
     private val _placeRegisterResult: MutableLiveData<Result<String>> = MutableLiveData()
 
     val placeRegisterResult: LiveData<Result<String>> = _placeRegisterResult
-
-    private val _placeCategories: MutableLiveData<List<PlaceCategory>> = MutableLiveData()
-    override val placeCategories: LiveData<List<PlaceCategory>> = _placeCategories
 
     override val displayLocation: LiveData<String> = placeRegisterRepo.locationText.asLiveData()
 
@@ -38,28 +32,6 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
     override val placeDescription: LiveData<String> = _placeRequest.map { "" }
     override fun setPlaceDescription(text: String) {
 //        val newRequest = _placeRequest.value?.copy(description = text)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
-    override val placeVisitTime: LiveData<String> = _placeRequest.map {
-        "선택 하여 주세요"
-    }
-
-    override fun setPlaceBestStartTime(time: String) {
-//        val newRequest = _placeRequest.value?.copy(bestStartTime = time)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
-    override fun setPlaceBestEndTime(time: String) {
-//        val newRequest = _placeRequest.value?.copy(bestEndTime = time)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
-    override fun setCategory(category: PlaceCategory) {
-//        val newRequest = _placeRequest.value?.copy(categoryCode = category.code)
 //
 //        _placeRequest.postValue(newRequest)
     }

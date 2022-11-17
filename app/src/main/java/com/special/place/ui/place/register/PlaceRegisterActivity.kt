@@ -9,14 +9,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.special.place.ui.place.register.location.LocationStep
 import com.special.place.ui.theme.PlaceTheme
-import com.special.place.ui.widget.CenterAlignedTopAppBar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -70,13 +68,7 @@ class PlaceRegisterActivity : ComponentActivity() {
 
 @Composable
 fun RegisterScreen(vm: PlaceRegisterViewModel) {
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = "장소의 위치를 지정해주세요") {
-
-        }
-    }) {
-        LocationStep(vm)
-    }
+    LocationStep(vm)
 }
 
 
