@@ -39,7 +39,8 @@ fun PrimaryButton(text: String, clickListener: () -> Unit) {
 @Composable
 fun PrimaryButton(text: String, modifier: Modifier, clickListener: () -> Unit) {
     Button(
-        modifier = modifier,
+        modifier = modifier
+            .height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Purple500),
         elevation = ButtonDefaults.elevation(
@@ -128,6 +129,20 @@ fun SecondaryButtonSelected(text: String, clickListener: () -> Unit) {
         border = BorderStroke(2.dp, Purple700),
         onClick = { clickListener() }) {
         Text(text = text, style = Subtitle2, color = Purple700)
+    }
+}
+
+@Composable
+fun SecondaryButton(text: String, modifier: Modifier, clickListener: () -> Unit) {
+    Button(
+        modifier = modifier.height(56.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = ButtonDefaults.buttonColors(Grey200),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
+        onClick = { clickListener() }) {
+        Text(text = text, style = Subtitle2, color = Color.Black)
     }
 }
 

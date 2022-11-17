@@ -29,13 +29,6 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
         _placeRequest.postValue(newRequest)
     }
 
-    override val placeDescription: LiveData<String> = _placeRequest.map { "" }
-    override fun setPlaceDescription(text: String) {
-//        val newRequest = _placeRequest.value?.copy(description = text)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
     override fun updateCameraPosition(coordinate: Coordinate) {
         // 처음으로 호출 될것을 예상하고 위치 변경 되었을 경우에만 객체를 생성 하도록 작성.
         val newRequest = _placeRequest.value?.copy(coordinate = coordinate) ?: run {
@@ -44,6 +37,17 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
 
         _placeRequest.postValue(newRequest)
         placeRegisterRepo.updateLocation(coordinate)
+    }
+
+    override val step: LiveData<PlaceRegisterStep>
+        get() = TODO("Not yet implemented")
+
+    override fun back() {
+        TODO("Not yet implemented")
+    }
+
+    override fun next() {
+        TODO("Not yet implemented")
     }
 
     fun registerPlace() {

@@ -83,7 +83,6 @@ fun HashtagStep() {
 
             PrimaryButton(
                 text = "완료", modifier = Modifier
-                    .height(56.dp)
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(24.dp)

@@ -11,9 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.special.place.ui.place.register.complete.PlaceRegisterCompleteScreen
+import com.special.place.ui.place.register.hashtags.HashtagStep
+import com.special.place.ui.place.register.input.InputPlaceNameStep
 import com.special.place.ui.place.register.location.LocationStep
+import com.special.place.ui.place.register.select.picture.SelectPictureStep
 import com.special.place.ui.theme.PlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,7 +74,16 @@ class PlaceRegisterActivity : ComponentActivity() {
 
 @Composable
 fun RegisterScreen(vm: PlaceRegisterViewModel) {
-    LocationStep(vm)
+    val step by vm.step.observeAsState(initial = PlaceRegisterStep.Location)
+
+    when (step) {
+        PlaceRegisterStep.Location -> LocationStep(vm)
+        PlaceRegisterStep.SelectPicture -> SelectPictureStep()
+        PlaceRegisterStep.InputPlaceName -> InputPlaceNameStep()
+        PlaceRegisterStep.ChooseHashtag -> HashtagStep()
+        PlaceRegisterStep.Complete -> PlaceRegisterCompleteScreen()
+    }
+
 }
 
 
