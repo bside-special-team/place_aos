@@ -3,8 +3,6 @@ package com.special.place.ui.place.information
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -28,7 +26,12 @@ import com.special.place.ui.utils.LandMarkProgressBar
 @Preview
 @Composable
 fun PlaceInfoScreen() {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.White)
+            .padding(horizontal = 28.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -56,6 +59,7 @@ fun PlaceInfoScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
         Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "히든플레이스", style = Caption, color = Grey600)
             Spacer(modifier = Modifier.width(12.dp))
@@ -66,8 +70,24 @@ fun PlaceInfoScreen() {
                     .background(color = Grey600)
             )
             Spacer(modifier = Modifier.width(12.dp))
+            Image(
+                modifier = Modifier
+                    .width(16.dp)
+                    .height(16.dp),
+                painter = painterResource(R.drawable.ic_eyes_solid),
+                contentDescription = "eye"
+            )
+            Spacer(modifier = Modifier.width(6.dp))
             Text(text = "20명", style = Caption, color = Grey600)
             Spacer(modifier = Modifier.width(16.dp))
+            Image(
+                modifier = Modifier
+                    .width(16.dp)
+                    .height(16.dp),
+                painter = painterResource(R.drawable.ic_thumbs_up_solid),
+                contentDescription = "thumbs_up"
+            )
+            Spacer(modifier = Modifier.width(6.dp))
             Text(text = "7명", style = Caption, color = Grey600)
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -80,7 +100,23 @@ fun PlaceInfoScreen() {
         )
         LandMarkCard()
         Spacer(modifier = Modifier.height(48.dp))
-        CommentScreen()
+//        CommentScreen()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "댓글", style = Subtitle4, color = Grey900)
+
+            Text(
+                modifier = Modifier
+                    .background(color = Grey200, shape = RoundedCornerShape(12.dp))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                text = "작성하기", style = Subtitle2, fontSize = 14.sp, color = Grey800
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
     }
 
 }
@@ -110,8 +146,8 @@ fun LandMarkCard() {
             Spacer(modifier = Modifier.height(30.dp))
             LandMarkProgressBar(
                 progress = 0.7f,
-                startIcon = R.drawable.ic_trophy_star_solid,
-                endIcon = R.drawable.ic_info_circle
+                startIcon = R.drawable.ic_hidden_place_purple,
+                endIcon = R.drawable.ic_landmark_purple
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(
@@ -133,32 +169,14 @@ fun LandMarkCard() {
 @Composable
 fun CommentScreen() {
     Column() {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "댓글", style = Subtitle4, color = Grey900)
-            Card(
-                modifier = Modifier
-                    .background(color = Grey200, shape = RoundedCornerShape(12.dp))
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-            ) {
-                Text(text = "작성하기", style = Subtitle2, fontSize = 14.sp, color = Grey800)
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        val scrollState = rememberLazyListState()
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = scrollState,
+                .fillMaxSize()
+                .padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(5) {
-                CommentItem(list = arrayListOf(Comment("일상의 발견", "4일전", "정말 좋아요!!!")), index = 0)
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+            CommentItem(list = arrayListOf(Comment("일상의 발견", "4일전", "정말 좋아요!!!")), index = 0)
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
