@@ -1,19 +1,22 @@
 package com.special.place.ui.place.register
 
+import android.net.Uri
 import androidx.lifecycle.*
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
+import com.special.place.ui.place.register.hashtags.HashtagEventListener
 import com.special.place.ui.place.register.input.PlaceInputEventListener
 import com.special.place.ui.place.register.location.PlaceLocationEventListener
+import com.special.place.ui.place.register.select.picture.SelectPictureEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: PlaceRegisterRepository) :
-    ViewModel(), PlaceInputEventListener,
-    PlaceLocationEventListener {
+    ViewModel(), PlaceInputEventListener, SelectPictureEventListener, HashtagEventListener, PlaceLocationEventListener {
+
     private val _placeRegisterResult: MutableLiveData<Result<String>> = MutableLiveData()
 
     val placeRegisterResult: LiveData<Result<String>> = _placeRegisterResult
@@ -39,15 +42,46 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
         placeRegisterRepo.updateLocation(coordinate)
     }
 
-    override val step: LiveData<PlaceRegisterStep>
-        get() = TODO("Not yet implemented")
+    private val _pictures: MutableLiveData<List<Uri>> = MutableLiveData()
+    override val pictures: LiveData<List<Uri>> = _pictures
+
+    override fun selectPicture(uri: Uri) {
+        val origins = pictures.value ?: listOf()
+        _pictures.postValue(origins.plus(uri))
+    }
+
+    override fun unselectPicture(uri: Uri) {
+        val origins = pictures.value ?: listOf()
+        _pictures.postValue(origins.minus(uri))
+    }
+
+    private val _hashtags: MutableLiveData<List<String>> = MutableLiveData()
+    override val hashtags: LiveData<List<String>> = _hashtags
+
+    override fun updateHashtag(hashtag: String) {
+        val origins = hashtags.value ?: listOf()
+        if (origins.contains(hashtag)) {
+            _hashtags.postValue(origins.minus(hashtag))
+        } else {
+            _hashtags.postValue(origins.plus(hashtag))
+        }
+    }
+
+    private val _step: MutableLiveData<PlaceRegisterStep> = MutableLiveData(PlaceRegisterStep.Location)
+    override val step: LiveData<PlaceRegisterStep> = _step
 
     override fun back() {
-        TODO("Not yet implemented")
+        val currentStep = step.value
+        if (currentStep != null && currentStep != PlaceRegisterStep.Location) {
+            _step.postValue(currentStep.back())
+        }
     }
 
     override fun next() {
-        TODO("Not yet implemented")
+        val currentStep = step.value
+        if (currentStep != null && currentStep != PlaceRegisterStep.Complete) {
+            _step.postValue(currentStep.next())
+        }
     }
 
     fun registerPlace() {

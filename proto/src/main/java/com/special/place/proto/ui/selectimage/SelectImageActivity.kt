@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,7 +19,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -93,7 +93,7 @@ fun SelectImageSkeleton(vm : SelectImageViewModel) {
                 Image(
                     painter = rememberAsyncImagePainter(
                         ImageRequest
-                            .Builder(LocalContext.current)
+                            .Builder(context)
                             .data(data = bitmap)
                             .build()
                     ),

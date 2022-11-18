@@ -71,7 +71,7 @@ fun CenterAlignedTopAppBar(
             //actions
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Row(
-                    Modifier.fillMaxHeight(),
+                    Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                     content = actions

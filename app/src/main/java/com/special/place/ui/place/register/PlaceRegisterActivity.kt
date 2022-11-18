@@ -78,9 +78,9 @@ fun RegisterScreen(vm: PlaceRegisterViewModel) {
 
     when (step) {
         PlaceRegisterStep.Location -> LocationStep(vm)
-        PlaceRegisterStep.SelectPicture -> SelectPictureStep()
-        PlaceRegisterStep.InputPlaceName -> InputPlaceNameStep()
-        PlaceRegisterStep.ChooseHashtag -> HashtagStep()
+        PlaceRegisterStep.SelectPicture -> SelectPictureStep(vm)
+        PlaceRegisterStep.InputPlaceName -> InputPlaceNameStep(vm)
+        PlaceRegisterStep.ChooseHashtag -> HashtagStep(vm)
         PlaceRegisterStep.Complete -> PlaceRegisterCompleteScreen()
     }
 

@@ -9,5 +9,16 @@ enum class PlaceRegisterStep(val step: Int) {
 }
 
 fun PlaceRegisterStep.next(): PlaceRegisterStep {
-    return PlaceRegisterStep.values()[step + 1]
+    val values = PlaceRegisterStep.values()
+    if (step >= values.size) {
+        return PlaceRegisterStep.Complete
+    }
+    return values[step + 1]
+}
+
+fun PlaceRegisterStep.back(): PlaceRegisterStep {
+    if (step == 0) {
+        return PlaceRegisterStep.Location
+    }
+    return PlaceRegisterStep.values()[step - 1]
 }

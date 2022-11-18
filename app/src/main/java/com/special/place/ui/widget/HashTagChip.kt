@@ -2,6 +2,7 @@ package com.special.place.ui.widget
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -37,9 +38,10 @@ fun HashtagChip(content: String) {
 }
 
 @Composable
-fun HashtagChipClickable(content: String, select: Boolean) {
+fun HashtagChipClickable(content: String, select: Boolean, clickListener: () -> Unit) {
     Box(
         modifier = Modifier
+            .clickable(onClick = clickListener)
             .background(color = if (select) Grey900 else Grey100, shape = RoundedCornerShape(14.dp))
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {

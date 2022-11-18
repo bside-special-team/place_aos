@@ -62,6 +62,7 @@ fun LocationStep(vm: PlaceRegisterViewModel) {
                 modifier = Modifier
                     .clickable {
 //                    vm.updateTrackingMode(LocationTrackingMode.Follow)
+                        // TODO: 현재 위치 이동
                     }
                     .size(32.dp)
                     .constrainAs(locationRef) {
@@ -69,7 +70,9 @@ fun LocationStep(vm: PlaceRegisterViewModel) {
                         bottom.linkTo(parent.bottom, margin = 32.dp)
                     })
 
-            NextButton("다음", clickListener = {}, modifier = Modifier.constrainAs(nextRef) {
+            NextButton("다음", clickListener = {
+                vm.next()
+            }, modifier = Modifier.constrainAs(nextRef) {
                 end.linkTo(parent.end, margin = 24.dp)
                 bottom.linkTo(parent.bottom, margin = 24.dp)
             })

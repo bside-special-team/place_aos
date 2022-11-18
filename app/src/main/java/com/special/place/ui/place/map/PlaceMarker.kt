@@ -9,4 +9,3 @@ sealed class PlaceMarker(overlayImage: OverlayImage) {
     object Focused : PlaceMarker(OverlayImage.fromResource(R.drawable.ic_place_focused))
     object Highlighted : PlaceMarker(OverlayImage.fromResource(R.drawable.ic_place_highlighted))
 }
-

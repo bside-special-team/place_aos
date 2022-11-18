@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -27,8 +28,8 @@ import com.special.place.ui.utils.NextButton
 import com.special.place.ui.widget.CenterAlignedTopAppBar
 
 @Composable
-fun InputPlaceNameStep() {
-    var text: String by mutableStateOf("")
+fun InputPlaceNameStep(eventListener: PlaceInputEventListener) {
+    val text: String by eventListener.placeName.observeAsState(initial = "")
     var textFieldWidth by remember { mutableStateOf(1.dp) }
     var textFieldColor by remember { mutableStateOf(Grey300) }
 
@@ -60,7 +61,7 @@ fun InputPlaceNameStep() {
             ) {
                 TextField(
                     value = text,
-                    onValueChange = { text = it.take(10) },
+                    onValueChange = { eventListener.setPlaceName(it.take(10)) },
                     placeholder = {
                         Text("두 글자 이상 입력해주세요")
                     },
@@ -94,7 +95,9 @@ fun InputPlaceNameStep() {
                 Text(text = text.length.toString() + "/10", style = Body1, color = Grey600)
             }
 
-            NextButton("다음", clickListener = {}, modifier = Modifier.constrainAs(nextRef) {
+            NextButton("다음", clickListener = {
+                eventListener.next()
+            }, modifier = Modifier.constrainAs(nextRef) {
                 end.linkTo(parent.end, margin = 24.dp)
                 bottom.linkTo(parent.bottom, margin = 24.dp)
             })
@@ -105,5 +108,5 @@ fun InputPlaceNameStep() {
 @Preview
 @Composable
 fun PreviewPlaceInputNameStep() {
-    InputPlaceNameStep()
+    InputPlaceNameStep(PlaceInputEventListener.empty())
 }

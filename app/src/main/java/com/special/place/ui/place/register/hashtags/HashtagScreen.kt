@@ -6,7 +6,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -24,8 +24,8 @@ import com.special.place.ui.widget.EmptyChipClickable
 import com.special.place.ui.widget.HashtagChipClickable
 
 @Composable
-fun HashtagStep() {
-    val selectedTags: List<String> by mutableStateOf(listOf("\uD83D\uDE32 신기한"))
+fun HashtagStep(eventListener: HashtagEventListener) {
+    val selectedTags: List<String> by eventListener.hashtags.observeAsState(initial = listOf())
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = "키워드로 장소를 소개해주세요") {
@@ -48,7 +48,9 @@ fun HashtagStep() {
                             .fillMaxWidth()
                     ) {
                         selectedTags.forEach() {
-                            HashtagChipClickable(content = it, select = selectedTags.contains(it))
+                            HashtagChipClickable(content = it, select = selectedTags.contains(it)) {
+                                eventListener.updateHashtag(it)
+                            }
                         }
                         EmptyChipClickable()
                     }
@@ -76,7 +78,9 @@ fun HashtagStep() {
                         .fillMaxWidth()
                 ) {
                     DEFAULT_HASHTAGS.forEach() {
-                        HashtagChipClickable(content = it, select = selectedTags.contains(it))
+                        HashtagChipClickable(content = it, select = selectedTags.contains(it)) {
+                            eventListener.updateHashtag(it)
+                        }
                     }
                 }
             }
@@ -87,7 +91,7 @@ fun HashtagStep() {
                     .fillMaxWidth()
                     .padding(24.dp)
             ) {
-
+                eventListener.next()
             }
         }
 
@@ -97,5 +101,5 @@ fun HashtagStep() {
 @Preview
 @Composable
 fun PreviewHashtagStep() {
-    HashtagStep()
+    HashtagStep(HashtagEventListener.empty())
 }
