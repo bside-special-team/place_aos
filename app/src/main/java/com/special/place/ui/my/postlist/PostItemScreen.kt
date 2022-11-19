@@ -13,15 +13,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import com.special.domain.entities.place.Place
 import com.special.place.resource.R
-import com.special.place.ui.my.act.MyPostData
 import com.special.place.ui.theme.Body1
 import com.special.place.ui.theme.Purple500
 import com.special.place.ui.theme.Subtitle4
 
 
 @Composable
-fun PostItem(list: ArrayList<MyPostData>, index: Int) {
+fun PostItem(place: List<Place>, bookmark: LiveData<Boolean>, index: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,20 +47,20 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
                 modifier = Modifier.width(176.dp)
             ) {
                 Text(
-                    text = list[index].placeType,
+                    text = place[index].placeType.name,
                     fontSize = 14.sp,
                     color = colorResource(id = R.color.grey_600),
                     style = Body1
                 )
                 Text(
-                    text = list[index].placeName,
+                    text = place[index].name,
                     fontSize = 18.sp,
                     color = colorResource(id = R.color.grey_900),
                     style = Subtitle4
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            if (list[index].bookmark) {
+            if (bookmark.value!!) {
                 // 보라
                 Image(
                     modifier = Modifier
@@ -87,7 +88,7 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
         }
         Row() {
             Spacer(modifier = Modifier.width(64.dp))
-            TagList(list[index].hashTag)
+            TagList(place[index].hashTags)
         }
 
     }

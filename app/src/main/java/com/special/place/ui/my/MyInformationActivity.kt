@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -20,8 +21,13 @@ import com.special.place.ui.theme.Grey100
 import com.special.place.ui.theme.PlaceTheme
 import com.special.place.ui.theme.Title1
 import com.special.place.ui.utils.MyTopAppBar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyInformationActivity : ComponentActivity() {
+
+    private val vm: MyInformationViewModel by viewModels()
+
     companion object {
         fun settingNewIntent(context: Context): Intent =
             Intent(context, SettingActivity::class.java)
@@ -68,7 +74,7 @@ class MyInformationActivity : ComponentActivity() {
                                     .fillMaxSize()
                             ) {
                                 items(1) {
-                                    MyInformationScreen()
+                                    MyInformationScreen(vm)
                                     Spacer(modifier = Modifier.height(28.dp))
 
                                 }
@@ -89,13 +95,16 @@ class MyInformationActivity : ComponentActivity() {
                                         style = Title1
                                     )
                                 }
-                                items(myPostList.size) {
+                                items(vm.currentVisitedPlace.value!!.size) {
                                     Column(
                                         modifier = Modifier.padding(horizontal = 24.dp)
                                     ) {
-                                        PostItem(list = myPostList, index = it)
+                                        PostItem(
+                                            place = vm.currentVisitedPlace.value!!,
+                                            bookmark = vm.isBookmarked,
+                                            index = it
+                                        )
                                     }
-
                                 }
                             }
                         })

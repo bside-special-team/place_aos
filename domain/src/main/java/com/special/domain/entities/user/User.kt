@@ -7,4 +7,7 @@ data class User(
     val pushAlarm: Boolean = false,
     val marketingAlarm: Boolean = false,
     val myPoint: Int,
+    val myBadge: String?,
+    val level: Int?,
+    val progress: Float?
 )

@@ -8,11 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.special.place.ui.my.act.MyPostData
+import androidx.lifecycle.LiveData
+import com.special.domain.entities.place.Place
 import com.special.place.ui.my.setting.addFocusCleaner
 
 @Composable
-fun PostScreen(postList: ArrayList<MyPostData>) {
+fun PostScreen(postList: List<Place>, bookmark: LiveData<Boolean>) {
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -22,13 +23,13 @@ fun PostScreen(postList: ArrayList<MyPostData>) {
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        PostList(postList)
+        PostList(postList, bookmark = bookmark)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
-fun PostList(list: ArrayList<MyPostData>) {
+fun PostList(list: List<Place>, bookmark: LiveData<Boolean>) {
     val scrollState = rememberLazyListState()
     LazyColumn(
         modifier = Modifier
@@ -37,7 +38,7 @@ fun PostList(list: ArrayList<MyPostData>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(list.size) {
-            PostItem(list, it)
+            PostItem(list, bookmark = bookmark, it)
         }
     }
 }
