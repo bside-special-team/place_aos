@@ -10,7 +10,7 @@ import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class UserRepoImpl @Inject constructor(
     private val tokenData: TokenDataSource
 ) : UserRepository {
 
-    override val loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow()
+    override val loginStatus: MutableStateFlow<LoginStatus> = MutableStateFlow(LoginStatus.empty())
 
     init {
         CoroutineScope(Dispatchers.Default).launch {

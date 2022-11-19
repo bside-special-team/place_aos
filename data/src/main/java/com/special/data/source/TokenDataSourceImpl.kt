@@ -4,6 +4,7 @@ import com.special.data.utils.PrefsHelper
 import com.special.domain.datasources.TokenDataSource
 import com.special.domain.entities.user.LoginToken
 import com.special.domain.entities.user.LoginType
+import com.special.domain.exception.EmptyTokenException
 import javax.inject.Inject
 
 class TokenDataSourceImpl @Inject constructor(
@@ -30,5 +31,14 @@ class TokenDataSourceImpl @Inject constructor(
     override fun updateToken(token: LoginToken) {
         prefsHelper.accessToken = token.accessToken
         prefsHelper.refreshToken = token.refreshToken
+    }
+
+    override suspend fun <R> checkToken(block: suspend () -> R): Result<R> {
+        return runCatching {
+            if (!isLogin) {
+                throw EmptyTokenException()
+            }
+            block.invoke()
+        }
     }
 }

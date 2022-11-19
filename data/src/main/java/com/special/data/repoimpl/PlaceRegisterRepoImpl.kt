@@ -37,7 +37,7 @@ class PlaceRegisterRepoImpl @Inject constructor(
 
     override suspend fun uploadImage(imageFiles: List<File>): List<String> {
         return withContext(Dispatchers.IO) {
-            placeRemote.uploadImage(imageFiles)
+            placeRemote.uploadImage(imageFiles).getOrNull() ?: listOf()
         }
     }
 }
