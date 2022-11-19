@@ -1,5 +1,6 @@
 package com.special.data.repoimpl
 
+import android.util.Log
 import com.special.domain.datasources.LoginRemoteDataSource
 import com.special.domain.datasources.TokenDataSource
 import com.special.domain.entities.user.LoginStatus
@@ -11,6 +12,8 @@ import com.special.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,18 +22,20 @@ class UserRepoImpl @Inject constructor(
     private val tokenData: TokenDataSource
 ) : UserRepository {
 
-    override val loginStatus: MutableStateFlow<LoginStatus> = MutableStateFlow(LoginStatus.empty())
+
+    private val _loginStatus: MutableStateFlow<LoginStatus> = MutableStateFlow(LoginStatus.empty())
+    override val loginStatus: StateFlow<LoginStatus> = _loginStatus.asStateFlow()
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
             runCatching {
                 if (tokenData.isLogin) {
-                    loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
+                    _loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
                 } else {
-                    loginStatus.emit(LoginStatus.empty())
+                    _loginStatus.emit(LoginStatus.empty())
                 }
             }.onFailure {
-                loginStatus.emit(LoginStatus.empty())
+                _loginStatus.emit(LoginStatus.empty())
             }
         }
     }
@@ -41,9 +46,10 @@ class UserRepoImpl @Inject constructor(
                 val token = loginRemote.socialLogin(response.idToken!!)
                 tokenData.updateToken(token)
 
-                loginStatus.emit(LoginStatus.success(response.type, token))
+                Log.d("socialLogin", response.toString())
+                _loginStatus.emit(LoginStatus.success(response.type, token))
             } else {
-                loginStatus.emit(LoginStatus.empty())
+                _loginStatus.emit(LoginStatus.empty())
             }
         }
     }

@@ -33,14 +33,16 @@ class LoginActivity : ComponentActivity() {
 
     private fun initViewModel() {
         vm.loginResult.observe(this) {
+            Log.d("LoginScreenLL", "$it")
+
             if (it is LoginStatus.LoggedIn) {
                 // TODO: 닉네임 입력 화면 or 메인 화면으로 리다이렉트
-                Log.d("LoginScreen", "$it")
+
 
                 startActivity(MainActivity.newIntent(this))
-                finish()
+
             } else {
-                Log.d("LoginScreen", "$it")
+                Log.d("LoginScreenNN", "$it")
                 // TODO: 로그인 실패 팝업 노출
             }
         }

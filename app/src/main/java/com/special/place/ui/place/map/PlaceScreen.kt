@@ -119,10 +119,7 @@ fun PlaceScreen(
 
             /* 내 정보 버튼 */
             Box(modifier = Modifier
-                .clickable {
-                    //TODO : 내 정보 화면 이동
-                    routeListener.requestRoute(Route.MyInfoPage)
-                }
+                .clickable { routeListener.requestRoute(Route.MyInfoPage) }
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))
                 .constrainAs(myInfoButton) {
@@ -145,10 +142,7 @@ fun PlaceScreen(
 
             /* 플레이스 작성 버튼 */
             Box(modifier = Modifier
-                .clickable {
-                    //TODO : 플레이스 작성 화면 이동
-                    routeListener.requestRoute(Route.PlaceRegisterPage)
-                }
+                .clickable { routeListener.requestRoute(Route.PlaceRegisterPage) }
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))
                 .constrainAs(registerButton) {

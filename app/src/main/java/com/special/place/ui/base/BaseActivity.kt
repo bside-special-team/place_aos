@@ -37,7 +37,7 @@ open class BaseActivity : ComponentActivity() {
 
         if (!isLoginView) {
             loginVM.loginResult.observe(this) {
-                Log.d("LoginScreen", "$it")
+                Log.d("LoginScreenBase", "$it")
                 if (!it.isLogin) {
                     finish()
                     startActivity(LoginActivity.newIntent(this))
