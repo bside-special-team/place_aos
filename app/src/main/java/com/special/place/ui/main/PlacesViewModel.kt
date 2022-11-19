@@ -50,6 +50,13 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
         }
     }
 
+    private val _currentPlace: MutableLiveData<Place> = MutableLiveData()
+    override val currentPlace: LiveData<Place> = _currentPlace
+
+    override fun updateCurrentPlace(place: Place) {
+        _currentPlace.postValue(place)
+    }
+
 }
 
 fun Location.toLatLnt(): LatLng = LatLng(latitude, longitude)

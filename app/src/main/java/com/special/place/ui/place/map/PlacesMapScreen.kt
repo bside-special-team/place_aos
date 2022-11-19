@@ -3,14 +3,15 @@ package com.special.place.ui.place.map
 import android.util.Log
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.compose.*
-import com.special.domain.entities.place.Place
 import com.special.place.toMarker
 import kotlinx.coroutines.launch
 
@@ -32,8 +33,6 @@ fun PlacesMapScreen(
     val places by eventListener.places.observeAsState(initial = listOf())
 
     val coroutineScope = rememberCoroutineScope()
-
-    var selectedPlace by remember { mutableStateOf<Place?>(null) }
 
     val trackingMode by eventListener.trackingMode.observeAsState(LocationTrackingMode.Follow)
 
@@ -59,9 +58,9 @@ fun PlacesMapScreen(
     ) {
         places.forEach {
             it.toMarker {
-                selectedPlace = it
-
                 coroutineScope.launch {
+                    eventListener.updateCurrentPlace(it)
+
                     if (bottomSheetState.isCollapsed) {
                         bottomSheetState.expand()
                     } else {

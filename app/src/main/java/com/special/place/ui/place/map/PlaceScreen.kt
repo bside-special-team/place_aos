@@ -21,7 +21,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.LocationTrackingMode
-import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 import com.special.place.ui.Route
 import com.special.place.ui.base.RouteListener
@@ -45,7 +44,7 @@ fun PlaceScreen(
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
-        sheetContent = { PlaceBottomSheet(Place.mock(), eventListener, routeListener) },
+        sheetContent = { PlaceBottomSheet(eventListener, routeListener) },
         sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
         sheetElevation = 5.dp
     ) {

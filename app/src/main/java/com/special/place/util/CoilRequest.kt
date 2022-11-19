@@ -11,9 +11,9 @@ class CoilRequest @Inject constructor(
     private val tokenData: TokenDataSource
 ) {
 
-    fun myImageRequest(url: String): ImageRequest {
+    fun myImageRequest(uuid: String): ImageRequest {
         return ImageRequest.Builder(context)
-            .data(url)
+            .data("https://www.special-dev.xyz/api/v1/images/${uuid}")
             .addHeader("Authorization", "Bearer ${tokenData.accessToken()}")
             .build()
     }
