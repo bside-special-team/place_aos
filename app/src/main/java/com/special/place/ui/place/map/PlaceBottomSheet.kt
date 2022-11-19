@@ -12,12 +12,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
@@ -36,6 +39,7 @@ fun PlaceBottomSheet(
     routeListener: RouteListener
 ) {
     val place: Place by eventListener.currentPlace.observeAsState(initial = Place.mock())
+
 
     ConstraintLayout(
         modifier = Modifier
@@ -70,11 +74,24 @@ fun PlaceBottomSheet(
                 top.linkTo(parent.top)
                 end.linkTo(parent.end)
             }) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_empty_image),
-                contentDescription = null,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            val firstImageUUID = place.imageUuids.firstOrNull()
+
+            if (firstImageUUID != null) {
+                AsyncImage(
+                    model = eventListener.coilRequest(firstImageUUID),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_empty_image),
+                    contentDescription = null,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
 
         FlowRow(

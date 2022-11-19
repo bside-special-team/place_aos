@@ -2,6 +2,7 @@ package com.special.place.ui.place.map
 
 import android.location.Location
 import androidx.lifecycle.LiveData
+import coil.request.ImageRequest
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.special.domain.entities.place.Place
@@ -26,4 +27,6 @@ interface PlaceEventListener {
     fun clickVisitPlace(placeId: String)
 
     fun updateTrackingMode(mode: LocationTrackingMode)
+
+    fun coilRequest(uuid: String): ImageRequest
 }
