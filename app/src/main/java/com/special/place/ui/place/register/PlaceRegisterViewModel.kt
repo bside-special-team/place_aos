@@ -99,7 +99,7 @@ class PlaceRegisterViewModel @Inject constructor(
                 ?.let { placeRegisterRepo.uploadImage(it) }
 
             val request = _placeRequest.value?.copy(
-                images = imageUUIDs ?: listOf(),
+                imageUuids = imageUUIDs ?: listOf(),
                 hashTags = hashtags.value ?: listOf()
             )
 
