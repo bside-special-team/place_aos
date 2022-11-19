@@ -1,11 +1,12 @@
 package com.special.data.repoimpl
 
-import com.special.data.utils.PrefsHelper
-import com.special.domain.datasources.RemoteDataSource
+import com.special.domain.datasources.LoginRemoteDataSource
+import com.special.domain.datasources.TokenDataSource
 import com.special.domain.entities.user.LoginStatus
 import com.special.domain.entities.user.LoginToken
 import com.special.domain.entities.user.SocialLoginResponse
 import com.special.domain.entities.user.badge.Badge
+import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,27 +15,32 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class UserRepoImpl @Inject constructor(
-    private val remote: RemoteDataSource,
-    private val prefs: PrefsHelper
+    private val loginRemote: LoginRemoteDataSource,
+    private val tokenData: TokenDataSource
 ) : UserRepository {
 
     override val loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow()
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
-            if (!prefs.isLogin) {
+            runCatching {
+                if (tokenData.isLogin) {
+                    loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
+                } else {
+                    loginStatus.emit(LoginStatus.empty())
+                }
+            }.onFailure {
                 loginStatus.emit(LoginStatus.empty())
-            } else {
-                // TODO: accessToken 갱신
-                loginStatus.emit(LoginStatus.success(prefs.loginType, loadToken()))
             }
         }
     }
 
     override suspend fun socialLogin(response: SocialLoginResponse) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             if (response.isLogin && response.idToken != null) {
-                val token = remote.socialLogin(response.idToken!!)
+                val token = loginRemote.socialLogin(response.idToken!!)
+                tokenData.updateToken(token)
+
                 loginStatus.emit(LoginStatus.success(response.type, token))
             } else {
                 loginStatus.emit(LoginStatus.empty())
@@ -67,14 +73,13 @@ class UserRepoImpl @Inject constructor(
     }
 
     private fun loadToken(): LoginToken {
-        val accessToken = prefs.accessToken
-        val refreshToken = prefs.refreshToken
+        val accessToken = tokenData.accessToken()
+        val refreshToken = tokenData.refreshToken()
 
-        return if (accessToken != null && refreshToken != null) {
+        return if (accessToken.isNotEmpty() && refreshToken.isNotEmpty()) {
             LoginToken(accessToken, refreshToken)
         } else {
-            // TODO: EmptyTokenException 생성
-            throw IllegalStateException()
+            throw RetrySocialLogin()
         }
     }
 

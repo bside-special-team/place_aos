@@ -9,13 +9,18 @@ import com.special.place.ui.place.register.hashtags.HashtagEventListener
 import com.special.place.ui.place.register.input.PlaceInputEventListener
 import com.special.place.ui.place.register.location.PlaceLocationEventListener
 import com.special.place.ui.place.register.select.picture.SelectPictureEventListener
+import com.special.place.util.ContentResolverHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: PlaceRegisterRepository) :
-    ViewModel(), PlaceInputEventListener, SelectPictureEventListener, HashtagEventListener, PlaceLocationEventListener {
+class PlaceRegisterViewModel @Inject constructor(
+    private val placeRegisterRepo: PlaceRegisterRepository,
+    private val resolverHelper: ContentResolverHelper
+) :
+    ViewModel(), PlaceInputEventListener, SelectPictureEventListener, HashtagEventListener,
+    PlaceLocationEventListener {
 
     private val _placeRegisterResult: MutableLiveData<Result<String>> = MutableLiveData()
 
@@ -67,7 +72,8 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
         }
     }
 
-    private val _step: MutableLiveData<PlaceRegisterStep> = MutableLiveData(PlaceRegisterStep.Location)
+    private val _step: MutableLiveData<PlaceRegisterStep> =
+        MutableLiveData(PlaceRegisterStep.Location)
     override val step: LiveData<PlaceRegisterStep> = _step
 
     override fun back() {
@@ -79,19 +85,30 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
 
     override fun next() {
         val currentStep = step.value
-        if (currentStep != null && currentStep != PlaceRegisterStep.Complete) {
+
+        if (currentStep == PlaceRegisterStep.ChooseHashtag) {
+            registerPlace()
+        } else if (currentStep != null && currentStep != PlaceRegisterStep.Complete) {
             _step.postValue(currentStep.next())
         }
     }
 
-    fun registerPlace() {
+    private fun registerPlace() {
         viewModelScope.launch {
-            val request = _placeRequest.value
+            val imageUUIDs = pictures.value?.mapNotNull { resolverHelper.uriToFile(it) }
+                ?.let { placeRegisterRepo.uploadImage(it) }
+
+            val request = _placeRequest.value?.copy(
+                images = imageUUIDs ?: listOf(),
+                hashTags = hashtags.value ?: listOf()
+            )
 
             if (request != null) {
                 val result = placeRegisterRepo.registerPlace(request).runCatching {
                     "등록 되었습니다."
                 }
+
+
 
                 _placeRegisterResult.postValue(result)
             } else {

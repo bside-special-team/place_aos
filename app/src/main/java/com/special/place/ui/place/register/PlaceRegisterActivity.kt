@@ -21,7 +21,9 @@ import com.special.place.ui.place.register.input.InputPlaceNameStep
 import com.special.place.ui.place.register.location.LocationStep
 import com.special.place.ui.place.register.select.picture.SelectPictureStep
 import com.special.place.ui.theme.PlaceTheme
+import com.special.place.util.ContentResolverHelper
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 const val LATITUDE = "lat"
@@ -30,13 +32,17 @@ const val LONGITUDE = "lng"
 @AndroidEntryPoint
 class PlaceRegisterActivity : ComponentActivity() {
     companion object {
-        fun newIntent(context: Context): Intent = Intent(context, PlaceRegisterActivity::class.java).apply {
+        fun newIntent(context: Context): Intent =
+            Intent(context, PlaceRegisterActivity::class.java).apply {
 //            if (latLng != null) {
 //                putExtra(LATITUDE, latLng.latitude)
 //                putExtra(LONGITUDE, latLng.longitude)
 //            }
-        }
+            }
     }
+
+    @Inject
+    lateinit var contentResolverHelper: ContentResolverHelper
 
     private val vm: PlaceRegisterViewModel by viewModels()
 

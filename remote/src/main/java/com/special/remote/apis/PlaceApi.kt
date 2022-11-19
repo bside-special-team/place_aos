@@ -3,7 +3,6 @@ package com.special.remote.apis
 import com.special.domain.entities.place.PlaceCategory
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.entities.place.RequestVisitPlace
-import com.special.domain.entities.user.LoginToken
 import com.special.remote.models.PlaceResponseModel
 import okhttp3.MultipartBody
 import retrofit2.http.*
@@ -32,9 +31,7 @@ interface PlaceApi {
 
     @Multipart
     @POST("/api/v1/images")
-    suspend fun uploadImage(@Part file: MultipartBody.Part): String
+    suspend fun uploadImage(@Part images: List<MultipartBody.Part>): List<String>
 
-    @GET("/login/oauth2/id-token")
-    suspend fun socialLogin(@Query("idToken") idToken: String): LoginToken
 
 }

@@ -4,9 +4,9 @@ import android.content.Context
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.special.data.social.LoginCallback
+import com.special.data.social.SocialLogin
 import com.special.domain.entities.user.LoginType
 import com.special.domain.entities.user.SocialLoginResponse
-import com.special.data.social.SocialLogin
 
 class KakaoLogin constructor(private val context: Context, private val callback: LoginCallback) :
     SocialLogin {
@@ -32,5 +32,9 @@ class KakaoLogin constructor(private val context: Context, private val callback:
         UserApiClient.instance.logout {
             callback.onResponse(SocialLoginResponse.notLogin())
         }
+    }
+
+    override fun checkSigned() {
+        doLogin()
     }
 }

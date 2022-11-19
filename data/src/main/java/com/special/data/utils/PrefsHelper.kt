@@ -32,12 +32,8 @@ class PrefsHelper @Inject constructor(@ApplicationContext context: Context) {
             apply()
         }
 
-    var isLogin: Boolean
-        get() = pref.getBoolean(IS_LOGIN, false)
-        set(value) = pref.edit().run {
-            putBoolean(IS_LOGIN, value)
-            apply()
-        }
+    val isLogin: Boolean
+        get() = pref.getString(ACCESS_TOKEN, null) != null
 
     // TODO: need secure
     var loginType: LoginType

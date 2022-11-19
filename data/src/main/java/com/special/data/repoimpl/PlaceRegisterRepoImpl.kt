@@ -3,7 +3,6 @@ package com.special.data.repoimpl
 import com.special.domain.datasources.CoordinateToAddressDataSource
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.entities.place.Coordinate
-import com.special.domain.entities.place.PlaceCategory
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +10,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
 
 class PlaceRegisterRepoImpl @Inject constructor(
@@ -35,13 +35,9 @@ class PlaceRegisterRepoImpl @Inject constructor(
             coord2AddrRemote.coordinateToAddress(it)
         }
 
-    override suspend fun categories(): List<PlaceCategory> {
+    override suspend fun uploadImage(imageFiles: List<File>): List<String> {
         return withContext(Dispatchers.IO) {
-            placeRemote.categories()
+            placeRemote.uploadImage(imageFiles)
         }
-    }
-
-    override suspend fun uploadImage(targetId: String, imagePath: String) {
-        TODO("Not yet implemented")
     }
 }
