@@ -1,19 +1,20 @@
-package com.special.place.ui.place.register.input
+package com.special.place.ui.place.register.hashtags
 
 import androidx.lifecycle.LiveData
 import com.special.place.ui.place.register.PlaceRegisterStep
 import com.special.place.ui.place.register.RegisterEventListener
 
-interface PlaceInputEventListener : RegisterEventListener {
-    val placeName: LiveData<String>
-    fun setPlaceName(name: String)
+interface HashtagEventListener : RegisterEventListener {
+    val hashtags: LiveData<List<String>>
+
+    fun updateHashtag(hashtag: String)
 
     companion object {
-        fun empty() = object : PlaceInputEventListener {
-            override val placeName: LiveData<String>
+        fun empty() = object : HashtagEventListener {
+            override val hashtags: LiveData<List<String>>
                 get() = TODO("Not yet implemented")
 
-            override fun setPlaceName(name: String) {
+            override fun updateHashtag(hashtag: String) {
                 TODO("Not yet implemented")
             }
 

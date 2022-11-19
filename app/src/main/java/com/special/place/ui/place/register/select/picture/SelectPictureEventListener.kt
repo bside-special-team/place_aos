@@ -1,19 +1,26 @@
-package com.special.place.ui.place.register.input
+package com.special.place.ui.place.register.select.picture
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.special.place.ui.place.register.PlaceRegisterStep
 import com.special.place.ui.place.register.RegisterEventListener
 
-interface PlaceInputEventListener : RegisterEventListener {
-    val placeName: LiveData<String>
-    fun setPlaceName(name: String)
+interface SelectPictureEventListener : RegisterEventListener {
+    val pictures: LiveData<List<Uri>>
+
+    fun selectPicture(uri: Uri)
+    fun unselectPicture(uri: Uri)
 
     companion object {
-        fun empty() = object : PlaceInputEventListener {
-            override val placeName: LiveData<String>
+        fun empty(): SelectPictureEventListener = object : SelectPictureEventListener {
+            override val pictures: LiveData<List<Uri>>
                 get() = TODO("Not yet implemented")
 
-            override fun setPlaceName(name: String) {
+            override fun selectPicture(uri: Uri) {
+                TODO("Not yet implemented")
+            }
+
+            override fun unselectPicture(uri: Uri) {
                 TODO("Not yet implemented")
             }
 

@@ -20,6 +20,7 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     val places: LiveData<List<Place>> = placeRepo.places.asLiveData()
 
     // TODO: normal 0.75
+    private lateinit var highlightedShadow: Bitmap
     private lateinit var baseBitmap: Bitmap
     private lateinit var decoratedBitmap: Bitmap
     private var lastCoordinate: Coordinate = Coordinate("0", "0")
@@ -38,17 +39,29 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     }
 
     fun initContext(context: Context) {
-        val baseDrawable = ContextCompat.getDrawable(context, R.drawable.ic_landmark_background) ?: return
-        val decoDrawable = ContextCompat.getDrawable(context, R.drawable.ic_landmark_badge) ?: return
+        val baseDrawable = ContextCompat.getDrawable(context, R.drawable.ic_landmark_base)
+        val decoDrawable = ContextCompat.getDrawable(context, R.drawable.ic_landmark_badge)
+        val shadowDrawable = ContextCompat.getDrawable(context, R.drawable.ic_landmark_highlighted_shadow)
 
-        baseBitmap = Bitmap.createBitmap(baseDrawable.intrinsicWidth, baseDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888).applyCanvas {
-            baseDrawable.setBounds(0, 0, width, height)
-            baseDrawable.draw(this)
+        if (baseDrawable != null) {
+            baseBitmap = Bitmap.createBitmap(baseDrawable.intrinsicWidth, baseDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888).applyCanvas {
+                baseDrawable.setBounds(0, 0, width, height)
+                baseDrawable.draw(this)
+            }
         }
 
-        decoratedBitmap = Bitmap.createBitmap(decoDrawable.intrinsicWidth, decoDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888).applyCanvas {
-            decoDrawable.setBounds(0, 0, width, height)
-            decoDrawable.draw(this)
+        if (decoDrawable != null) {
+            decoratedBitmap = Bitmap.createBitmap(decoDrawable.intrinsicWidth, decoDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888).applyCanvas {
+                decoDrawable.setBounds(0, 0, width, height)
+                decoDrawable.draw(this)
+            }
+        }
+
+        if (shadowDrawable != null) {
+            highlightedShadow = Bitmap.createBitmap(shadowDrawable.intrinsicWidth, shadowDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888).applyCanvas {
+                shadowDrawable.setBounds(0, 0, width, height)
+                shadowDrawable.draw(this)
+            }
         }
     }
 
@@ -69,7 +82,8 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
 
     private suspend fun getMergedOverlay(bitmap: Bitmap): OverlayImage {
         return imageMaps[bitmap.hashCode()] ?: run {
-            val mergedBitmap = BitmapConverter.mergedMarker(baseBitmap, decoratedBitmap, bitmap)
+
+        val mergedBitmap = BitmapConverter.mergedMarker(baseBitmap, decoratedBitmap, bitmap)
             val overlayImage = OverlayImage.fromBitmap(mergedBitmap)
             imageMaps[bitmap.hashCode()] = overlayImage
 

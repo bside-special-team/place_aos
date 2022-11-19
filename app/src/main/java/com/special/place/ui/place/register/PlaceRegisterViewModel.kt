@@ -1,28 +1,25 @@
 package com.special.place.ui.place.register
 
+import android.net.Uri
 import androidx.lifecycle.*
 import com.special.domain.entities.place.Coordinate
-import com.special.domain.entities.place.PlaceCategory
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
-import com.special.place.ui.place.register.besttime.BestTimeEventListener
-import com.special.place.ui.place.register.category.CategoryEventListener
+import com.special.place.ui.place.register.hashtags.HashtagEventListener
 import com.special.place.ui.place.register.input.PlaceInputEventListener
 import com.special.place.ui.place.register.location.PlaceLocationEventListener
+import com.special.place.ui.place.register.select.picture.SelectPictureEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: PlaceRegisterRepository) :
-    ViewModel(), CategoryEventListener, BestTimeEventListener, PlaceInputEventListener,
-    PlaceLocationEventListener {
+    ViewModel(), PlaceInputEventListener, SelectPictureEventListener, HashtagEventListener, PlaceLocationEventListener {
+
     private val _placeRegisterResult: MutableLiveData<Result<String>> = MutableLiveData()
 
     val placeRegisterResult: LiveData<Result<String>> = _placeRegisterResult
-
-    private val _placeCategories: MutableLiveData<List<PlaceCategory>> = MutableLiveData()
-    override val placeCategories: LiveData<List<PlaceCategory>> = _placeCategories
 
     override val displayLocation: LiveData<String> = placeRegisterRepo.locationText.asLiveData()
 
@@ -35,35 +32,6 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
         _placeRequest.postValue(newRequest)
     }
 
-    override val placeDescription: LiveData<String> = _placeRequest.map { "" }
-    override fun setPlaceDescription(text: String) {
-//        val newRequest = _placeRequest.value?.copy(description = text)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
-    override val placeVisitTime: LiveData<String> = _placeRequest.map {
-        "선택 하여 주세요"
-    }
-
-    override fun setPlaceBestStartTime(time: String) {
-//        val newRequest = _placeRequest.value?.copy(bestStartTime = time)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
-    override fun setPlaceBestEndTime(time: String) {
-//        val newRequest = _placeRequest.value?.copy(bestEndTime = time)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
-    override fun setCategory(category: PlaceCategory) {
-//        val newRequest = _placeRequest.value?.copy(categoryCode = category.code)
-//
-//        _placeRequest.postValue(newRequest)
-    }
-
     override fun updateCameraPosition(coordinate: Coordinate) {
         // 처음으로 호출 될것을 예상하고 위치 변경 되었을 경우에만 객체를 생성 하도록 작성.
         val newRequest = _placeRequest.value?.copy(coordinate = coordinate) ?: run {
@@ -72,6 +40,48 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
 
         _placeRequest.postValue(newRequest)
         placeRegisterRepo.updateLocation(coordinate)
+    }
+
+    private val _pictures: MutableLiveData<List<Uri>> = MutableLiveData()
+    override val pictures: LiveData<List<Uri>> = _pictures
+
+    override fun selectPicture(uri: Uri) {
+        val origins = pictures.value ?: listOf()
+        _pictures.postValue(origins.plus(uri))
+    }
+
+    override fun unselectPicture(uri: Uri) {
+        val origins = pictures.value ?: listOf()
+        _pictures.postValue(origins.minus(uri))
+    }
+
+    private val _hashtags: MutableLiveData<List<String>> = MutableLiveData()
+    override val hashtags: LiveData<List<String>> = _hashtags
+
+    override fun updateHashtag(hashtag: String) {
+        val origins = hashtags.value ?: listOf()
+        if (origins.contains(hashtag)) {
+            _hashtags.postValue(origins.minus(hashtag))
+        } else {
+            _hashtags.postValue(origins.plus(hashtag))
+        }
+    }
+
+    private val _step: MutableLiveData<PlaceRegisterStep> = MutableLiveData(PlaceRegisterStep.Location)
+    override val step: LiveData<PlaceRegisterStep> = _step
+
+    override fun back() {
+        val currentStep = step.value
+        if (currentStep != null && currentStep != PlaceRegisterStep.Location) {
+            _step.postValue(currentStep.back())
+        }
+    }
+
+    override fun next() {
+        val currentStep = step.value
+        if (currentStep != null && currentStep != PlaceRegisterStep.Complete) {
+            _step.postValue(currentStep.next())
+        }
     }
 
     fun registerPlace() {
@@ -91,9 +101,9 @@ class PlaceRegisterViewModel @Inject constructor(private val placeRegisterRepo: 
     }
 
     init {
-        viewModelScope.launch {
-            _placeCategories.postValue(placeRegisterRepo.categories())
-        }
+//        viewModelScope.launch {
+//            _placeCategories.postValue(placeRegisterRepo.categories())
+//        }
 
     }
 }
