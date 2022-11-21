@@ -5,7 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +54,7 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                             .padding(horizontal = 24.dp, vertical = 16.dp)
                             .fillMaxWidth()
                     ) {
-                        selectedTags.forEach() {
+                        selectedTags.forEach {
                             HashtagChipClickable(content = it, select = selectedTags.contains(it)) {
                                 eventListener.updateHashtag(it)
                             }
@@ -85,7 +86,7 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                         .padding(horizontal = 24.dp, vertical = 16.dp)
                         .fillMaxWidth()
                 ) {
-                    DEFAULT_HASHTAGS.forEach() {
+                    DEFAULT_HASHTAGS.forEach {
                         HashtagChipClickable(content = it, select = selectedTags.contains(it)) {
                             eventListener.updateHashtag(it)
                         }
@@ -108,8 +109,8 @@ fun HashtagStep(eventListener: HashtagEventListener) {
 
 @Composable
 fun InputHashtag() {
-    Box() {
-        Row() {
+    Box {
+        Row {
 
         }
     }

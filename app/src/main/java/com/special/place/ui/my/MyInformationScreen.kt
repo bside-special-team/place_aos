@@ -126,7 +126,7 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
                     style = Title1,
                     fontSize = 14.sp
                 )
-                Row() {
+                Row {
                     Text(
                         text = stringResource(id = R.string.txt_next_level_point, point),
                         color = Color.White,

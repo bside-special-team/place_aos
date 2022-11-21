@@ -73,8 +73,7 @@ fun NickNameItem(nickname: String) {
                 contentDescription = "user"
             )
             Spacer(modifier = Modifier.width(20.dp))
-            Column(
-            ) {
+            Column {
                 Text(
                     color = Grey600,
                     text = stringResource(id = R.string.item_nickname),

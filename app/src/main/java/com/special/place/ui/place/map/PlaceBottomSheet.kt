@@ -102,7 +102,7 @@ fun PlaceBottomSheet(
                 top.linkTo(titleRef.bottom, margin = 16.dp)
                 width = Dimension.fillToConstraints
             }) {
-            place.hashTags.forEach() {
+            place.hashTags.forEach {
                 HashtagChip(content = it)
             }
         }

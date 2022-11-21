@@ -85,7 +85,7 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
                 contentDescription = "dots"
             )
         }
-        Row() {
+        Row {
             Spacer(modifier = Modifier.width(64.dp))
             TagList(list[index].hashTag)
         }

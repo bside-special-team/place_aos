@@ -14,7 +14,7 @@ class TokenInjectInterceptor @Inject constructor(
     private val loginRemote: LoginRemoteDataSource
 ) :
     Interceptor {
-    final val notInjectedPath = listOf("login")
+    val notInjectedPath = listOf("login")
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return checkResponse(chain)

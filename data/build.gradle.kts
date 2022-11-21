@@ -47,6 +47,7 @@ dependencies {
 
     debugImplementation(Deps.Pluto.debug)
     releaseImplementation(Deps.Pluto.release)
+
     debugImplementation(Deps.Pluto.debugNetwork)
     releaseImplementation(Deps.Pluto.releaseNetwork)
 
