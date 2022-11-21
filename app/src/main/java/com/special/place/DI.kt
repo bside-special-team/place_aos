@@ -15,8 +15,6 @@ const val LOCATION_PERMISSION_REQUEST_CODE = 0xfefefe
 @InstallIn(ActivityComponent::class)
 @Module
 object MapModule {
-
-
     @Provides
     fun provideLocationSource(@ActivityContext context: Context): LocationSource {
         return FusedLocationSource((context as Activity), LOCATION_PERMISSION_REQUEST_CODE)

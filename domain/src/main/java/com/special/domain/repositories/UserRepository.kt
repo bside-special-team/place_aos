@@ -3,10 +3,10 @@ package com.special.domain.repositories
 import com.special.domain.entities.user.LoginStatus
 import com.special.domain.entities.user.SocialLoginResponse
 import com.special.domain.entities.user.badge.Badge
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
 interface UserRepository {
-    val loginStatus: MutableSharedFlow<LoginStatus>
+    val loginStatus: StateFlow<LoginStatus>
 
     suspend fun socialLogin(response: SocialLoginResponse)
 

@@ -6,18 +6,19 @@ import com.special.data.KAKAO_API_KEY
 import com.special.data.repoimpl.PlaceRegisterRepoImpl
 import com.special.data.repoimpl.PlaceRepoImpl
 import com.special.data.repoimpl.UserRepoImpl
+import com.special.data.source.TokenDataSourceImpl
 import com.special.data.usecases.LoginUseCase
 import com.special.data.usecases.LoginUseCaseImpl
 import com.special.domain.datasources.CoordinateToAddressDataSource
+import com.special.domain.datasources.LoginRemoteDataSource
 import com.special.domain.datasources.RemoteDataSource
+import com.special.domain.datasources.TokenDataSource
 import com.special.domain.repositories.PlaceRegisterRepository
 import com.special.domain.repositories.PlaceRepository
 import com.special.domain.repositories.UserRepository
-import com.special.remote.ApiManager
-import com.special.remote.KakaoApiKeyInterceptor
-import com.special.remote.KakaoApiManager
-import com.special.remote.PlaceAppApiManager
+import com.special.remote.*
 import com.special.remote.impls.CoordinateToAddressRemoteImpl
+import com.special.remote.impls.LoginRemoteDataImpl
 import com.special.remote.impls.RemoteDataImpl
 import dagger.Binds
 import dagger.Module
@@ -35,7 +36,20 @@ object ApiModule {
     @PlaceAppApiManager
     @Singleton
     @Provides
-    fun provideApiManager(): ApiManager {
+    fun provideApiManager(
+        tokenInjectInterceptor: TokenInjectInterceptor
+    ): ApiManager {
+        return ApiManager(
+            baseUrl = "https://www.special-dev.xyz/",
+            interceptors = interceptors()
+                .plus(tokenInjectInterceptor)
+        )
+    }
+
+    @PlaceLoginApiManager
+    @Singleton
+    @Provides
+    fun provideLoginApiManager(): ApiManager {
         return ApiManager(
             baseUrl = "https://www.special-dev.xyz/",
             interceptors = interceptors()
@@ -66,6 +80,13 @@ object ApiModule {
 
 @InstallIn(SingletonComponent::class)
 @Module
+abstract class DataSourceBinds {
+    @Binds
+    abstract fun bindTokenData(impl: TokenDataSourceImpl): TokenDataSource
+}
+
+@InstallIn(SingletonComponent::class)
+@Module
 abstract class RepoBinds {
     @Binds
     abstract fun bindPlaceRepo(impl: PlaceRepoImpl): PlaceRepository
@@ -82,6 +103,9 @@ abstract class RepoBinds {
 abstract class RemoteBinds {
     @Binds
     abstract fun bindPlaceRemote(impl: RemoteDataImpl): RemoteDataSource
+
+    @Binds
+    abstract fun bindLoginRemote(impl: LoginRemoteDataImpl): LoginRemoteDataSource
 
     @Binds
     abstract fun bindCoord2AddrRemote(impl: CoordinateToAddressRemoteImpl): CoordinateToAddressDataSource

@@ -2,17 +2,22 @@ package com.special.place.ui.main
 
 import android.location.Location
 import androidx.lifecycle.*
+import coil.request.ImageRequest
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.special.domain.entities.place.Place
 import com.special.domain.repositories.PlaceRepository
 import com.special.place.ui.place.map.PlaceEventListener
+import com.special.place.util.CoilRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository) : ViewModel(), PlaceEventListener {
+class PlacesViewModel @Inject constructor(
+    private val placeRepo: PlaceRepository,
+    private val coilRequest: CoilRequest
+) : ViewModel(), PlaceEventListener {
     private val _cameraPosition: MutableLiveData<CameraPosition> = MutableLiveData()
     private val _currentLocation: MutableLiveData<Location> = MutableLiveData()
 
@@ -21,8 +26,9 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
     private val _trackingMode: MutableLiveData<LocationTrackingMode> = MutableLiveData()
     override val trackingMode: LiveData<LocationTrackingMode> = _trackingMode
 
-    override val visibleCurrentLocationButton: LiveData<Boolean> = Transformations.map(_cameraPosition) {
-        _trackingMode.value == LocationTrackingMode.NoFollow
+    override val visibleCurrentLocationButton: LiveData<Boolean> =
+        Transformations.map(_cameraPosition) {
+            _trackingMode.value != LocationTrackingMode.Follow
     }
 
     override fun updateCameraPosition(camera: CameraPosition) {
@@ -50,6 +56,16 @@ class PlacesViewModel @Inject constructor(private val placeRepo: PlaceRepository
         }
     }
 
+    private val _currentPlace: MutableLiveData<Place> = MutableLiveData()
+    override val currentPlace: LiveData<Place> = _currentPlace
+
+    override fun updateCurrentPlace(place: Place) {
+        _currentPlace.postValue(place)
+    }
+
+    override fun coilRequest(uuid: String): ImageRequest {
+        return coilRequest.myImageRequest(uuid)
+    }
 }
 
 fun Location.toLatLnt(): LatLng = LatLng(latitude, longitude)

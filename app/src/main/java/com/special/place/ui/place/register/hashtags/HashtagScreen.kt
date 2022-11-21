@@ -1,11 +1,11 @@
 package com.special.place.ui.place.register.hashtags
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +26,7 @@ import com.special.place.ui.widget.HashtagChipClickable
 @Composable
 fun HashtagStep(eventListener: HashtagEventListener) {
     val selectedTags: List<String> by eventListener.hashtags.observeAsState(initial = listOf())
+//    var editMode by remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = "키워드로 장소를 소개해주세요") {
@@ -37,7 +38,12 @@ fun HashtagStep(eventListener: HashtagEventListener) {
 
                 if (selectedTags.isEmpty()) {
                     Text(
-                        text = "아래 카테고리에서 선택하거나\n이 곳을 눌러 직접 작성해보세요!", textAlign = TextAlign.Center, modifier = Modifier
+                        text = "아래 카테고리에서 선택하거나\n이 곳을 눌러 직접 작성해보세요!",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .clickable {
+//                                editMode = true;
+                            }
                             .padding(top = 16.dp)
                             .align(Alignment.CenterHorizontally)
                     )
@@ -52,7 +58,9 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                                 eventListener.updateHashtag(it)
                             }
                         }
-                        EmptyChipClickable()
+                        EmptyChipClickable {
+//                                    editMode = true
+                        }
                     }
                 }
 
@@ -95,6 +103,15 @@ fun HashtagStep(eventListener: HashtagEventListener) {
             }
         }
 
+    }
+}
+
+@Composable
+fun InputHashtag() {
+    Box() {
+        Row() {
+
+        }
     }
 }
 

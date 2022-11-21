@@ -14,7 +14,7 @@ import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 
-val marker = OverlayImage.fromResource(R.drawable.ic_marker_question)
+val marker = OverlayImage.fromResource(R.drawable.ic_place_normal)
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable

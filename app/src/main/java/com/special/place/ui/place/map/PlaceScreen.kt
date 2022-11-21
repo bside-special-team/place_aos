@@ -21,10 +21,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.LocationTrackingMode
-import com.special.domain.entities.place.Place
+import com.naver.maps.map.util.FusedLocationSource
 import com.special.place.resource.R
 import com.special.place.ui.Route
 import com.special.place.ui.base.RouteListener
+import com.special.place.ui.main.toLatLnt
 import com.special.place.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -45,8 +46,9 @@ fun PlaceScreen(
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
-        sheetContent = { PlaceBottomSheet(Place.mock(), eventListener, routeListener) },
+        sheetContent = { PlaceBottomSheet(eventListener, routeListener) },
         sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        sheetPeekHeight = 0.dp,
         sheetElevation = 5.dp
     ) {
         ConstraintLayout(
@@ -73,6 +75,7 @@ fun PlaceScreen(
                 .background(
                     brush = Brush.verticalGradient(
                         listOf(
+                            Color.White.copy(alpha = 0.0f),
                             Color.White.copy(alpha = 0.2f),
                             Color.White
                         )
@@ -119,10 +122,7 @@ fun PlaceScreen(
 
             /* 내 정보 버튼 */
             Box(modifier = Modifier
-                .clickable {
-                    //TODO : 내 정보 화면 이동
-                    routeListener.requestRoute(Route.MyInfoPage)
-                }
+                .clickable { routeListener.requestRoute(Route.MyInfoPage) }
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))
                 .constrainAs(myInfoButton) {
@@ -146,8 +146,12 @@ fun PlaceScreen(
             /* 플레이스 작성 버튼 */
             Box(modifier = Modifier
                 .clickable {
-                    //TODO : 플레이스 작성 화면 이동
-                    routeListener.requestRoute(Route.PlaceRegisterPage)
+                    val lastLocation = (locationSource as? FusedLocationSource)?.lastLocation?.toLatLnt()
+                    routeListener.requestRoute(
+                        Route.PlaceRegisterPage(
+                            lastLocation
+                        )
+                    )
                 }
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))

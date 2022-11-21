@@ -2,31 +2,47 @@ package com.special.domain.entities.place
 
 /*
 {
-  "createdAt": "2022-10-04T05:49:06.463Z",
-  "lastModifiedAt": "2022-10-04T05:49:06.463Z",
+  "createdAt": "2022-11-19T16:14:55.681Z",
+  "lastModifiedAt": "2022-11-19T16:14:55.681Z",
   "id": "string",
-  "placeType": "HIDDEN",
-  "category": {
+  "writer": {
     "id": "string",
-    "code": "string",
-    "name": "string"
+    "authProvider": "KAKAO",
+    "subject": "string",
+    "email": "string",
+    "nickName": "string",
+    "visitInfos": [
+      {
+        "id": "string",
+        "visitedAt": "2022-11-19T16:14:55.681Z"
+      }
+    ],
+    "recPlaces": [
+      "string"
+    ]
   },
+  "placeType": "HIDDEN",
   "coordinate": {
     "latitude": 120.12312312,
     "longitude": 20.12312312
   },
   "name": "string",
-  "description": "string",
   "imageUrls": [
     "string"
   ],
   "visitCount": 0,
-  "bestStartTime": "23:00",
-  "bestEndTime": "23:00",
   "hashTags": [
     "string"
   ],
-  "season": "SPRING"
+  "visitInfos": [
+    {
+      "id": "string",
+      "visitedAt": "2022-11-19T16:14:55.681Z"
+    }
+  ],
+  "recommendUsers": [
+    "string"
+  ]
 }
  */
 
@@ -35,7 +51,7 @@ data class Place(
     val placeType: PlaceType,
     val coordinate: Coordinate,
     val name: String,
-    val imageUrls: List<String>,
+    val imageUuids: List<String>,
     val visitCount: Int,
     val hashTags: List<String>,
     val createdAt: String,
@@ -47,7 +63,7 @@ data class Place(
             placeType = PlaceType.Hidden,
             coordinate = Coordinate("37.5666102", "126.9783881"),
             name = "목업 플레이스",
-            imageUrls = listOf(),
+            imageUuids = listOf(),
             visitCount = 0,
             hashTags = listOf(),
             createdAt = "",

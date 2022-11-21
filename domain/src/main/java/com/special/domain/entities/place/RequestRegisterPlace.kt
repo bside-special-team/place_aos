@@ -4,6 +4,6 @@ data class RequestRegisterPlace(
     val coordinate: Coordinate,
     val name: String? = null,
     val userId: String? = null,
-    val images: List<String> = listOf(),
+    val imageUuids: List<String> = listOf(),
     val hashTags: List<String> = listOf(),
 )

@@ -42,7 +42,7 @@ fun SettingScreen() {
         ) // 약관 및 동의 관리
         SettingItem(
             R.string.item_social,
-            R.drawable.ic_kakao,
+            R.drawable.ic_kakao_login,
             R.string.btn_logout
         ) // 소셜 계정 회원
         SettingItem(R.string.item_withdrawal, R.drawable.ic_siren, 0) // 회원 탈퇴
