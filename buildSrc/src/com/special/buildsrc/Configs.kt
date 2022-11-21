@@ -5,8 +5,8 @@ object Configs {
     const val minSdkVersion = 23
     const val targetSdkVersion = 33
 
-    const val versionCode = 4
-    const val versionName = "0.0.4"
+    const val versionCode = 5
+    const val versionName = "0.0.5"
 
     const val composeVersion = "1.3.1"
 
