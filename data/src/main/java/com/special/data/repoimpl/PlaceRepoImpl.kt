@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSource) :
     PlaceRepository {
 

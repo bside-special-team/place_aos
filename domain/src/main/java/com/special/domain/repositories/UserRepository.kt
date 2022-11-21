@@ -22,4 +22,6 @@ interface UserRepository {
 
     suspend fun modifyNickName(nickName: String)
 
+    suspend fun checkLogin()
+
 }

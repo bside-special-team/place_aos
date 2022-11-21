@@ -1,14 +1,13 @@
 package com.special.place.ui.login
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.special.domain.entities.user.LoginStatus
 import com.special.domain.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,16 +16,25 @@ class LoginViewModel @Inject constructor(
     private val userRepo: UserRepository
 ) : ViewModel() {
 
-    private val _loginStatus: MutableLiveData<LoginStatus> = MutableLiveData()
-    val loginResult: LiveData<LoginStatus> = _loginStatus
+    // val loginResult: LiveData<LoginStatus> = userRepo.loginStatus.asLiveData()
+    val loginStatus: StateFlow<LoginStatus> = userRepo.loginStatus
 
     init {
         viewModelScope.launch {
-            userRepo.loginStatus.collectLatest {
-                Log.d("loginVM", "isLogin ${it.isLogin}")
+            userRepo.loginStatus.collectIndexed { index, value -> Log.d("loginViewModel", "$index :: $value") }
+        }
 
-                _loginStatus.postValue(it)
-            }
+    }
+
+    fun checkLogin() {
+        viewModelScope.launch {
+            userRepo.checkLogin()
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            userRepo.logout()
         }
     }
 }

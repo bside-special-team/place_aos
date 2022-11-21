@@ -11,6 +11,8 @@ interface TokenDataSource {
     fun tokenRaw(): LoginToken
 
     fun updateToken(token: LoginToken)
+    fun updateLoginType(type: LoginType)
+    fun clearAll()
 
     suspend fun <R> checkToken(block: suspend () -> R): Result<R>
 }

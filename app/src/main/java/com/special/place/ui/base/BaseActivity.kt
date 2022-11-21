@@ -1,15 +1,18 @@
 package com.special.place.ui.base
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.special.place.ui.Route
 import com.special.place.ui.login.LoginActivity
 import com.special.place.ui.login.LoginViewModel
 import com.special.place.ui.main.MainActivity
 import com.special.place.ui.my.MyInformationActivity
 import com.special.place.ui.place.register.PlaceRegisterActivity
+import kotlinx.coroutines.launch
 
 open class BaseActivity : ComponentActivity() {
     protected val routeVM: RouteViewModel by viewModels()
@@ -27,6 +30,7 @@ open class BaseActivity : ComponentActivity() {
                 Route.MainPage -> startActivity(MainActivity.newIntent(this))
                 Route.MyInfoPage -> startActivity(MyInformationActivity.newIntent(this))
                 Route.LoginPage -> startActivity(LoginActivity.newIntent(this))
+                Route.Logout -> loginVM.logout()
                 is Route.PlaceRegisterPage -> startActivity(PlaceRegisterActivity.newIntent(this, it.location))
                 is Route.PlaceDetailPage -> {
                     it.place
@@ -35,12 +39,17 @@ open class BaseActivity : ComponentActivity() {
             }
         }
 
-        if (!isLoginView) {
-            loginVM.loginResult.observe(this) {
-                Log.d("LoginScreenBase", "$it")
-                if (!it.isLogin) {
-                    finish()
-                    startActivity(LoginActivity.newIntent(this))
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                loginVM.loginStatus.collect { status ->
+                    if (!status.isLogin && !isLoginView) {
+                        startActivity(LoginActivity.newIntent(this@BaseActivity))
+                        finish()
+                    } else if (status.isLogin && isLoginView) {
+                        startActivity(MainActivity.newIntent(this@BaseActivity))
+                        finish()
+                    }
                 }
             }
         }

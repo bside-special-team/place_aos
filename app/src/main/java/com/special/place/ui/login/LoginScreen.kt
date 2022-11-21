@@ -80,7 +80,6 @@ fun LoginScreen(eventListener: LoginUseCase) {
                     .fillMaxSize()
                     .padding(start = 20.dp)
             ) {
-                // TODO: 벡터 깨짐..
                 Image(painter = painterResource(id = R.drawable.ic_kakao_login), contentDescription = "kakao_icon")
                 Spacer(modifier = Modifier.width(16.dp))
                 Text("카카오톡으로 시작하기")
@@ -106,7 +105,6 @@ fun LoginScreen(eventListener: LoginUseCase) {
                     .fillMaxSize()
                     .padding(start = 20.dp)
             ) {
-                // TODO: 벡터 깨짐..
                 Image(painter = painterResource(id = R.drawable.ic_google_login), contentDescription = "google_icon")
                 Spacer(modifier = Modifier.width(16.dp))
                 Text("구글로 시작하기")

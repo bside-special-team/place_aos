@@ -13,10 +13,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepoImpl @Inject constructor(
     private val loginRemote: LoginRemoteDataSource,
     private val tokenData: TokenDataSource
@@ -24,33 +26,51 @@ class UserRepoImpl @Inject constructor(
 
 
     private val _loginStatus: MutableStateFlow<LoginStatus> = MutableStateFlow(LoginStatus.empty())
-    override val loginStatus: StateFlow<LoginStatus> = _loginStatus.asStateFlow()
+    override val loginStatus: StateFlow<LoginStatus> = _loginStatus
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
+            loginStatus.collect {
+                Log.d("loginUserRepo", "$this")
+                Log.d("loginUserRepo", "status == ${it}")
+            }
+        }
+    }
+
+    override suspend fun checkLogin() {
+        withContext(Dispatchers.Default) {
             runCatching {
                 if (tokenData.isLogin) {
                     _loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
                 } else {
+                    Log.d("loginUserRepo", "isLogin == false")
                     _loginStatus.emit(LoginStatus.empty())
                 }
             }.onFailure {
+                Log.d("loginUserRepo", "loadToken failed")
                 _loginStatus.emit(LoginStatus.empty())
             }
         }
     }
 
     override suspend fun socialLogin(response: SocialLoginResponse) {
-        CoroutineScope(Dispatchers.IO).launch {
+        val statue = withContext(Dispatchers.IO) {
             if (response.isLogin && response.idToken != null) {
                 val token = loginRemote.socialLogin(response.idToken!!)
+                tokenData.updateLoginType(response.type)
                 tokenData.updateToken(token)
 
-                Log.d("socialLogin", response.toString())
-                _loginStatus.emit(LoginStatus.success(response.type, token))
+                LoginStatus.success(response.type, token)
             } else {
-                _loginStatus.emit(LoginStatus.empty())
+                LoginStatus.empty()
             }
+        }
+
+        withContext(Dispatchers.Default) {
+            Log.d("loginUserRepo", "isLogin == ${statue.isLogin}")
+            val result = _loginStatus.tryEmit(statue)
+
+            Log.d("loginUserRepo", "emit!, $result")
         }
     }
 
@@ -63,7 +83,10 @@ class UserRepoImpl @Inject constructor(
     }
 
     override suspend fun logout() {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.Default) {
+            tokenData.clearAll()
+            _loginStatus.emit(LoginStatus.empty())
+        }
     }
 
     override suspend fun updatePushAlarm(enable: Boolean) {

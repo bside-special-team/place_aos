@@ -5,10 +5,10 @@ sealed class LoginStatus private constructor(
     val type: LoginType
 ) {
 
-    class LoggedIn(
-        type: LoginType,
+    data class LoggedIn(
+        private val _type: LoginType,
         val token: LoginToken
-    ) : LoginStatus(isLogin = true, type = type)
+    ) : LoginStatus(isLogin = true, type = _type)
 
     object LoggedOut : LoginStatus(isLogin = false, type = LoginType.None)
 

@@ -12,6 +12,7 @@ sealed class Route {
     object SettingPage : Route()
     object MyActivityPage : Route()
     object BadgeListPage : Route()
+    object Logout : Route()
 
     class PlaceRegisterPage(val location: LatLng? = null) : Route()
     class PlaceDetailPage(val place: Place) : Route()

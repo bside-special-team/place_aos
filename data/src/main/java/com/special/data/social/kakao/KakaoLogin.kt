@@ -13,8 +13,6 @@ class KakaoLogin constructor(private val context: Context, private val callback:
     override fun doLogin() {
         kakaoLogin(context) { token, error ->
             token?.idToken?.let { idToken ->
-                println("KAKAO ID TOKEN :: $idToken")
-
                 callback.onResponse(SocialLoginResponse.success(type = LoginType.Kakao, idToken = idToken))
             } ?: run { callback.onResponse(SocialLoginResponse.notLogin()) }
         }

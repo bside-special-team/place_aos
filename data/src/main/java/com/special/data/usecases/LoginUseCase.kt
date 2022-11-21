@@ -25,7 +25,7 @@ class LoginUseCaseImpl @Inject constructor(
     )
 
     override fun onResponse(response: SocialLoginResponse) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Default).launch {
             userRepo.socialLogin(response)
         }
     }

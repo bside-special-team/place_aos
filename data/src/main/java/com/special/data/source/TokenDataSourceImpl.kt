@@ -33,6 +33,10 @@ class TokenDataSourceImpl @Inject constructor(
         prefsHelper.refreshToken = token.refreshToken
     }
 
+    override fun updateLoginType(type: LoginType) {
+        prefsHelper.loginType = type
+    }
+
     override suspend fun <R> checkToken(block: suspend () -> R): Result<R> {
         return runCatching {
             if (!isLogin) {
@@ -40,5 +44,10 @@ class TokenDataSourceImpl @Inject constructor(
             }
             block.invoke()
         }
+    }
+
+    override fun clearAll() {
+        prefsHelper.accessToken = null
+        prefsHelper.refreshToken = null
     }
 }

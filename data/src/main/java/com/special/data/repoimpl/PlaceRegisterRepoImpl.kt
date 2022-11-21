@@ -12,7 +12,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PlaceRegisterRepoImpl @Inject constructor(
     private val placeRemote: RemoteDataSource,
     private val coord2AddrRemote: CoordinateToAddressDataSource
