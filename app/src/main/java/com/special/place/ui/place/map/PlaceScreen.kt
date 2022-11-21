@@ -21,9 +21,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.LocationTrackingMode
+import com.naver.maps.map.util.FusedLocationSource
 import com.special.place.resource.R
 import com.special.place.ui.Route
 import com.special.place.ui.base.RouteListener
+import com.special.place.ui.main.toLatLnt
 import com.special.place.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -46,6 +48,7 @@ fun PlaceScreen(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = { PlaceBottomSheet(eventListener, routeListener) },
         sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        sheetPeekHeight = 0.dp,
         sheetElevation = 5.dp
     ) {
         ConstraintLayout(
@@ -72,6 +75,7 @@ fun PlaceScreen(
                 .background(
                     brush = Brush.verticalGradient(
                         listOf(
+                            Color.White.copy(alpha = 0.0f),
                             Color.White.copy(alpha = 0.2f),
                             Color.White
                         )
@@ -141,7 +145,14 @@ fun PlaceScreen(
 
             /* 플레이스 작성 버튼 */
             Box(modifier = Modifier
-                .clickable { routeListener.requestRoute(Route.PlaceRegisterPage) }
+                .clickable {
+                    val lastLocation = (locationSource as? FusedLocationSource)?.lastLocation?.toLatLnt()
+                    routeListener.requestRoute(
+                        Route.PlaceRegisterPage(
+                            lastLocation
+                        )
+                    )
+                }
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))
                 .constrainAs(registerButton) {

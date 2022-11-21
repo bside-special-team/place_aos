@@ -7,15 +7,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -27,11 +32,15 @@ import com.special.place.ui.theme.Grey900
 import com.special.place.ui.utils.NextButton
 import com.special.place.ui.widget.CenterAlignedTopAppBar
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun InputPlaceNameStep(eventListener: PlaceInputEventListener) {
     val text: String by eventListener.placeName.observeAsState(initial = "")
     var textFieldWidth by remember { mutableStateOf(1.dp) }
     var textFieldColor by remember { mutableStateOf(Grey300) }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = "장소의 이름을 지어주세요") {
@@ -65,6 +74,15 @@ fun InputPlaceNameStep(eventListener: PlaceInputEventListener) {
                     placeholder = {
                         Text("두 글자 이상 입력해주세요")
                     },
+                    singleLine = true,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        keyboardController?.hide()
+                        // eventListener.next()
+                    }),
                     modifier = Modifier
 //                        .focusRequester(focusRequester = focusRequester)
                         .onFocusChanged {

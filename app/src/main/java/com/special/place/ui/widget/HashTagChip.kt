@@ -67,9 +67,10 @@ fun HashtagChipClickable(content: String, select: Boolean, clickListener: () -> 
 }
 
 @Composable
-fun EmptyChipClickable() {
+fun EmptyChipClickable(clickListener: () -> Unit) {
     Box(
         modifier = Modifier
+            .clickable(onClick = clickListener)
             .background(color = Grey100, shape = RoundedCornerShape(14.dp))
             .padding(10.dp)
     ) {

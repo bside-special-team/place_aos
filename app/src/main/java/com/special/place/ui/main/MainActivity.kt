@@ -59,14 +59,6 @@ class MainActivity : BaseActivity() {
 
         setContent {
             PlaceTheme {
-                val systemUiController = rememberSystemUiController()
-                SideEffect {
-                    systemUiController.setStatusBarColor(
-                        color = Color.Transparent,
-                        darkIcons = true
-                    )
-                }
-
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

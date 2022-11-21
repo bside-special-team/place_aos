@@ -26,8 +26,8 @@ open class BaseActivity : ComponentActivity() {
             when (it) {
                 Route.MainPage -> startActivity(MainActivity.newIntent(this))
                 Route.MyInfoPage -> startActivity(MyInformationActivity.newIntent(this))
-                Route.PlaceRegisterPage -> startActivity(PlaceRegisterActivity.newIntent(this))
                 Route.LoginPage -> startActivity(LoginActivity.newIntent(this))
+                is Route.PlaceRegisterPage -> startActivity(PlaceRegisterActivity.newIntent(this, it.location))
                 is Route.PlaceDetailPage -> {
                     it.place
                 }

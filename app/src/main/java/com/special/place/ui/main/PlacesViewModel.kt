@@ -28,7 +28,7 @@ class PlacesViewModel @Inject constructor(
 
     override val visibleCurrentLocationButton: LiveData<Boolean> =
         Transformations.map(_cameraPosition) {
-            _trackingMode.value == LocationTrackingMode.NoFollow
+            _trackingMode.value != LocationTrackingMode.Follow
     }
 
     override fun updateCameraPosition(camera: CameraPosition) {

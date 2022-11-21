@@ -10,6 +10,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -31,9 +33,20 @@ import com.special.place.ui.place.register.PlaceRegisterViewModel
 import com.special.place.ui.theme.Grey900
 import com.special.place.ui.utils.NextButton
 import com.special.place.ui.widget.CenterAlignedTopAppBar
+import com.special.place.util.LocationFactory
 
 @Composable
-fun LocationStep(vm: PlaceRegisterViewModel) {
+fun LocationStep(vm: PlaceRegisterViewModel, locationFactory: LocationFactory, initialLocation: LatLng? = null) {
+    LaunchedEffect(Unit) {
+        locationFactory.startLocationTracking()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            locationFactory.stopLocationTracking()
+        }
+    }
+
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = "장소의 위치를 지정해주세요") {
 
@@ -41,14 +54,18 @@ fun LocationStep(vm: PlaceRegisterViewModel) {
     }) {
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-            val (mapRef, addressRef, locationRef, nextRef) = createRefs()
+            val (mapRef, addressRef, nextRef) = createRefs()
 
-            NaverMapView(vm, modifier = Modifier.constrainAs(mapRef) {
-                linkTo(start = parent.start, end = parent.end)
-                linkTo(top = parent.top, bottom = parent.bottom)
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
-            })
+            NaverMapView(
+                vm,
+                locationFactory = locationFactory,
+                initialLocation = initialLocation,
+                modifier = Modifier.constrainAs(mapRef) {
+                    linkTo(start = parent.start, end = parent.end)
+                    linkTo(top = parent.top, bottom = parent.bottom)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                })
 
             DisplayLocation(vm, modifier = Modifier.constrainAs(addressRef) {
                 start.linkTo(parent.start, margin = 24.dp)
@@ -56,19 +73,6 @@ fun LocationStep(vm: PlaceRegisterViewModel) {
                 top.linkTo(parent.top, 20.dp)
                 width = Dimension.fillToConstraints
             })
-
-            Icon(painter = painterResource(id = R.drawable.ic_current_location_button),
-                contentDescription = "location",
-                modifier = Modifier
-                    .clickable {
-//                    vm.updateTrackingMode(LocationTrackingMode.Follow)
-                        // TODO: 현재 위치 이동
-                    }
-                    .size(32.dp)
-                    .constrainAs(locationRef) {
-                        start.linkTo(parent.start, margin = 36.dp)
-                        bottom.linkTo(parent.bottom, margin = 32.dp)
-                    })
 
             NextButton("다음", clickListener = {
                 vm.next()
@@ -101,30 +105,54 @@ fun DisplayLocation(vm: PlaceLocationEventListener, modifier: Modifier) {
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun NaverMapView(vm: PlaceLocationEventListener, modifier: Modifier, initialCoordinate: LatLng? = null) {
+fun NaverMapView(
+    vm: PlaceLocationEventListener,
+    modifier: Modifier,
+    locationFactory: LocationFactory,
+    initialLocation: LatLng? = null
+) {
     Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
         val cameraState = rememberCameraPositionState(init = {
-            if (initialCoordinate != null) {
-                position = CameraPosition(initialCoordinate, 17.0)
+            if (initialLocation != null) {
+                position = CameraPosition(initialLocation, 13.6)
             }
         })
 
         NaverMap(
             cameraPositionState = cameraState,
-            uiSettings = MapUiSettings(isLocationButtonEnabled = false, isZoomControlEnabled = false),
+            uiSettings = MapUiSettings(
+                isLocationButtonEnabled = false,
+                isZoomControlEnabled = false
+            ),
             modifier = Modifier
                 .fillMaxSize()
         )
 
         Image(painterResource(id = R.drawable.ic_place_normal), contentDescription = "target")
 
+
+        Icon(painter = painterResource(id = R.drawable.ic_current_location_button),
+            contentDescription = "location",
+            tint = Color.Transparent,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 36.dp, bottom = 32.dp)
+                .clickable {
+                    val lastLatLng = locationFactory.lastLatLng()
+                    if (lastLatLng != null) {
+                        cameraState.position = CameraPosition(lastLatLng, 13.6)
+                    }
+
+                }
+                .size(32.dp))
+
         if (cameraState.isMoving.not()) {
             val position = cameraState.position
-            vm.updateCameraPosition(Coordinate(latitude = position.target.latitude.toString(), longitude = position.target.longitude.toString()))
-
-            Log.d(
-                "CameraState",
-                "Lat=${position.target.latitude}, Lng=${position.target.longitude}, ZoomLevel=${position.zoom}"
+            vm.updateCameraPosition(
+                Coordinate(
+                    latitude = position.target.latitude.toString(),
+                    longitude = position.target.longitude.toString()
+                )
             )
         }
     }

@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.naver.maps.geometry.LatLng
+import com.special.domain.entities.place.Coordinate
 import com.special.place.ui.place.register.complete.PlaceRegisterCompleteScreen
 import com.special.place.ui.place.register.hashtags.HashtagStep
 import com.special.place.ui.place.register.input.InputPlaceNameStep
@@ -22,6 +24,7 @@ import com.special.place.ui.place.register.location.LocationStep
 import com.special.place.ui.place.register.select.picture.SelectPictureStep
 import com.special.place.ui.theme.PlaceTheme
 import com.special.place.util.ContentResolverHelper
+import com.special.place.util.LocationFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,17 +35,30 @@ const val LONGITUDE = "lng"
 @AndroidEntryPoint
 class PlaceRegisterActivity : ComponentActivity() {
     companion object {
-        fun newIntent(context: Context): Intent =
+        fun newIntent(context: Context, latLng: LatLng? = null): Intent =
             Intent(context, PlaceRegisterActivity::class.java).apply {
-//            if (latLng != null) {
-//                putExtra(LATITUDE, latLng.latitude)
-//                putExtra(LONGITUDE, latLng.longitude)
-//            }
+                if (latLng != null) {
+                    putExtra(LATITUDE, latLng.latitude)
+                    putExtra(LONGITUDE, latLng.longitude)
+                }
             }
+    }
+
+    private val lastLatLng : LatLng? by lazy {
+        val latitude = intent.getDoubleExtra(LATITUDE, -1.0)
+        val longitude = intent.getDoubleExtra(LONGITUDE, -1.0)
+        if (latitude >= 0 && longitude >= 0) {
+            LatLng(latitude, longitude)
+        } else {
+            null
+        }
     }
 
     @Inject
     lateinit var contentResolverHelper: ContentResolverHelper
+
+    @Inject
+    lateinit var locationFactory: LocationFactory
 
     private val vm: PlaceRegisterViewModel by viewModels()
 
@@ -56,7 +72,7 @@ class PlaceRegisterActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RegisterScreen(vm)
+                    RegisterScreen(vm, locationFactory, initialLocation = lastLatLng)
                 }
             }
         }
@@ -79,11 +95,11 @@ class PlaceRegisterActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegisterScreen(vm: PlaceRegisterViewModel) {
+fun RegisterScreen(vm: PlaceRegisterViewModel, locationFactory: LocationFactory, initialLocation: LatLng? = null) {
     val step by vm.step.observeAsState(initial = PlaceRegisterStep.Location)
 
     when (step) {
-        PlaceRegisterStep.Location -> LocationStep(vm)
+        PlaceRegisterStep.Location -> LocationStep(vm, locationFactory, initialLocation)
         PlaceRegisterStep.SelectPicture -> SelectPictureStep(vm)
         PlaceRegisterStep.InputPlaceName -> InputPlaceNameStep(vm)
         PlaceRegisterStep.ChooseHashtag -> HashtagStep(vm)

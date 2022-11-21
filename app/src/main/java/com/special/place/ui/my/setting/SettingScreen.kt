@@ -40,14 +40,14 @@ fun SettingScreen() {
         SettingItem(
             R.string.item_terms_agreement,
             R.drawable.ic_info_circle,
-            com.special.place.R.drawable.ic_arrow_right
+            R.drawable.ic_arrow_right
         ) // 약관 및 동의 관리
         SettingItem(
             R.string.item_social,
-            com.special.place.R.drawable.ic_kakao,
+            R.drawable.ic_kakao_login,
             R.string.btn_logout
         ) // 소셜 계정 회원
-        SettingItem(R.string.item_withdrawal, com.special.place.R.drawable.ic_siren, 0) // 회원 탈퇴
+        SettingItem(R.string.item_withdrawal, R.drawable.ic_siren, 0) // 회원 탈퇴
     }
 }
 
@@ -69,7 +69,7 @@ fun NickNameItem(nickname: String) {
                 modifier = Modifier
                     .width(20.dp)
                     .height(20.dp),
-                painter = painterResource(id = com.special.place.R.drawable.ic_user),
+                painter = painterResource(id = R.drawable.ic_user),
                 contentDescription = "user"
             )
             Spacer(modifier = Modifier.width(20.dp))
@@ -143,7 +143,7 @@ fun SettingItem(item: Int, image: Int, subItem: Int) {
                 Text(text = logoutBtnText, style = Body1, fontWeight = FontWeight.Bold)
             }
         }
-        if (subItem == com.special.place.R.drawable.ic_arrow_right) {
+        if (subItem == R.drawable.ic_arrow_right) {
             Icon(
                 Icons.Filled.KeyboardArrowRight, contentDescription = "arrow",
                 tint = Grey600
