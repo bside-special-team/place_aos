@@ -2,9 +2,14 @@ package com.special.remote.impls
 
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.datasources.TokenDataSource
+import com.special.domain.entities.Paging
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.RequestRegisterPlace
+import com.special.domain.entities.user.Comment
+import com.special.domain.entities.user.CommentRequest
+import com.special.domain.entities.user.PointResult
+import com.special.domain.entities.user.User
 import com.special.remote.ApiManager
 import com.special.remote.PlaceAppApiManager
 import com.special.remote.apis.PlaceApi
@@ -42,8 +47,6 @@ class RemoteDataImpl @Inject constructor(
 
     override suspend fun uploadImage(files: List<File>): Result<List<String>> {
         return tokenData.checkToken {
-            val builder = MultipartBody.Builder()
-
             val images = files
                 .map {
                     MultipartBody.Part.createFormData(
@@ -54,6 +57,32 @@ class RemoteDataImpl @Inject constructor(
                 }
 
             client.uploadImage(images)
+        }
+    }
+
+    override suspend fun visitPlace(placeId: String): PointResult {
+        return client.visitPlace(placeId).pointResult
+    }
+
+    override suspend fun recommendPlace(placeId: String): PointResult {
+        return client.recommendPlace(placeId).pointResult
+    }
+
+    override suspend fun registerComment(comment: CommentRequest): PointResult {
+        return client.registerComments(comment).pointResult
+    }
+
+    override suspend fun updateNickName(nickName: String) {
+        return client.updateNickname(nickName)
+    }
+
+    override suspend fun checkUser(): User {
+        return client.checkUser().response
+    }
+
+    override suspend fun commentList(placeId: String, lastTimestamp: Long): Paging<Comment> {
+        return client.placeComments(placeId, lastTimestamp, limit = 15).let {
+            Paging(isLast = !it.hasNext, list = it.comments)
         }
     }
 }

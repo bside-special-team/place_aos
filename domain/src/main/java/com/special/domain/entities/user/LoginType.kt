@@ -1,5 +1,12 @@
 package com.special.domain.entities.user
 
+import com.google.gson.annotations.SerializedName
+
 enum class LoginType {
-    Kakao, Google, None
+    @SerializedName("KAKAO")
+    Kakao,
+
+    @SerializedName("GOOGLE")
+    Google,
+    None
 }
