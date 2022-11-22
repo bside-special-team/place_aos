@@ -1,60 +1,43 @@
 package com.special.place.ui.place.information
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
-@Preview
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PlaceImageScreen() {
+fun PlaceImageScreen(vm: PlaceDetailViewModel, imageList: List<*>) {
     ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val (imageView, dots) = createRefs()
 
-        val slideImage =
-            remember { mutableStateOf(com.special.place.resource.R.drawable.image) }
+        val place = vm.placeInfo.observeAsState()
+
         val state = rememberPagerState()
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(screenWidth),
-            count = 3, state = state
+            count = place.value?.imageList?.size ?: 0, state = state
         ) { page ->
-            when (page) {
-
-                0 -> {
-                    slideImage.value = com.special.place.resource.R.drawable.image
-                }
-
-                1 -> {
-                    slideImage.value = com.special.place.resource.R.drawable.image
-                }
-
-                2 -> {
-                    slideImage.value = com.special.place.resource.R.drawable.image
-                }
-            }
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .constrainAs(imageView) {
                         top.linkTo(parent.top)
@@ -62,12 +45,13 @@ fun PlaceImageScreen() {
                         end.linkTo(parent.end)
                         width = Dimension.wrapContent
                     }) {
-                Image(
-                    painterResource(slideImage.value),
-                    contentDescription = "",
+                AsyncImage(
+                    model = vm.coilRequest(place.value!!.imageList[page].toString()),
+                    contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(screenWidth),
+                    contentScale = ContentScale.Crop
                 )
             }
 
@@ -81,7 +65,7 @@ fun PlaceImageScreen() {
             }
             .padding(vertical = 52.dp)) {
             DotsIndicator(
-                totalDots = 3,
+                totalDots = imageList.size,
                 selectedIndex = state.currentPage,
                 selectedColor = Color.White,
                 unSelectedColor = Color.White

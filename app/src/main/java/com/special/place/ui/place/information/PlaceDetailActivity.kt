@@ -1,0 +1,361 @@
+package com.special.place.ui.place.information
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import com.special.domain.entities.place.Place
+import com.special.place.resource.R
+import com.special.place.ui.my.setting.addFocusCleaner
+import com.special.place.ui.theme.*
+import com.special.place.ui.utils.MyTopAppBar
+import com.special.place.ui.utils.PrimaryButton
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
+const val PLACE_ID = "id"
+const val PLACE_NAME = "name"
+const val PLACE_TYPE = "type"
+const val PLACE_RECOMMEND_CNT = "3"
+const val PLACE_VISIT_CNT = "3"
+const val PLACE_WRITER_NAME = "writer"
+const val PLACE_IMAGES = "imageList"
+const val PLACE_HASH_TAGS = "hashTags"
+
+@AndroidEntryPoint
+class PlaceDetailActivity : ComponentActivity() {
+    companion object {
+        fun newIntent(context: Context, place: Place? = null): Intent =
+            Intent(context, PlaceDetailActivity::class.java).apply {
+                if (place != null) {
+                    val imageList: java.io.Serializable = place.imageUuids as java.io.Serializable
+                    val hashTags: java.io.Serializable = place.hashTags as java.io.Serializable
+                    putExtra(PLACE_ID, place.id)
+                    putExtra(PLACE_TYPE, place.placeType.name)
+                    putExtra(PLACE_NAME, place.name)
+                    putExtra(PLACE_RECOMMEND_CNT, place.recommendCount)
+                    putExtra(PLACE_VISIT_CNT, place.visitCount)
+                    putExtra(PLACE_WRITER_NAME, place.nickName)
+                    putExtra(PLACE_IMAGES, imageList)
+                    putExtra(PLACE_HASH_TAGS, hashTags)
+                }
+            }
+
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        super.onCreate(savedInstanceState)
+
+        val onClose: () -> Unit = {
+            finish()
+        }
+
+        val vm: PlaceDetailViewModel by viewModels()
+        val id = intent.getStringExtra(PLACE_ID) ?: ""
+        val name = intent.getStringExtra(PLACE_NAME) ?: ""
+        val type = intent.getStringExtra(PLACE_TYPE) ?: ""
+        val recommendCnt = intent.getIntExtra(PLACE_RECOMMEND_CNT, 0)
+        val visitCnt = intent.getIntExtra(PLACE_VISIT_CNT, 0)
+        val writerName = intent.getStringExtra(PLACE_WRITER_NAME) ?: ""
+        val imageList = intent.getSerializableExtra(PLACE_IMAGES) as List<*>
+        val hashTags = intent.getSerializableExtra(PLACE_HASH_TAGS) as List<*>
+        vm.setPlaceInfo(
+            PlaceInfo(
+                id,
+                name,
+                type,
+                recommendCnt,
+                visitCnt,
+                writerName,
+                imageList,
+                hashTags
+            )
+        )
+
+        setContent {
+            PlaceTheme {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    val display = this.applicationContext?.resources?.displayMetrics
+                    val screenHeight = display?.heightPixels!!.dp
+                    val coroutineScope = rememberCoroutineScope()
+                    val bottomSheetState =
+                        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+                    var bottomSheetContent = remember {
+                        "comment"
+                    }
+                    val onDelete: () -> Unit = {
+                        vm.placeDeleteBtnClick()
+                        bottomSheetContent = "placeDelete"
+                    }
+                    vm.setBottomSheet.observe(this) {
+                        coroutineScope.launch {
+                            bottomSheetState.show()
+                        }
+                    }
+
+                    Scaffold(
+                        topBar = {
+                            MyTopAppBar(
+                                title = "",
+                                navigationType = "close",
+                                navigationListener = { onClose() },
+                                actionType = "delete",
+                                actionListener = { onDelete() }
+                            )
+                        },
+                        content = {
+                            ModalBottomSheetLayout(
+                                sheetContent = {
+                                    BottomSheetScreen(vm, bottomSheetContent, screenHeight)
+                                },
+                                sheetState = bottomSheetState,
+                                sheetShape = RoundedCornerShape(36.dp)
+                            ) {
+                                ConstraintLayout {
+
+                                    val (imagePager, info) = createRefs()
+                                    val screenWidth =
+                                        (LocalConfiguration.current.screenWidthDp - 28).dp
+
+                                    LazyColumn(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                    ) {
+                                        items(1) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .constrainAs(imagePager) {
+                                                        top.linkTo(parent.top)
+                                                        start.linkTo(parent.start)
+                                                        end.linkTo(parent.end)
+                                                    }
+                                            ) {
+                                                PlaceImageScreen(vm, imageList)
+                                                Column() {
+                                                    Spacer(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .height(screenWidth)
+                                                    )
+                                                    Spacer(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .height(28.dp)
+                                                            .background(
+                                                                color = Color.White,
+                                                                shape = RoundedCornerShape(
+                                                                    topStart = 24.dp,
+                                                                    topEnd = 24.dp
+                                                                )
+                                                            )
+                                                    )
+                                                }
+
+                                            }
+                                        }
+                                        items(1) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(end = 4.dp)
+                                                    .constrainAs(info) {
+                                                        start.linkTo(parent.start)
+                                                        top.linkTo(imagePager.top)
+                                                        end.linkTo(parent.end)
+                                                        bottom.linkTo(parent.bottom)
+                                                        width = Dimension.fillToConstraints
+                                                    }
+                                            ) {
+                                                PlaceInfoScreen(vm)
+                                            }
+                                        }
+                                        items(3) {
+                                            CommentScreen(vm)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomSheetScreen(vm: PlaceDetailViewModel, bottom: String, screenHeight: Dp) {
+    Log.d("??", vm.setBottomSheet.value.toString())
+    when (bottom) {
+        "comment" -> {
+            CommentBottomSheetScreen(screenHeight)
+        }
+        "placeDelete" -> {
+            DeletePlaceBottomSheetScreen()
+        }
+        else -> {
+            CommentBottomSheetScreen(screenHeight)
+        }
+    }
+}
+
+@Composable
+fun DeletePlaceBottomSheetScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(500.dp)
+    ) {
+        Spacer(modifier = Modifier.height(24.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .padding(horizontal = 20.dp),
+            Arrangement.SpaceBetween,
+        ) {
+            Image(painter = painterResource(id = R.drawable.ic_close), contentDescription = "close")
+            Text(text = "댓글을 ")
+        }
+    }
+}
+
+@Composable
+fun CommentBottomSheetScreen(screenHeight: Dp) {
+
+    var text by remember { mutableStateOf("일상의 발견") }
+    var textFieldWidth by remember { mutableStateOf(1.dp) }
+    var textFieldColor by remember { mutableStateOf(Grey300) }
+
+    val focusRequester by remember { mutableStateOf(FocusRequester()) }
+    val focusManager = LocalFocusManager.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .addFocusCleaner(focusManager)
+            .fillMaxHeight()
+            .padding(24.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Image(painter = painterResource(id = R.drawable.ic_close), contentDescription = "close")
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "댓글을 작성해주세요",
+                textAlign = TextAlign.Center,
+                style = Subtitle1,
+                fontSize = 16.sp
+            )
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        ConstraintLayout {
+            val (textField, count) = createRefs()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(176.dp)
+                    .border(
+                        BorderStroke(width = textFieldWidth, color = textFieldColor),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .constrainAs(textField) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.wrapContent
+                    }
+            ) {
+                TextField(
+                    value = text,
+                    onValueChange = { text = it.take(6) },
+                    modifier = Modifier
+                        .focusRequester(focusRequester = focusRequester)
+                        .onFocusChanged {
+                            if (it.isFocused) {
+                                textFieldWidth = 3.dp
+                                textFieldColor = Grey900
+                            } else {
+                                textFieldWidth = 1.dp
+                                textFieldColor = Grey300
+                            }
+                        },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    )
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .padding(top = 140.dp)
+                    .padding(horizontal = 20.dp)
+                    .constrainAs(count) {
+                        top.linkTo(textField.top)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    }
+            ) {
+                Text(
+                    text = text.length.toString() + "/100", style = Body1, color = Grey600
+                )
+            }
+        }
+
+        PrimaryButton(text = "작성 완료") {}
+    }
+
+}
+
+// 전체화면의 터치 이벤트 감지
+fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit = {}): Modifier {
+    return this.pointerInput(Unit) {
+        detectTapGestures(onTap = {
+            doOnClear()
+            focusManager.clearFocus()
+        })
+    }
+}
+
+enum class BottomSheetType {
+    TYPE1, TYPE2
+}

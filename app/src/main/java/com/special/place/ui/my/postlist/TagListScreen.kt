@@ -17,7 +17,7 @@ import com.special.place.ui.theme.Subtitle1
 
 
 @Composable
-fun TagList(list: List<String>) {
+fun TagList(list: List<*>) {
     Row(
     ) {
         for (i in 0 until list.size - 1) {
@@ -27,7 +27,7 @@ fun TagList(list: List<String>) {
                     .padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
                 Text(
-                    text = list[i] + " ",
+                    text = list[i].toString() + " ",
                     color = Grey800,
                     style = Subtitle1,
                     fontSize = 13.sp,

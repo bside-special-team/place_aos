@@ -136,8 +136,6 @@ fun NicknameModifyScreen() {
                     text = text.length.toString() + "/6", style = Body1, color = Grey600
                 )
             }
-
-
         }
         PrimaryButton(text = stringResource(com.special.place.resource.R.string.btn_modify_done)) {}
     }
