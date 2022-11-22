@@ -1,11 +1,10 @@
 package com.special.place.ui.base
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.special.place.ui.Route
 import com.special.place.ui.login.LoginActivity
 import com.special.place.ui.login.LoginViewModel
@@ -41,8 +40,9 @@ open class BaseActivity : ComponentActivity() {
 
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            lifecycleScope.launchWhenResumed {
                 loginVM.loginStatus.collect { status ->
+                    Log.d("loginBase", "$status by ${this@BaseActivity::class.java.name}")
                     if (!status.isLogin && !isLoginView) {
                         startActivity(LoginActivity.newIntent(this@BaseActivity))
                         finish()

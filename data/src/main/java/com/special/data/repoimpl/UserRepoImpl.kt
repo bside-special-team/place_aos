@@ -11,8 +11,8 @@ import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,19 +26,10 @@ class UserRepoImpl @Inject constructor(
 
 
     private val _loginStatus: MutableStateFlow<LoginStatus> = MutableStateFlow(LoginStatus.empty())
-    override val loginStatus: StateFlow<LoginStatus> = _loginStatus
+    override val loginStatus: Flow<LoginStatus> = _loginStatus
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
-            loginStatus.collect {
-                Log.d("loginUserRepo", "$this")
-                Log.d("loginUserRepo", "status == ${it}")
-            }
-        }
-    }
-
-    override suspend fun checkLogin() {
-        withContext(Dispatchers.Default) {
             runCatching {
                 if (tokenData.isLogin) {
                     _loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))

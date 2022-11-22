@@ -24,7 +24,6 @@ class SplashActivity : ComponentActivity() {
 
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
-            loginVM.checkLogin()
             loginVM.loginStatus.collect {
                 if (it.isLogin) {
                     startActivity(MainActivity.newIntent(this@SplashActivity))
