@@ -1,8 +1,12 @@
 package com.special.domain.entities.place.comment
 
+import com.special.domain.entities.user.User
+
 data class Comment(
     val id: String,
-    val text: String,
+    val comment: String,
+    val placeId: String,
     val createdAt: String,
-    val writerId: String
+    val lastModifiedAt: String,
+    val user: User
 )

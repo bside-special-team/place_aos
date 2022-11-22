@@ -2,19 +2,20 @@ package com.special.remote.apis
 
 import com.special.domain.entities.BaseResponse
 import com.special.domain.entities.place.Place
+import com.special.domain.entities.place.PlaceResponse
 import com.special.domain.entities.place.RequestRegisterPlace
-import com.special.domain.entities.user.Comment
-import com.special.domain.entities.user.CommentRequest
-import com.special.domain.entities.user.CommentResponse
+import com.special.domain.entities.place.comment.Comment
+import com.special.domain.entities.place.comment.CommentRequest
+import com.special.domain.entities.place.comment.CommentResponse
+import com.special.domain.entities.user.LevelInfo
 import com.special.domain.entities.user.User
-import com.special.remote.models.PlaceResponseModel
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface PlaceApi {
 
     @GET("/api/v1/places")
-    suspend fun allPlaces(): PlaceResponseModel
+    suspend fun allPlaces(): PlaceResponse
 
     @POST("/api/v1/places")
     suspend fun registerPlaces(@Body request: RequestRegisterPlace)
@@ -31,7 +32,7 @@ interface PlaceApi {
         @Query("fromLongitude") fromLng: String,
         @Query("toLatitude") toLat: String,
         @Query("toLongitude") toLng: String,
-    ): PlaceResponseModel
+    ): PlaceResponse
 
     @POST("/api/v1/places/check-in")
     suspend fun visitPlace(@Field("placeId") placeId: String): BaseResponse<Place>
@@ -54,4 +55,7 @@ interface PlaceApi {
 
     @GET("/api/v1/users/one")
     suspend fun checkUser(): BaseResponse<User>
+
+    @GET("/api/v1/users/levels")
+    suspend fun levelInfo(): List<LevelInfo>
 }

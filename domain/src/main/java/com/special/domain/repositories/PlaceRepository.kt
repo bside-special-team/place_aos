@@ -6,12 +6,15 @@ import com.special.domain.entities.place.NearPlaces
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.entities.place.comment.Comment
+import com.special.domain.entities.user.PointResult
 import kotlinx.coroutines.flow.Flow
 
 interface PlaceRepository {
     fun updateCoordinate(coordinates: Pair<Coordinate, Coordinate>)
 
     val places: Flow<List<Place>>
+    val placeCount: Flow<NearPlaces>
+    val pointResult: Flow<PointResult>
 
     suspend fun registerPlace(request: RequestRegisterPlace)
 
@@ -36,4 +39,8 @@ interface PlaceRepository {
     suspend fun visitedPlaces(page: Int): Paging<Place>
 
     suspend fun myLikePlace(page: Int): Paging<Place>
+
+    suspend fun commentList(targetId: String, lastTimestamp: Long): Paging<Comment>
+
+    suspend fun registerComment(targetId: String, comment: String)
 }

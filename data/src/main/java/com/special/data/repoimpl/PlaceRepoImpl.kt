@@ -2,17 +2,13 @@ package com.special.data.repoimpl
 
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.entities.Paging
-import com.special.domain.entities.place.Coordinate
-import com.special.domain.entities.place.NearPlaces
-import com.special.domain.entities.place.Place
-import com.special.domain.entities.place.RequestRegisterPlace
+import com.special.domain.entities.place.*
 import com.special.domain.entities.place.comment.Comment
+import com.special.domain.entities.place.comment.CommentRequest
+import com.special.domain.entities.user.PointResult
 import com.special.domain.repositories.PlaceRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +16,10 @@ import javax.inject.Singleton
 class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSource) :
     PlaceRepository {
 
-    private val coordinatesFlow: MutableStateFlow<Pair<Coordinate, Coordinate>> = MutableStateFlow(Pair(Coordinate("0", "0"), Coordinate("0", "0")))
+    private val coordinatesFlow: MutableSharedFlow<Pair<Coordinate, Coordinate>> = MutableSharedFlow(replay = 1)
+    private val _pointResult: MutableStateFlow<PointResult> = MutableStateFlow(PointResult.empty())
+
+    override val pointResult: Flow<PointResult> = _pointResult
 
     override fun updateCoordinate(coordinates: Pair<Coordinate, Coordinate>) {
         runBlocking { coordinatesFlow.emit(coordinates) }
@@ -29,8 +28,15 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
     @OptIn(FlowPreview::class)
     override val places: Flow<List<Place>>
         get() = coordinatesFlow.debounce(200).map {
-            placeRemote.allPlaces().getOrNull() ?: listOf()
+            placeRemote.boundsPlaces(from = it.first, to = it.second).getOrDefault(PlaceResponse.empty())
+        }.map {
+            _placeCount.emit(NearPlaces(hiddenPlaceCount = it.hiddenPlaceCount, landmarkCount = it.landMarkCount))
+            it.hiddenPlaces + it.landMarkPlaces
         }
+
+    private val _placeCount: MutableSharedFlow<NearPlaces> = MutableSharedFlow(replay = 1)
+    override val placeCount: Flow<NearPlaces>
+        get() = _placeCount
 
     override suspend fun registerPlace(request: RequestRegisterPlace) {
         withContext(Dispatchers.IO) {
@@ -39,11 +45,15 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
     }
 
     override suspend fun visitPlace(targetId: String) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            _pointResult.emit(placeRemote.visitPlace(targetId))
+        }
     }
 
     override suspend fun likePlace(targetId: String) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            _pointResult.emit(placeRemote.recommendPlace(targetId))
+        }
     }
 
     override suspend fun unLikePlace(targetId: String) {
@@ -80,5 +90,17 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
 
     override suspend fun myLikePlace(page: Int): Paging<Place> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun commentList(targetId: String, lastTimestamp: Long): Paging<Comment> {
+        return withContext(Dispatchers.IO) {
+            placeRemote.commentList(targetId, lastTimestamp)
+        }
+    }
+
+    override suspend fun registerComment(targetId: String, comment: String) {
+        withContext(Dispatchers.IO) {
+            _pointResult.emit(placeRemote.registerComment(CommentRequest(placeId = targetId, comment = comment)))
+        }
     }
 }

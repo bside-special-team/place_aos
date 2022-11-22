@@ -5,9 +5,11 @@ import com.special.domain.datasources.TokenDataSource
 import com.special.domain.entities.Paging
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.Place
+import com.special.domain.entities.place.PlaceResponse
 import com.special.domain.entities.place.RequestRegisterPlace
-import com.special.domain.entities.user.Comment
-import com.special.domain.entities.user.CommentRequest
+import com.special.domain.entities.place.comment.Comment
+import com.special.domain.entities.place.comment.CommentRequest
+import com.special.domain.entities.user.LevelInfo
 import com.special.domain.entities.user.PointResult
 import com.special.domain.entities.user.User
 import com.special.remote.ApiManager
@@ -30,14 +32,14 @@ class RemoteDataImpl @Inject constructor(
         }
     }
 
-    override suspend fun boundsPlaces(from: Coordinate, to: Coordinate): Result<List<Place>> {
+    override suspend fun boundsPlaces(from: Coordinate, to: Coordinate): Result<PlaceResponse> {
         return tokenData.checkToken {
             client.coordinatePlaces(
                 fromLat = from.latitude,
                 fromLng = from.longitude,
                 toLat = to.latitude,
                 toLng = to.longitude
-            ).let { it.landMarkPlaces + it.hiddenPlaces }
+            )
         }
     }
 
@@ -84,5 +86,9 @@ class RemoteDataImpl @Inject constructor(
         return client.placeComments(placeId, lastTimestamp, limit = 15).let {
             Paging(isLast = !it.hasNext, list = it.comments)
         }
+    }
+
+    override suspend fun levelInfo(): List<LevelInfo> {
+        return client.levelInfo()
     }
 }

@@ -1,12 +1,15 @@
 package com.special.domain.repositories
 
+import com.special.domain.entities.user.LevelInfo
 import com.special.domain.entities.user.LoginStatus
 import com.special.domain.entities.user.SocialLoginResponse
+import com.special.domain.entities.user.User
 import com.special.domain.entities.user.badge.Badge
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     val loginStatus: Flow<LoginStatus>
+    val currentUser: Flow<User>
 
     suspend fun socialLogin(response: SocialLoginResponse)
 
@@ -22,4 +25,5 @@ interface UserRepository {
 
     suspend fun modifyNickName(nickName: String)
 
+    suspend fun nextLevel(): LevelInfo
 }

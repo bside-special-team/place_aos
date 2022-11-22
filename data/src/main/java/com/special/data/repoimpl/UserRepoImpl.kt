@@ -2,17 +2,15 @@ package com.special.data.repoimpl
 
 import android.util.Log
 import com.special.domain.datasources.LoginRemoteDataSource
+import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.datasources.TokenDataSource
-import com.special.domain.entities.user.LoginStatus
-import com.special.domain.entities.user.LoginToken
-import com.special.domain.entities.user.SocialLoginResponse
+import com.special.domain.entities.user.*
 import com.special.domain.entities.user.badge.Badge
 import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -21,12 +19,22 @@ import javax.inject.Singleton
 @Singleton
 class UserRepoImpl @Inject constructor(
     private val loginRemote: LoginRemoteDataSource,
+    private val remote: RemoteDataSource,
     private val tokenData: TokenDataSource
 ) : UserRepository {
 
-
     private val _loginStatus: MutableStateFlow<LoginStatus> = MutableStateFlow(LoginStatus.empty())
     override val loginStatus: Flow<LoginStatus> = _loginStatus
+
+    private val _user: StateFlow<User?> = _loginStatus.map {
+        if (it.isLogin) {
+            remote.checkUser()
+        } else {
+            null
+        }
+    }.stateIn(CoroutineScope(Dispatchers.IO), started = SharingStarted.Lazily, null)
+
+    override val currentUser: Flow<User> = _user.mapNotNull { it }
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
@@ -34,11 +42,9 @@ class UserRepoImpl @Inject constructor(
                 if (tokenData.isLogin) {
                     _loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
                 } else {
-                    Log.d("loginUserRepo", "isLogin == false")
                     _loginStatus.emit(LoginStatus.empty())
                 }
             }.onFailure {
-                Log.d("loginUserRepo", "loadToken failed")
                 _loginStatus.emit(LoginStatus.empty())
             }
         }
@@ -89,7 +95,9 @@ class UserRepoImpl @Inject constructor(
     }
 
     override suspend fun modifyNickName(nickName: String) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            remote.updateNickName(nickName)
+        }
     }
 
     private fun loadToken(): LoginToken {
@@ -103,5 +111,15 @@ class UserRepoImpl @Inject constructor(
         }
     }
 
-
+    override suspend fun nextLevel(): LevelInfo {
+        return withContext(Dispatchers.IO) {
+            val userData = _user.value
+            if (userData != null) {
+                val allLevelInfo = remote.levelInfo()
+                allLevelInfo.find { it.minPoint > userData.point } ?: allLevelInfo.last()
+            } else {
+                LevelInfo.none()
+            }
+        }
+    }
 }
