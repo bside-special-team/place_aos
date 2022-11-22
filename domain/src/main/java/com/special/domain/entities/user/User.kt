@@ -3,6 +3,7 @@ package com.special.domain.entities.user
 import com.google.gson.annotations.SerializedName
 
 data class User(
+    @SerializedName("userId")
     val id: String,
     @SerializedName("authProvider")
     val loginType: LoginType?,
