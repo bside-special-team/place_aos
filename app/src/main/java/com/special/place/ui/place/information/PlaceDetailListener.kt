@@ -9,7 +9,8 @@ interface PlaceDetailListener {
     val comment: LiveData<List<Comment>>
     val isBookmarked: LiveData<Boolean>
 
-    val setBottomSheet: LiveData<String>
+    val setBottomSheetComment: LiveData<String>
+    val setBottomSheetDelete: LiveData<String>
 
     fun recommendPlace(id: String)
     fun bookmarkPlace(id: String)

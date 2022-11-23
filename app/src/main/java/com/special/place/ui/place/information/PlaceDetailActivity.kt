@@ -3,7 +3,6 @@ package com.special.place.ui.place.information
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -28,7 +27,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -110,24 +108,28 @@ class PlaceDetailActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val display = this.applicationContext?.resources?.displayMetrics
-                    val screenHeight = display?.heightPixels!!.dp
                     val coroutineScope = rememberCoroutineScope()
                     val bottomSheetState =
                         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-                    var bottomSheetContent = remember {
-                        "comment"
+
+                    var currentBottomSheet: BottomSheetType? by remember {
+                        mutableStateOf(BottomSheetType.TYPE1)
                     }
                     val onDelete: () -> Unit = {
                         vm.placeDeleteBtnClick()
-                        bottomSheetContent = "placeDelete"
+                        currentBottomSheet = BottomSheetType.TYPE2
                     }
-                    vm.setBottomSheet.observe(this) {
+                    vm.setBottomSheetComment.observe(this) {
+                        coroutineScope.launch {
+                            currentBottomSheet = BottomSheetType.TYPE1
+                            bottomSheetState.show()
+                        }
+                    }
+                    vm.setBottomSheetDelete.observe(this) {
                         coroutineScope.launch {
                             bottomSheetState.show()
                         }
                     }
-
                     Scaffold(
                         topBar = {
                             MyTopAppBar(
@@ -141,7 +143,12 @@ class PlaceDetailActivity : ComponentActivity() {
                         content = {
                             ModalBottomSheetLayout(
                                 sheetContent = {
-                                    BottomSheetScreen(vm, bottomSheetContent, screenHeight)
+                                    currentBottomSheet?.let {
+                                        SheetLayout(
+                                            bottomSheetType = it
+                                        )
+                                    }
+//                                    BottomSheetScreen(vm, bottomSheetContent, screenHeight)
                                 },
                                 sheetState = bottomSheetState,
                                 sheetShape = RoundedCornerShape(36.dp)
@@ -220,18 +227,12 @@ class PlaceDetailActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomSheetScreen(vm: PlaceDetailViewModel, bottom: String, screenHeight: Dp) {
-    Log.d("??", vm.setBottomSheet.value.toString())
-    when (bottom) {
-        "comment" -> {
-            CommentBottomSheetScreen(screenHeight)
-        }
-        "placeDelete" -> {
-            DeletePlaceBottomSheetScreen()
-        }
-        else -> {
-            CommentBottomSheetScreen(screenHeight)
-        }
+fun SheetLayout(
+    bottomSheetType: BottomSheetType
+) {
+    when (bottomSheetType) {
+        BottomSheetType.TYPE1 -> CommentBottomSheetScreen()
+        BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen()
     }
 }
 
@@ -240,26 +241,17 @@ fun DeletePlaceBottomSheetScreen() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
+            .wrapContentHeight()
+            .padding(vertical = 32.dp, horizontal = 28.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .padding(horizontal = 20.dp),
-            Arrangement.SpaceBetween,
-        ) {
-            Image(painter = painterResource(id = R.drawable.ic_close), contentDescription = "close")
-            Text(text = "댓글을 ")
-        }
+        // TODO 삭제요청 컨텐츠
     }
 }
 
 @Composable
-fun CommentBottomSheetScreen(screenHeight: Dp) {
+fun CommentBottomSheetScreen() {
 
-    var text by remember { mutableStateOf("일상의 발견") }
+    var text by remember { mutableStateOf("") }
     var textFieldWidth by remember { mutableStateOf(1.dp) }
     var textFieldColor by remember { mutableStateOf(Grey300) }
 

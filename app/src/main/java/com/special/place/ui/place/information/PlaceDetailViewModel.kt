@@ -1,6 +1,5 @@
 package com.special.place.ui.place.information
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,8 +25,11 @@ class PlaceDetailViewModel @Inject constructor(private val coilRequest: CoilRequ
     override val placeInfo: LiveData<PlaceInfo>
         get() = _placeInfo
 
-    private val _setBottomSheet: MutableLiveData<String> = MutableLiveData()
-    override val setBottomSheet: LiveData<String> = _setBottomSheet
+    private val _setBottomSheetComment: MutableLiveData<String> = MutableLiveData()
+    override val setBottomSheetComment: LiveData<String> = _setBottomSheetComment
+
+    private val _setBottomSheetDelete: MutableLiveData<String> = MutableLiveData()
+    override val setBottomSheetDelete: LiveData<String> = _setBottomSheetDelete
     override fun bookmarkPlace(id: String) {
         TODO("Not yet implemented")
     }
@@ -41,18 +43,13 @@ class PlaceDetailViewModel @Inject constructor(private val coilRequest: CoilRequ
     }
 
     override fun commentBtnClick() {
-//        _setBottomSheet.value = "comment"
-        Log.d("comment??", _setBottomSheet.value.toString())
-        Log.d("comment??setB0ot", setBottomSheet.value.toString())
-//
-        _setBottomSheet.postValue("comment")
+        _setBottomSheetComment.postValue("comment")
     }
 
     override fun placeDeleteBtnClick() {
 
 //        _setBottomSheet.value = "placeDelete"
-        Log.d("placeDelete?", _setBottomSheet.value.toString())
-        _setBottomSheet.postValue("placeDelete")
+        _setBottomSheetDelete.postValue("placeDelete")
     }
 
     override fun coilRequest(uuid: String): ImageRequest {
