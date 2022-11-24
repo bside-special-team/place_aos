@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -13,16 +14,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
+import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.theme.Body1
 import com.special.place.ui.theme.Purple500
 import com.special.place.ui.theme.Subtitle4
 
 
 @Composable
-fun PostItem(place: List<Place>, bookmark: LiveData<Boolean>, index: Int) {
+fun PostItem(vm: MyInformationViewModel, index: Int) {
+    val place: List<Place> = vm.myPlace.observeAsState().value!!
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +62,7 @@ fun PostItem(place: List<Place>, bookmark: LiveData<Boolean>, index: Int) {
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            if (bookmark.value!!) {
+            if (false) { // TODO Bookmark is false
                 // 보라
                 Image(
                     modifier = Modifier

@@ -100,8 +100,7 @@ class MyInformationActivity : ComponentActivity() {
                                         modifier = Modifier.padding(horizontal = 24.dp)
                                     ) {
                                         PostItem(
-                                            place = vm.currentVisitedPlace.value!!,
-                                            bookmark = vm.isBookmarked,
+                                            vm = vm,
                                             index = it
                                         )
                                     }

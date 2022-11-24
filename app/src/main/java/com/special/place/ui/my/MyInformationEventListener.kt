@@ -14,7 +14,7 @@ interface MyInformationEventListener {
     val myBookmarkPlace: LiveData<List<Place>>
     val myPlace: LiveData<List<Place>>
 
-    val isBookmarked: LiveData<Boolean>
+//    val isBookmarked: LiveData<Boolean>
 
     fun bookmarkPlace(id: String)
 

@@ -17,7 +17,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import com.special.domain.entities.place.CommentPlace
 import com.special.place.resource.R
 import com.special.place.ui.my.postlist.TagList
@@ -26,8 +25,7 @@ import com.special.place.ui.theme.*
 
 @Composable
 fun MyCommentScreen(
-    postList: List<CommentPlace>,
-    bookmark: LiveData<Boolean>
+    postList: List<CommentPlace>
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -38,13 +36,13 @@ fun MyCommentScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CommentPostList(postList, bookmark)
+        CommentPostList(postList)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
-fun CommentPostList(pList: List<CommentPlace>, bookmark: LiveData<Boolean>) {
+fun CommentPostList(pList: List<CommentPlace>) {
     val scrollState = rememberLazyListState()
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -52,14 +50,14 @@ fun CommentPostList(pList: List<CommentPlace>, bookmark: LiveData<Boolean>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(pList.size) {
-            CommentItem(pList, bookmark, 0)
+            CommentItem(pList, 0)
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
 @Composable
-fun CommentItem(list: List<CommentPlace>, bookmark: LiveData<Boolean>, index: Int) {
+fun CommentItem(list: List<CommentPlace>, index: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +95,7 @@ fun CommentItem(list: List<CommentPlace>, bookmark: LiveData<Boolean>, index: In
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            if (bookmark.value!!) {
+            if (false) { //TODO bookmark is false
                 // 보라
                 Image(
                     modifier = Modifier

@@ -12,8 +12,9 @@ import javax.inject.Inject
 class MyInformationViewModel @Inject constructor() : ViewModel(), MyInformationEventListener {
     override val currentVisitedPlace: LiveData<List<Place>>
         get() = TODO("Not yet implemented")
-    override val isBookmarked: LiveData<Boolean>
-        get() = TODO("Not yet implemented")
+
+    //    override val isBookmarked: LiveData<Boolean>
+//        get() = TODO("Not yet implemented")
     override val userInfo: LiveData<User>
         get() = TODO("Not yet implemented")
     override val myBookmarkPlace: LiveData<List<Place>>
