@@ -55,7 +55,9 @@ data class Place(
     val visitCount: Int,
     val hashTags: List<String>,
     val createdAt: String,
-    val lastModifiedAt: String
+    val lastModifiedAt: String,
+    val recommendCount: Int,
+    val nickName: String
 ) {
     companion object {
         fun mock() = Place(
@@ -67,7 +69,9 @@ data class Place(
             visitCount = 0,
             hashTags = listOf(),
             createdAt = "",
-            lastModifiedAt = ""
+            lastModifiedAt = "",
+            recommendCount = 0,
+            nickName = "방방방"
         )
     }
 }

@@ -8,8 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -105,7 +103,6 @@ fun NickNameItem(nickname: String) {
 fun SettingItem(item: Int, image: Int, subItem: Int) {
     val itemText = stringResource(id = item)
     var logoutBtnText: String
-    val checkedState = remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier

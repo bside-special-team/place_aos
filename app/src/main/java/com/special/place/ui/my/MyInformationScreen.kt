@@ -38,6 +38,7 @@ fun MyInformationScreen() {
             .fillMaxSize()
             .fillMaxHeight()
             .fillMaxWidth()
+            .background(color = Color.White, shape = RoundedCornerShape(topStart = 5.dp))
             .padding(23.5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
