@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -27,6 +28,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.special.place.resource.R
+import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.my.postlist.PostScreen
 import com.special.place.ui.theme.PlaceTheme
 import com.special.place.ui.theme.Subtitle4
@@ -42,12 +44,11 @@ data class MyPostData(
     val bookmark: Boolean
 )
 
-val postList = ArrayList<MyPostData>()
-val postList2 = ArrayList<MyPostData>()
-
-
 @AndroidEntryPoint
 class MyActActivity : ComponentActivity() {
+
+    private val vm: MyInformationViewModel by viewModels()
+
     companion object {
         fun newIntent(context: Context) = Intent(context, MyActActivity::class.java)
     }
@@ -59,14 +60,6 @@ class MyActActivity : ComponentActivity() {
         val onBack: () -> Unit = {
             finish()
         }
-
-        postList.add(MyPostData("히든플레이스", "가로수길 아래", listOf("조용한", "힙한", "신기한"), true))
-        postList.add(MyPostData("히든플레이스", "가로수길 아래", listOf("시끄러운", "힙한", "신기한"), false))
-        postList.add(MyPostData("히든플레이스", "가로수길 아래", listOf("얍", "힙한", "신기한"), false))
-
-        postList2.add(MyPostData("히든플레이스", "추천 아래", listOf("조용한", "힙한", "신기한"), true))
-        postList2.add(MyPostData("히든플레이스", "가로수길 아래", listOf("시끄러운", "힙한", "신기한"), false))
-        postList2.add(MyPostData("히든플레이스", "가로수길 아래", listOf("얍", "힙한", "신기한"), false))
 
         val pages = listOf(
             resources.getString(R.string.tab_my_post), resources.getString(R.string.tab_my_comment),
@@ -149,10 +142,18 @@ class MyActActivity : ComponentActivity() {
                                     state = pagerState,
                                 ) { page ->
                                     when (page) {
-                                        0 -> PostScreen(postList) // 내 게시물
-                                        1 -> MyCommentScreen() // 내 댓글
-                                        2 -> PostScreen(postList2) // 추천
-                                        3 -> PostScreen(postList) // 북마크
+                                        0 -> PostScreen(
+                                            vm.myPlace.value!!
+                                        ) // 내 게시물
+                                        1 -> MyCommentScreen(
+                                            vm.myCommentPlace.value!!
+                                        ) // 내 댓글
+                                        2 -> PostScreen(
+                                            vm.myRecommendPlace.value!!
+                                        ) // 추천
+                                        3 -> PostScreen(
+                                            vm.myBookmarkPlace.value!!
+                                        ) // 북마크
                                     }
                                 }
                             }
