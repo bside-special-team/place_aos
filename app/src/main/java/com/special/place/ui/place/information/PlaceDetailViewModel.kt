@@ -59,6 +59,14 @@ class PlaceDetailViewModel @Inject constructor(private val coilRequest: CoilRequ
     override fun setPlaceInfo(placeInfo: PlaceInfo) {
         _placeInfo.postValue(placeInfo)
     }
+
+    override fun pickPlaceDeleteReason(idx: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun placeDeleteRequestClick() {
+        TODO("Not yet implemented")
+    }
 }
 
 data class PlaceInfo(

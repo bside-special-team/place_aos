@@ -20,4 +20,7 @@ interface PlaceDetailListener {
     fun placeDeleteBtnClick()
     fun coilRequest(uuid: String): ImageRequest
     fun setPlaceInfo(placeInfo: PlaceInfo)
+
+    fun pickPlaceDeleteReason(idx: Int)
+    fun placeDeleteRequestClick()
 }

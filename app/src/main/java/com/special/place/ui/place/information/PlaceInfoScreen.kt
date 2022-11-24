@@ -1,6 +1,5 @@
 package com.special.place.ui.place.information
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -38,6 +37,7 @@ fun PlaceInfoScreen(
     val visitCnt = place?.visitCnt ?: 0
     val writerName = place?.writerName ?: ""
     val hashTags = place?.hashTags ?: listOf("")
+    val id = place?.id ?: ""
 
     val placeType = if (type == "Hidden") {
         "히든플레이스"
@@ -122,7 +122,7 @@ fun PlaceInfoScreen(
                 .height(1.dp)
                 .background(color = Grey200)
         )
-        LandMarkCard(type, recommendCnt)
+        LandMarkCard(vm, id, type, recommendCnt)
         Spacer(modifier = Modifier.height(48.dp))
 //        CommentScreen()
         Row(
@@ -150,7 +150,7 @@ fun PlaceInfoScreen(
 }
 
 @Composable
-fun LandMarkCard(type: String, recommend_cnt: Int) {
+fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: String, recommend_cnt: Int) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -202,7 +202,7 @@ fun LandMarkCard(type: String, recommend_cnt: Int) {
                 elevation = ButtonDefaults.elevation(
                     defaultElevation = 0.dp
                 ),
-                onClick = { }) {
+                onClick = { vm.recommendPlace(id) }) {
                 Image(
                     modifier = Modifier
                         .width(16.dp)
@@ -230,20 +230,5 @@ fun CommentScreen(vm: PlaceDetailViewModel) {
             CommentItem(list = arrayListOf(Comment("일상의 발견", "4일전", "정말 좋아요!!!")), index = 0)
             Spacer(modifier = Modifier.height(20.dp))
         }
-    }
-}
-
-@Composable
-fun CommentBottomSheet() {
-    // TODO 임시
-    Log.d("comment", "bototm??")
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 28.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CommentItem(list = arrayListOf(Comment("일상의 발견", "4일전", "정말 좋아요!!!")), index = 0)
-        Spacer(modifier = Modifier.height(20.dp))
     }
 }

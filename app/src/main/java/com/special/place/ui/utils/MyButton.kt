@@ -68,11 +68,9 @@ fun PrimaryButtonPressed(text: String, clickListener: () -> Unit) {
 }
 
 @Composable
-fun PrimaryButtonDisable(text: String, clickListener: () -> Unit) {
+fun PrimaryButtonDisable(text: String, modifier: Modifier, clickListener: () -> Unit) {
     Button(
-        modifier = Modifier
-            .width(312.dp)
-            .height(56.dp),
+        modifier = modifier.height(56.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(Grey300),
         elevation = ButtonDefaults.elevation(

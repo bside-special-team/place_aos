@@ -6,16 +6,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
@@ -37,6 +35,8 @@ import com.special.place.ui.my.setting.addFocusCleaner
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.MyTopAppBar
 import com.special.place.ui.utils.PrimaryButton
+import com.special.place.ui.utils.PrimaryButtonDisable
+import com.special.place.ui.utils.SecondaryButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -145,7 +145,8 @@ class PlaceDetailActivity : ComponentActivity() {
                                 sheetContent = {
                                     currentBottomSheet?.let {
                                         SheetLayout(
-                                            bottomSheetType = it
+                                            bottomSheetType = it,
+                                            vm = vm
                                         )
                                     }
 //                                    BottomSheetScreen(vm, bottomSheetContent, screenHeight)
@@ -228,16 +229,17 @@ class PlaceDetailActivity : ComponentActivity() {
 
 @Composable
 fun SheetLayout(
-    bottomSheetType: BottomSheetType
+    bottomSheetType: BottomSheetType,
+    vm: PlaceDetailViewModel
 ) {
     when (bottomSheetType) {
-        BottomSheetType.TYPE1 -> CommentBottomSheetScreen()
-        BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen()
+        BottomSheetType.TYPE1 -> CommentBottomSheetScreen(vm)
+        BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen(vm)
     }
 }
 
 @Composable
-fun DeletePlaceBottomSheetScreen() {
+fun DeletePlaceBottomSheetScreen(vm: PlaceDetailViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -245,18 +247,81 @@ fun DeletePlaceBottomSheetScreen() {
             .padding(vertical = 32.dp, horizontal = 28.dp)
     ) {
         // TODO 삭제요청 컨텐츠
+
+        Text(text = "이 게시물을 삭제 요청하는 이유", style = Title2, fontSize = 20.sp)
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(text = "3건 이상의 신고가 들어오면 자동 삭제됩니다", style = Subtitle1, fontSize = 16.sp)
+        Spacer(modifier = Modifier.height(32.dp))
+        Box(
+            modifier = Modifier
+                .height(56.dp)
+                .fillMaxWidth()
+                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
+                .clickable { vm.pickPlaceDeleteReason(0) },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "해당 위치에 없는 게시물이에요",
+                style = Subtitle2, color = Color.Black,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Box(
+            modifier = Modifier
+                .height(56.dp)
+                .fillMaxWidth()
+                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
+                .clickable { vm.pickPlaceDeleteReason(1) },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "부적절한 내용이 있어요",
+                style = Subtitle2, color = Color.Black,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Box(
+            modifier = Modifier
+                .height(56.dp)
+                .fillMaxWidth()
+                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
+                .clickable { vm.pickPlaceDeleteReason(2) },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "중복 작성된 게시물이에요",
+                style = Subtitle2, color = Color.Black,
+                textAlign = TextAlign.Center
+            )
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            SecondaryButton(
+                text = "닫기", clickListener = {},
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.fillMaxWidth(0.05f))
+            PrimaryButtonDisable(
+                text = "삭제 요청하기",
+                clickListener = { vm.placeDeleteRequestClick() },
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
 @Composable
-fun CommentBottomSheetScreen() {
-
-    var text by remember { mutableStateOf("") }
-    var textFieldWidth by remember { mutableStateOf(1.dp) }
-    var textFieldColor by remember { mutableStateOf(Grey300) }
+fun CommentBottomSheetScreen(vm: PlaceDetailViewModel) {
 
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
+    var text by remember { mutableStateOf("") }
+    var textFieldWidth by remember { mutableStateOf(1.dp) }
+    var textFieldColor by remember { mutableStateOf(Grey300) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -332,8 +397,9 @@ fun CommentBottomSheetScreen() {
                 )
             }
         }
+        Spacer(modifier = Modifier.height(20.dp))
 
-        PrimaryButton(text = "작성 완료") {}
+        PrimaryButton(text = "작성 완료", modifier = Modifier.fillMaxWidth()) {}
     }
 
 }
