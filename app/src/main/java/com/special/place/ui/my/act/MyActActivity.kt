@@ -143,20 +143,16 @@ class MyActActivity : ComponentActivity() {
                                 ) { page ->
                                     when (page) {
                                         0 -> PostScreen(
-                                            vm.myPlace.value!!,
-                                            vm.isBookmarked
+                                            vm.myPlace.value!!
                                         ) // 내 게시물
                                         1 -> MyCommentScreen(
-                                            vm.myCommentPlace.value!!,
-                                            vm.isBookmarked
+                                            vm.myCommentPlace.value!!
                                         ) // 내 댓글
                                         2 -> PostScreen(
-                                            vm.myRecommendPlace.value!!,
-                                            vm.isBookmarked
+                                            vm.myRecommendPlace.value!!
                                         ) // 추천
                                         3 -> PostScreen(
-                                            vm.myBookmarkPlace.value!!,
-                                            vm.isBookmarked
+                                            vm.myBookmarkPlace.value!!
                                         ) // 북마크
                                     }
                                 }
