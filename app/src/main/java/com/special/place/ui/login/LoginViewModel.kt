@@ -21,4 +21,8 @@ class LoginViewModel @Inject constructor(
             userRepo.logout()
         }
     }
+
+    fun getNickname(): String? {
+        return userRepo.currentUser()?.nickName
+    }
 }

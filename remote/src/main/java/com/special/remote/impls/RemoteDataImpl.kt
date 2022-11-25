@@ -10,6 +10,7 @@ import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.entities.place.comment.Comment
 import com.special.domain.entities.place.comment.CommentRequest
 import com.special.domain.entities.user.LevelInfo
+import com.special.domain.entities.user.NickNameUpdate
 import com.special.domain.entities.user.PointResult
 import com.special.domain.entities.user.User
 import com.special.remote.ApiManager
@@ -75,7 +76,7 @@ class RemoteDataImpl @Inject constructor(
     }
 
     override suspend fun updateNickName(nickName: String) {
-        return client.updateNickname(nickName)
+        return client.updateNickname(NickNameUpdate(nickName))
     }
 
     override suspend fun checkUser(): User {

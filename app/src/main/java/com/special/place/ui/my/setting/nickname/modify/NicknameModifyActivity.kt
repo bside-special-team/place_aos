@@ -1,15 +1,21 @@
-package com.special.place.ui.my.setting
+package com.special.place.ui.my.setting.nickname.modify
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -20,15 +26,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.MyTopAppBar
 import com.special.place.ui.utils.PrimaryButton
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NicknameModifyActivity : ComponentActivity() {
+    companion object {
+        fun newIntent(context: Context) = Intent(context, NicknameModifyActivity::class.java)
+    }
+
+    private val vm: NickNameModifyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +69,7 @@ class NicknameModifyActivity : ComponentActivity() {
                                 verticalArrangement = Arrangement.SpaceBetween
                             ) {
                             }
-                            NicknameModifyScreen()
+                            NicknameModifyScreen(vm)
                         })
 
 
@@ -67,12 +80,11 @@ class NicknameModifyActivity : ComponentActivity() {
 
 }
 
-@Preview
 @Composable
-fun NicknameModifyScreen() {
+fun NicknameModifyScreen(eventListener: NickNameModifyEventListener) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
-    var text by remember { mutableStateOf("일상의 발견") }
+    val text: String by eventListener.name.observeAsState(initial = "")
     var textFieldWidth by remember { mutableStateOf(1.dp) }
     var textFieldColor by remember { mutableStateOf(Grey300) }
 
@@ -103,7 +115,15 @@ fun NicknameModifyScreen() {
             ) {
                 TextField(
                     value = text,
-                    onValueChange = { text = it.take(6) },
+                    maxLines = 1,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        eventListener.doModify()
+                    }),
+                    onValueChange = { eventListener.updateNickname(it.take(6)) },
                     modifier = Modifier
                         .focusRequester(focusRequester = focusRequester)
                         .onFocusChanged {
@@ -137,7 +157,7 @@ fun NicknameModifyScreen() {
                 )
             }
         }
-        PrimaryButton(text = stringResource(com.special.place.resource.R.string.btn_modify_done)) {}
+        PrimaryButton(text = stringResource(com.special.place.resource.R.string.btn_modify_done)) { eventListener.doModify() }
     }
 }
 

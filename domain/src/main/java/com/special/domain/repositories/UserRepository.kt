@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     val loginStatus: Flow<LoginStatus>
-    val currentUser: Flow<User>
+
+    fun currentUser(): User?
 
     suspend fun socialLogin(response: SocialLoginResponse)
 

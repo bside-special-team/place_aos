@@ -9,7 +9,7 @@ data class User(
     val loginType: LoginType?,
     val subject: String?,
     val email: String?,
-    val nickName: String,
+    val nickName: String?,
     val pushAlarm: Boolean = false,
     val marketingAlarm: Boolean = false,
     val myPoint: Int,

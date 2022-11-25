@@ -10,7 +10,8 @@ import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -23,24 +24,22 @@ class UserRepoImpl @Inject constructor(
     private val tokenData: TokenDataSource
 ) : UserRepository {
 
-    private val _loginStatus: MutableStateFlow<LoginStatus> = MutableStateFlow(LoginStatus.empty())
+    private val _loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow(replay = 1)
     override val loginStatus: Flow<LoginStatus> = _loginStatus
+    private var _user: User? = null
 
-    private val _user: StateFlow<User?> = _loginStatus.map {
-        if (it.isLogin) {
-            remote.checkUser()
-        } else {
-            null
-        }
-    }.stateIn(CoroutineScope(Dispatchers.IO), started = SharingStarted.Lazily, null)
-
-    override val currentUser: Flow<User> = _user.mapNotNull { it }
+    override fun currentUser(): User? {
+        return _user
+    }
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
             runCatching {
                 if (tokenData.isLogin) {
                     _loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
+                    withContext(Dispatchers.IO) {
+                        _user = remote.checkUser()
+                    }
                 } else {
                     _loginStatus.emit(LoginStatus.empty())
                 }
@@ -56,6 +55,8 @@ class UserRepoImpl @Inject constructor(
                 val token = loginRemote.socialLogin(response.idToken!!)
                 tokenData.updateLoginType(response.type)
                 tokenData.updateToken(token)
+
+                _user = remote.checkUser()
 
                 LoginStatus.success(response.type, token)
             } else {
@@ -113,7 +114,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun nextLevel(): LevelInfo {
         return withContext(Dispatchers.IO) {
-            val userData = _user.value
+            val userData = _user
             if (userData != null) {
                 val allLevelInfo = remote.levelInfo()
                 allLevelInfo.find { it.minPoint > userData.point } ?: allLevelInfo.last()

@@ -8,6 +8,7 @@ import com.special.domain.entities.place.comment.Comment
 import com.special.domain.entities.place.comment.CommentRequest
 import com.special.domain.entities.place.comment.CommentResponse
 import com.special.domain.entities.user.LevelInfo
+import com.special.domain.entities.user.NickNameUpdate
 import com.special.domain.entities.user.User
 import okhttp3.MultipartBody
 import retrofit2.http.*
@@ -51,7 +52,7 @@ interface PlaceApi {
     suspend fun placeComments(@Path("placeId") placeId: String, lastTimeStamp: Long, limit: Int): CommentResponse
 
     @PUT("/api/v1/users/update")
-    suspend fun updateNickname(@Field("nickName") nickName: String)
+    suspend fun updateNickname(@Body nickName: NickNameUpdate)
 
     @GET("/api/v1/users/one")
     suspend fun checkUser(): BaseResponse<User>

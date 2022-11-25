@@ -31,7 +31,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
-import com.special.place.ui.my.setting.addFocusCleaner
+import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.MyTopAppBar
 import com.special.place.ui.utils.PrimaryButton

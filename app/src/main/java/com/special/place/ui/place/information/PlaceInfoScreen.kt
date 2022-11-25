@@ -20,7 +20,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.special.place.resource.R
-import com.special.place.ui.my.act.Comment
 import com.special.place.ui.my.act.CommentItem
 import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.theme.*
@@ -227,7 +226,7 @@ fun CommentScreen(vm: PlaceDetailViewModel) {
                 .padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CommentItem(list = arrayListOf(Comment("일상의 발견", "4일전", "정말 좋아요!!!")), index = 0)
+            CommentItem(list = arrayListOf(), index = 0)
             Spacer(modifier = Modifier.height(20.dp))
         }
     }

@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.special.domain.entities.place.Place
 import com.special.place.ui.my.MyInformationViewModel
-import com.special.place.ui.my.setting.addFocusCleaner
+import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
 
 @Composable
 fun PostScreen(postList: List<Place>) {

@@ -56,7 +56,7 @@ fun MyInformationScreen(vm: MyInformationViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
         BadgeCard(userInfo.myBadge!!)
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = userInfo.nickName, style = Title2)
+        Text(text = userInfo.nickName ?: "", style = Title2)
 
         Spacer(modifier = Modifier.height(40.dp))
 

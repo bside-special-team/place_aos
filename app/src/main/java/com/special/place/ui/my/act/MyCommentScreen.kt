@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.special.domain.entities.place.CommentPlace
 import com.special.place.resource.R
 import com.special.place.ui.my.postlist.TagList
-import com.special.place.ui.my.setting.addFocusCleaner
+import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
 import com.special.place.ui.theme.*
 
 @Composable
@@ -141,7 +141,7 @@ fun CommentItem(list: List<CommentPlace>, index: Int) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = list[index].comment.writerId + "님", fontSize = 14.sp, color = Grey900,
+                text = list[index].comment.user.nickName + "님", fontSize = 14.sp, color = Grey900,
                 style = Subtitle2
             )
             Row(
@@ -161,7 +161,7 @@ fun CommentItem(list: List<CommentPlace>, index: Int) {
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 18.dp, 20.dp),
-            text = list[index].comment.text,
+            text = list[index].comment.comment,
             fontSize = 18.sp,
             color = Grey900,
             style = BodyLong2

@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.special.place.resource.R
+import com.special.place.ui.my.setting.nickname.modify.NicknameModifyActivity
 import com.special.place.ui.theme.*
 
 @Preview
