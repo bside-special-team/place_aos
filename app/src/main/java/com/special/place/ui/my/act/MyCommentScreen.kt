@@ -10,29 +10,23 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.special.domain.entities.place.CommentPlace
 import com.special.place.resource.R
-import com.special.place.ui.my.postlist.PostItem
+import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.my.setting.addFocusCleaner
 import com.special.place.ui.theme.*
 
-// 임의 데이터
-data class Comment(
-    val nickname: String, val date: String, val text: String
-)
-
-val commentList = ArrayList<Comment>()
-
-@Preview
 @Composable
-fun MyCommentScreen() {
-    postList.add(MyPostData("히든플레이스", "가로수길 아래", listOf("조용한", "힙한", "신기한"), true))
-    commentList.add(Comment("일상의 발견", "4일전", "정말 좋아요!!!"))
-
+fun MyCommentScreen(
+    postList: List<CommentPlace>
+) {
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -42,13 +36,13 @@ fun MyCommentScreen() {
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CommentPostList(postList, commentList)
+        CommentPostList(postList)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
-fun CommentPostList(pList: ArrayList<MyPostData>, list: ArrayList<Comment>) {
+fun CommentPostList(pList: List<CommentPlace>) {
     val scrollState = rememberLazyListState()
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -56,15 +50,83 @@ fun CommentPostList(pList: ArrayList<MyPostData>, list: ArrayList<Comment>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(pList.size) {
-            PostItem(pList, 0)
-            CommentItem(list, 0)
+            CommentItem(pList, 0)
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
 @Composable
-fun CommentItem(list: ArrayList<Comment>, index: Int) {
+fun CommentItem(list: List<CommentPlace>, index: Int) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 23.5.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.photo),
+                contentDescription = "item",
+                modifier = Modifier
+                    .width(48.dp)
+                    .height(48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(
+                modifier = Modifier.width(176.dp)
+            ) {
+                Text(
+                    text = list[index].placeType.name,
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.grey_600),
+                    style = Body1
+                )
+                Text(
+                    text = list[index].name,
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.grey_900),
+                    style = Subtitle4
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            if (false) { //TODO bookmark is false
+                // 보라
+                Image(
+                    modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp),
+                    painter = painterResource(id = R.drawable.ic_bookmark_grey),
+                    contentDescription = "bookmark",
+                    colorFilter = ColorFilter.tint(Purple500)
+                )
+            } else {
+                // 회색
+                Image(
+                    modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp),
+                    painter = painterResource(id = R.drawable.ic_bookmark_grey),
+                    contentDescription = "bookmark"
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Image(
+                painter = painterResource(id = R.drawable.ic_dots),
+                contentDescription = "dots"
+            )
+        }
+        Row() {
+            Spacer(modifier = Modifier.width(64.dp))
+            TagList(list[index].hashTags)
+        }
+
+    }
 
     Column(
         modifier = Modifier
@@ -79,7 +141,7 @@ fun CommentItem(list: ArrayList<Comment>, index: Int) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = list[index].nickname + "님", fontSize = 14.sp, color = Grey900,
+                text = list[index].comment.writerId + "님", fontSize = 14.sp, color = Grey900,
                 style = Subtitle2
             )
             Row(
@@ -87,7 +149,7 @@ fun CommentItem(list: ArrayList<Comment>, index: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = list[index].date, color = Grey600, style = Caption
+                    text = list[index].comment.createdAt, color = Grey600, style = Caption
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Image(
@@ -99,7 +161,7 @@ fun CommentItem(list: ArrayList<Comment>, index: Int) {
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 18.dp, 20.dp),
-            text = list[index].text,
+            text = list[index].comment.text,
             fontSize = 18.sp,
             color = Grey900,
             style = BodyLong2

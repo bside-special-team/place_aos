@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -13,15 +14,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.special.domain.entities.place.Place
 import com.special.place.resource.R
-import com.special.place.ui.my.act.MyPostData
+import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.theme.Body1
 import com.special.place.ui.theme.Purple500
 import com.special.place.ui.theme.Subtitle4
 
 
 @Composable
-fun PostItem(list: ArrayList<MyPostData>, index: Int) {
+fun PostItem(vm: MyInformationViewModel, index: Int) {
+    val place: List<Place> = vm.myPlace.observeAsState().value!!
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,20 +49,20 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
                 modifier = Modifier.width(176.dp)
             ) {
                 Text(
-                    text = list[index].placeType,
+                    text = place[index].placeType.name,
                     fontSize = 14.sp,
                     color = colorResource(id = R.color.grey_600),
                     style = Body1
                 )
                 Text(
-                    text = list[index].placeName,
+                    text = place[index].name,
                     fontSize = 18.sp,
                     color = colorResource(id = R.color.grey_900),
                     style = Subtitle4
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            if (list[index].bookmark) {
+            if (false) { // TODO Bookmark is false
                 // 보라
                 Image(
                     modifier = Modifier
@@ -85,9 +88,9 @@ fun PostItem(list: ArrayList<MyPostData>, index: Int) {
                 contentDescription = "dots"
             )
         }
-        Row {
+        Row(modifier = Modifier.padding(16.dp)) {
             Spacer(modifier = Modifier.width(64.dp))
-            TagList(list[index].hashTag)
+            TagList(place[index].hashTags)
         }
 
     }

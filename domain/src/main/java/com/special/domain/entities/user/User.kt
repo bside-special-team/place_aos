@@ -12,6 +12,10 @@ data class User(
     val nickName: String,
     val pushAlarm: Boolean = false,
     val marketingAlarm: Boolean = false,
+    val myPoint: Int,
+    val myBadge: String?,
+    val level: Int?,
+    val progress: Float?,
     val point: Int,
     val label: String
 )

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
@@ -24,20 +24,16 @@ import com.special.place.resource.R
 import com.special.place.ui.my.act.MyActActivity
 import com.special.place.ui.theme.*
 
-@Preview
 @Composable
-fun MyInformationScreen() {
-    // 임의 데이터
-    val name: String = "유저 이름"
-    val level: Int = 2
-    val point: Int = 250
-    val progress: Float = 0.7f
-    val badge: String = "외지인"
+fun MyInformationScreen(vm: MyInformationViewModel) {
+
+    val userInfo = vm.userInfo.observeAsState().value!!
     Column(
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
             .fillMaxWidth()
+            .background(color = Color.White, shape = RoundedCornerShape(topStart = 5.dp))
             .padding(23.5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -54,18 +50,17 @@ fun MyInformationScreen() {
                 painter = painterResource(R.drawable.ic_logo),
                 contentDescription = "avatar",
                 contentScale = ContentScale.Crop,            // crop the image if it's not a square
-
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        BadgeCard(badge)
+        BadgeCard(userInfo.myBadge!!)
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = name, style = Title2)
+        Text(text = userInfo.nickName, style = Title2)
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        LevelCard(level, point, progress)
+        LevelCard(userInfo.level!!, userInfo.myPoint, userInfo.progress!!)
 
         Spacer(modifier = Modifier.height(20.dp))
         Row(
@@ -81,7 +76,6 @@ fun MyInformationScreen() {
             )
         }
 
-
     }
 }
 
@@ -94,7 +88,6 @@ fun BadgeCard(badge: String) {
         text = badge,
         style = Title1,
         fontSize = 14.sp
-
     )
 }
 
@@ -140,7 +133,6 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
                         colorFilter = ColorFilter.tint(Purple100)
                     )
                 }
-
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
