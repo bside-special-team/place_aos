@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.repositories.PlaceRegisterRepository
+import com.special.place.ui.UiState
 import com.special.place.ui.place.register.hashtags.HashtagEventListener
 import com.special.place.ui.place.register.input.PlaceInputEventListener
 import com.special.place.ui.place.register.location.PlaceLocationEventListener
@@ -21,10 +22,6 @@ class PlaceRegisterViewModel @Inject constructor(
 ) :
     ViewModel(), PlaceInputEventListener, SelectPictureEventListener, HashtagEventListener,
     PlaceLocationEventListener {
-
-    private val _placeRegisterResult: MutableLiveData<Result<String>> = MutableLiveData()
-
-    val placeRegisterResult: LiveData<Result<String>> = _placeRegisterResult
 
     override val displayLocation: LiveData<String> = placeRegisterRepo.locationText.asLiveData()
 
@@ -94,6 +91,7 @@ class PlaceRegisterViewModel @Inject constructor(
     }
 
     private fun registerPlace() {
+        _uiState.postValue(UiState.Progress)
         viewModelScope.launch {
             val imageUUIDs = pictures.value?.mapNotNull { resolverHelper.uriToFile(it) }
                 ?.let { placeRegisterRepo.uploadImage(it) }
@@ -104,23 +102,17 @@ class PlaceRegisterViewModel @Inject constructor(
             )
 
             if (request != null) {
-                val result = placeRegisterRepo.registerPlace(request).runCatching {
-                    "등록 되었습니다."
+                placeRegisterRepo.registerPlace(request).runCatching {
+                    _uiState.postValue(UiState.Done)
+                }.onFailure {
+                    _uiState.postValue(UiState.Error(it))
                 }
-
-
-
-                _placeRegisterResult.postValue(result)
             } else {
-                // TODO: Throw Error Result
+                _uiState.postValue(UiState.Error(IllegalArgumentException()))
             }
         }
     }
 
-    init {
-//        viewModelScope.launch {
-//            _placeCategories.postValue(placeRegisterRepo.categories())
-//        }
-
-    }
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
+    override val uiState: LiveData<UiState> = _uiState
 }

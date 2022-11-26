@@ -16,7 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.naver.maps.geometry.LatLng
-import com.special.domain.entities.place.Coordinate
+import com.special.place.ui.UiState
 import com.special.place.ui.place.register.complete.PlaceRegisterCompleteScreen
 import com.special.place.ui.place.register.hashtags.HashtagStep
 import com.special.place.ui.place.register.input.InputPlaceNameStep
@@ -81,13 +81,12 @@ class PlaceRegisterActivity : ComponentActivity() {
     }
 
     private fun initViewModel() {
-        vm.placeRegisterResult.observe(this) {
-            if (it.isSuccess) {
-                Toast.makeText(applicationContext, it.getOrNull(), Toast.LENGTH_SHORT).show()
+        vm.uiState.observe(this) {
+            if (it == UiState.Done) {
+                Toast.makeText(applicationContext, "등록 되었습니다.", Toast.LENGTH_SHORT).show()
 
                 finish()
             } else {
-
                 Toast.makeText(applicationContext, "등록에 실패 하였습니다.", Toast.LENGTH_SHORT).show()
             }
         }

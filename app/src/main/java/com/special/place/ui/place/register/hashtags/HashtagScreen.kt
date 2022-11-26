@@ -2,6 +2,8 @@ package com.special.place.ui.place.register.hashtags
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
 import com.special.place.DEFAULT_HASHTAGS
+import com.special.place.ui.UiState
 import com.special.place.ui.theme.Grey300
 import com.special.place.ui.theme.Grey900
 import com.special.place.ui.utils.PrimaryButton
@@ -27,6 +30,8 @@ import com.special.place.ui.widget.HashtagChipClickable
 @Composable
 fun HashtagStep(eventListener: HashtagEventListener) {
     val selectedTags: List<String> by eventListener.hashtags.observeAsState(initial = listOf())
+    val uiState: UiState by eventListener.uiState.observeAsState(initial = UiState.Init)
+    val scrollState = rememberScrollState()
 //    var editMode by remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
@@ -35,7 +40,11 @@ fun HashtagStep(eventListener: HashtagEventListener) {
         }
     }) {
         Box {
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+            ) {
 
                 if (selectedTags.isEmpty()) {
                     Text(
@@ -92,10 +101,14 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                         }
                     }
                 }
+
+                Box(modifier = Modifier.height(80.dp))
             }
 
             PrimaryButton(
-                text = "완료", modifier = Modifier
+                text = "완료",
+                isNotProgress = uiState != UiState.Progress,
+                modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(24.dp)

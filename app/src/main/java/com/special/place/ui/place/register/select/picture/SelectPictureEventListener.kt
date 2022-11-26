@@ -2,6 +2,7 @@ package com.special.place.ui.place.register.select.picture
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import com.special.place.ui.UiState
 import com.special.place.ui.place.register.PlaceRegisterStep
 import com.special.place.ui.place.register.RegisterEventListener
 
@@ -25,6 +26,8 @@ interface SelectPictureEventListener : RegisterEventListener {
             }
 
             override val step: LiveData<PlaceRegisterStep>
+                get() = TODO("Not yet implemented")
+            override val uiState: LiveData<UiState>
                 get() = TODO("Not yet implemented")
 
             override fun back() {
