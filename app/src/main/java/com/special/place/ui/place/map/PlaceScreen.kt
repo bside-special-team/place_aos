@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.Visibility
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.util.FusedLocationSource
@@ -105,6 +106,8 @@ fun PlaceScreen(
                 .constrainAs(tourButton) {
                     linkTo(start = parent.start, end = parent.end)
                     bottom.linkTo(parent.bottom, 32.dp)
+
+                    visibility = Visibility.Gone
                 }) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,8 +129,8 @@ fun PlaceScreen(
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))
                 .constrainAs(myInfoButton) {
-                    end.linkTo(tourButton.start, margin = 20.dp)
-                    linkTo(top = tourButton.top, bottom = tourButton.bottom)
+                    end.linkTo(tourButton.start, margin = 20.dp, goneMargin = 10.dp)
+                    bottom.linkTo(parent.bottom, margin = 44.dp)
                 }) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -156,8 +159,8 @@ fun PlaceScreen(
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))
                 .constrainAs(registerButton) {
-                    start.linkTo(tourButton.end, margin = 20.dp)
-                    linkTo(top = tourButton.top, bottom = tourButton.bottom)
+                    start.linkTo(tourButton.end, margin = 20.dp, goneMargin = 10.dp)
+                    bottom.linkTo(parent.bottom, margin = 44.dp)
                 }) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -236,7 +239,7 @@ fun PlaceScreen(
                         }
                         .size(32.dp)
                         .constrainAs(myLocationButton) {
-                            bottom.linkTo(tourButton.top, margin = 24.dp)
+                            bottom.linkTo(myInfoButton.top, margin = 35.dp)
                             linkTo(parent.start, parent.end)
                         })
             }
