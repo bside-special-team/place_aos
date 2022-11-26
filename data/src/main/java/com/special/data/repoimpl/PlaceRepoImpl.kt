@@ -70,10 +70,6 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
         TODO("Not yet implemented")
     }
 
-    override suspend fun commentList(placeId: String, page: Int): Paging<Comment> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun nearPlaceCount(coordinate: Coordinate): NearPlaces {
         TODO("Not yet implemented")
     }

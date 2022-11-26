@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 import com.special.place.ui.UiState
@@ -88,6 +87,8 @@ class PlaceDetailActivity : ComponentActivity() {
         val vm: PlaceDetailViewModel by viewModels()
 
         setContent {
+            val commentList by vm.comments.observeAsState(listOf())
+
             PlaceTheme {
                 Surface(
                     modifier = Modifier
@@ -205,7 +206,8 @@ class PlaceDetailActivity : ComponentActivity() {
                                                 PlaceInfoScreen(vm)
                                             }
                                         }
-                                        items(listOf<CommentPlace>()) { item ->
+
+                                        items(commentList) { item ->
                                             CommentItem(item)
                                             Spacer(modifier = Modifier.height(20.dp))
                                         }

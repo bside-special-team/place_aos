@@ -49,7 +49,7 @@ interface PlaceApi {
     suspend fun registerComments(@Body comment: CommentRequest): BaseResponse<Comment>
 
     @GET("/api/v1/comments/places/{placeId}")
-    suspend fun placeComments(@Path("placeId") placeId: String, lastTimeStamp: Long, limit: Int): CommentResponse
+    suspend fun placeComments(@Path("placeId") placeId: String, @Query("lastTimestamp") lastTimeStamp: Long, @Query("limit") limit: Int): CommentResponse
 
     @PUT("/api/v1/users/update")
     suspend fun updateNickname(@Body nickName: NickNameUpdate)

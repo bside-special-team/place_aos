@@ -24,8 +24,6 @@ interface PlaceRepository {
 
     suspend fun unLikePlace(targetId: String)
 
-    suspend fun commentList(placeId: String, page: Int): Paging<Comment>
-
     suspend fun nearPlaceCount(coordinate: Coordinate): NearPlaces
 
     suspend fun modifyPlace(request: RequestRegisterPlace)

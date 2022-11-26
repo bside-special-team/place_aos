@@ -2,13 +2,16 @@ package com.special.place.ui.place.information
 
 import androidx.lifecycle.*
 import coil.request.ImageRequest
+import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.Place
+import com.special.domain.entities.place.combine
 import com.special.domain.entities.place.comment.Comment
 import com.special.domain.repositories.PlaceRepository
 import com.special.place.ui.UiState
 import com.special.place.ui.place.information.comment.CommentRegisterEventListener
 import com.special.place.util.CoilRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,8 +25,11 @@ class PlaceDetailViewModel @Inject constructor(
     private val _currentPlace: LiveData<Place> = placeRepo.currentPlace.asLiveData()
 
     private val _comment: MutableLiveData<List<Comment>> = MutableLiveData()
-    override val comment: LiveData<List<Comment>>
-        get() = _comment
+    override val comments: LiveData<List<CommentPlace>> = placeRepo.currentPlace.map { place ->
+        placeRepo.commentList(place.id, 0).list.map {
+            place.combine(it)
+        }
+    }.asLiveData()
 
     private val _isBookmarked: MutableLiveData<Boolean> = MutableLiveData()
     override val isBookmarked: LiveData<Boolean>
