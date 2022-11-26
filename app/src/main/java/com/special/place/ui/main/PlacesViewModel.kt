@@ -12,6 +12,7 @@ import com.special.domain.entities.place.Coordinate
 import com.special.domain.entities.place.CoordinateBounds
 import com.special.domain.entities.place.Place
 import com.special.domain.repositories.PlaceRepository
+import com.special.place.toLatLng
 import com.special.place.ui.place.map.PlaceEventListener
 import com.special.place.util.CoilRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,6 +53,7 @@ class PlacesViewModel @Inject constructor(
     override val hiddenPlaceCount: LiveData<Int> = placeRepo.placeCount.map { it.hiddenPlaceCount }.asLiveData()
     override val landmarkCount: LiveData<Int> = placeRepo.placeCount.map { it.landmarkCount }.asLiveData()
 
+
     override fun clickTourStart() {
 
     }
@@ -78,6 +80,22 @@ class PlacesViewModel @Inject constructor(
 
     override fun coilRequest(uuid: String): ImageRequest {
         return coilRequest.myImageRequest(uuid)
+    }
+
+    override val distance: LiveData<String> = _currentPlace.map {
+        val currentLatLnt = _currentLocation.value?.toLatLnt()
+
+        if (currentLatLnt == null) {
+            "-"
+        } else {
+            val distance = it.coordinate.toLatLng().distanceTo(currentLatLnt).toInt()
+
+            if (distance > 1000) {
+                "${distance / 1000} km"
+            } else {
+                "$distance m"
+            }
+        }
     }
 }
 

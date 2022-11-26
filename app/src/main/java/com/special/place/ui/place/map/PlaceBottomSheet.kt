@@ -39,6 +39,7 @@ fun PlaceBottomSheet(
     routeListener: RouteListener
 ) {
     val place: Place by eventListener.currentPlace.observeAsState(initial = Place.mock())
+    val distance: String by eventListener.distance.observeAsState(initial = "현재 위치를 가져 올 수 없습니다.")
 
     ConstraintLayout(
         modifier = Modifier
@@ -116,7 +117,7 @@ fun PlaceBottomSheet(
             }) {
             Icon(painterResource(id = R.drawable.ic_place_distance), contentDescription = null)
             Box(modifier = Modifier.width(4.dp))
-            Text("50m", color = Grey600, fontSize = 14.sp)
+            Text(distance, color = Grey600, fontSize = 14.sp)
             Box(modifier = Modifier.width(16.dp))
             Icon(painterResource(id = R.drawable.ic_place_visit_point), contentDescription = null)
             Box(modifier = Modifier.width(4.dp))
@@ -125,7 +126,6 @@ fun PlaceBottomSheet(
 
         Box(modifier = Modifier
             .clickable {
-                // TODO 자세히 보기
                 routeListener.requestRoute(Route.PlaceDetailPage(place = place))
             }
             .height(56.dp)
@@ -146,7 +146,6 @@ fun PlaceBottomSheet(
 
         Box(modifier = Modifier
             .clickable {
-                // TODO 방문 하기
                 eventListener.clickVisitPlace(place.id)
             }
             .height(56.dp)
