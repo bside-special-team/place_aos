@@ -15,6 +15,7 @@ import com.special.domain.repositories.PlaceRepository
 import com.special.place.ui.place.map.PlaceEventListener
 import com.special.place.util.CoilRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,8 +49,8 @@ class PlacesViewModel @Inject constructor(
         _currentLocation.postValue(location)
     }
 
-    override val hiddenPlaceCount: LiveData<Int> = liveData { emit(17) }
-    override val landmarkCount: LiveData<Int> = liveData { emit(5) }
+    override val hiddenPlaceCount: LiveData<Int> = placeRepo.placeCount.map { it.hiddenPlaceCount }.asLiveData()
+    override val landmarkCount: LiveData<Int> = placeRepo.placeCount.map { it.landmarkCount }.asLiveData()
 
     override fun clickTourStart() {
 
