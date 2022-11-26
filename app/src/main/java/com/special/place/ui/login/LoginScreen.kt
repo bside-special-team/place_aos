@@ -116,5 +116,5 @@ fun LoginScreen(eventListener: LoginUseCase) {
 @Preview
 @Composable
 fun LoginPreview() {
-    LoginScreen(LoginEventListener.empty())
+    LoginScreen(LoginUseCase.empty())
 }

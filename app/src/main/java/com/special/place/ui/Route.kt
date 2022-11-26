@@ -9,6 +9,7 @@ sealed class Route {
     object ModifyNickNamePage : Route()
     object MainPage : Route()
     object MyInfoPage : Route()
+    object PolicyPage : Route()
     object SettingPage : Route()
     object MyActivityPage : Route()
     object BadgeListPage : Route()

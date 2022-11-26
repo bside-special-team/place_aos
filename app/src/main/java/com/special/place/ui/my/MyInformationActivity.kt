@@ -3,7 +3,6 @@ package com.special.place.ui.my
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -14,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.special.place.resource.R
+import com.special.place.ui.base.BaseActivity
 import com.special.place.ui.my.act.MyPostData
 import com.special.place.ui.my.postlist.PostItem
 import com.special.place.ui.my.setting.SettingActivity
@@ -24,7 +24,7 @@ import com.special.place.ui.utils.MyTopAppBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MyInformationActivity : ComponentActivity() {
+class MyInformationActivity : BaseActivity() {
 
     private val vm: MyInformationViewModel by viewModels()
 

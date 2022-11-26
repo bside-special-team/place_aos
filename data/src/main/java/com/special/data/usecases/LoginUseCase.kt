@@ -52,4 +52,14 @@ interface LoginUseCase {
     fun googleLogin()
 
     fun logout()
+
+    companion object {
+        fun empty(): LoginUseCase = object : LoginUseCase {
+            override fun kakaoLogin() {}
+
+            override fun googleLogin() {}
+
+            override fun logout() {}
+        }
+    }
 }

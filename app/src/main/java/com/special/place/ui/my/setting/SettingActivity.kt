@@ -1,7 +1,6 @@
 package com.special.place.ui.my.setting
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,10 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.special.place.resource.R
+import com.special.place.ui.base.BaseActivity
 import com.special.place.ui.theme.PlaceTheme
 import com.special.place.ui.utils.MyTopAppBar
+import dagger.hilt.android.AndroidEntryPoint
 
-class SettingActivity : ComponentActivity() {
+@AndroidEntryPoint
+class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +46,7 @@ class SettingActivity : ComponentActivity() {
                                 actionListener = {}
                             )
                         }, content = {
-                            SettingScreen()
+                            SettingScreen(routeVM, loginVM)
                         })
                 }
             }

@@ -2,6 +2,7 @@ package com.special.place.ui.my.setting
 
 import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -18,12 +19,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.special.place.resource.R
+import com.special.place.ui.Route
+import com.special.place.ui.base.RouteListener
+import com.special.place.ui.login.LoginEventListener
 import com.special.place.ui.my.setting.nickname.modify.NicknameModifyActivity
 import com.special.place.ui.theme.*
 
 @Preview
 @Composable
-fun SettingScreen() {
+fun PreviewSettingScreen() {
+    SettingScreen(route = RouteListener.empty(), loginVM = LoginEventListener.empty())
+}
+
+@Composable
+fun SettingScreen(route: RouteListener, loginVM: LoginEventListener) {
 
     // 임의 데이터
     val nickname = "일상의 발견"
@@ -40,13 +49,20 @@ fun SettingScreen() {
             R.string.item_terms_agreement,
             R.drawable.ic_info_circle,
             R.drawable.ic_arrow_right
-        ) // 약관 및 동의 관리
+        ) {
+            //TODO: 약관 및 동의 관리
+            route.requestRoute(Route.PolicyPage)
+        }
         SettingItem(
             R.string.item_social,
             R.drawable.ic_kakao_login,
             R.string.btn_logout
-        ) // 소셜 계정 회원
-        SettingItem(R.string.item_withdrawal, R.drawable.ic_siren, 0) // 회원 탈퇴
+        ) {
+            loginVM.logout()
+        }
+        SettingItem(R.string.item_withdrawal, R.drawable.ic_siren, 0) {
+            loginVM.logout()
+        }
     }
 }
 
@@ -101,12 +117,13 @@ fun NickNameItem(nickname: String) {
 }
 
 @Composable
-fun SettingItem(item: Int, image: Int, subItem: Int) {
+fun SettingItem(item: Int, image: Int, subItem: Int, click: () -> Unit) {
     val itemText = stringResource(id = item)
     var logoutBtnText: String
 
     Row(
         modifier = Modifier
+            .clickable(onClick = click)
             .fillMaxWidth()
             .height(50.dp)
             .padding(horizontal = 20.dp),
@@ -134,7 +151,7 @@ fun SettingItem(item: Int, image: Int, subItem: Int) {
                 modifier = Modifier
                     .height(36.dp),
                 colors = ButtonDefaults.buttonColors(Grey200),
-                onClick = { /*todo*/ },
+                onClick = click,
                 shape = RoundedCornerShape(12.dp),
             ) {
                 Text(text = logoutBtnText, style = Body1, fontWeight = FontWeight.Bold)

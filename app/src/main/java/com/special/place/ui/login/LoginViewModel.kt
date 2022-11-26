@@ -12,17 +12,17 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepo: UserRepository
-) : ViewModel() {
+) : ViewModel(), LoginEventListener {
 
     val loginStatus: Flow<LoginStatus> = userRepo.loginStatus
 
-    fun logout() {
+    override fun logout() {
         viewModelScope.launch {
             userRepo.logout()
         }
     }
 
-    fun getNickname(): String? {
+    override fun getNickname(): String? {
         return userRepo.currentUser()?.nickName
     }
 }
