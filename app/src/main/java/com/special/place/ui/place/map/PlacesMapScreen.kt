@@ -76,7 +76,7 @@ fun PlacesMapScreen(
         // TODO: 이벤트 수신이 계속 되고 있음.
 
         val position = cameraPosition.position
-        position.let { eventListener.updateCameraPosition(it) }
+        position.let { eventListener.updateCameraPosition(cameraPosition) }
 
         Log.d(
             "CameraState",

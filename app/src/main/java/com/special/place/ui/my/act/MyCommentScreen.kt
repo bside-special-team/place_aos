@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -49,18 +50,18 @@ fun CommentPostList(pList: List<CommentPlace>) {
         state = scrollState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(pList.size) {
-            CommentItem(pList, 0)
+        items(pList) { item ->
+            CommentItem(item)
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
 @Composable
-fun CommentItem(list: List<CommentPlace>, index: Int) {
+fun CommentItem(comment: CommentPlace) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(vertical = 23.5.dp)
     ) {
         Row(
@@ -82,13 +83,13 @@ fun CommentItem(list: List<CommentPlace>, index: Int) {
                 modifier = Modifier.width(176.dp)
             ) {
                 Text(
-                    text = list[index].placeType.name,
+                    text = comment.placeType.name,
                     fontSize = 14.sp,
                     color = colorResource(id = R.color.grey_600),
                     style = Body1
                 )
                 Text(
-                    text = list[index].name,
+                    text = comment.name,
                     fontSize = 18.sp,
                     color = colorResource(id = R.color.grey_900),
                     style = Subtitle4
@@ -123,7 +124,7 @@ fun CommentItem(list: List<CommentPlace>, index: Int) {
         }
         Row() {
             Spacer(modifier = Modifier.width(64.dp))
-            TagList(list[index].hashTags)
+            TagList(comment.hashTags)
         }
 
     }
@@ -141,7 +142,7 @@ fun CommentItem(list: List<CommentPlace>, index: Int) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = list[index].comment.user.nickName + "님", fontSize = 14.sp, color = Grey900,
+                text = comment.comment.user.nickName + "님", fontSize = 14.sp, color = Grey900,
                 style = Subtitle2
             )
             Row(
@@ -149,7 +150,7 @@ fun CommentItem(list: List<CommentPlace>, index: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = list[index].comment.createdAt, color = Grey600, style = Caption
+                    text = comment.comment.createdAt, color = Grey600, style = Caption
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Image(
@@ -161,7 +162,7 @@ fun CommentItem(list: List<CommentPlace>, index: Int) {
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 18.dp, 20.dp),
-            text = list[index].comment.comment,
+            text = comment.comment.comment,
             fontSize = 18.sp,
             color = Grey900,
             style = BodyLong2

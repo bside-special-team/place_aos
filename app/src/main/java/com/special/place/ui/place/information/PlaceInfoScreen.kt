@@ -10,6 +10,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,8 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.special.domain.entities.place.PlaceType
 import com.special.place.resource.R
-import com.special.place.ui.my.act.CommentItem
 import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.LandMarkProgressBar
@@ -29,16 +30,16 @@ import com.special.place.ui.utils.LandMarkProgressBar
 fun PlaceInfoScreen(
     vm: PlaceDetailViewModel
 ) {
-    val place = vm.placeInfo.observeAsState().value
+    val place by vm.placeInfo.observeAsState()
     val name = place?.name ?: ""
-    val type = place?.type ?: ""
-    val recommendCnt = place?.recommendCnt ?: 0
-    val visitCnt = place?.visitCnt ?: 0
-    val writerName = place?.writerName ?: ""
-    val hashTags = place?.hashTags ?: listOf("")
+    val type = place?.placeType ?: PlaceType.Hidden
+    val recommendCnt = place?.recommendCount ?: 0
+    val visitCnt = place?.visitCount ?: 0
+    val writerName = place?.nickName ?: "Unknown"
+    val hashTags = place?.hashTags ?: listOf()
     val id = place?.id ?: ""
 
-    val placeType = if (type == "Hidden") {
+    val placeType = if (type == PlaceType.Hidden) {
         "히든플레이스"
     } else {
         "랜드마크"
@@ -149,7 +150,7 @@ fun PlaceInfoScreen(
 }
 
 @Composable
-fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: String, recommend_cnt: Int) {
+fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommend_cnt: Int) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -162,7 +163,7 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: String, recommend_c
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (type == "Hidden") {
+            if (type == PlaceType.Hidden) {
                 Text(
                     text = "랜드마크까지 ${20 - recommend_cnt}표 남았어요!",
                     color = Color.White,
@@ -213,21 +214,6 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: String, recommend_c
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(text = "이 장소를 추천하기", style = Subtitle2, color = Purple700)
             }
-        }
-    }
-}
-
-@Composable
-fun CommentScreen(vm: PlaceDetailViewModel) {
-    Column() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CommentItem(list = arrayListOf(), index = 0)
-            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

@@ -40,7 +40,6 @@ fun PlaceBottomSheet(
 ) {
     val place: Place by eventListener.currentPlace.observeAsState(initial = Place.mock())
 
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()

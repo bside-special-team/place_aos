@@ -1,20 +1,20 @@
 package com.special.domain.repositories
 
 import com.special.domain.entities.Paging
-import com.special.domain.entities.place.Coordinate
-import com.special.domain.entities.place.NearPlaces
-import com.special.domain.entities.place.Place
-import com.special.domain.entities.place.RequestRegisterPlace
+import com.special.domain.entities.place.*
 import com.special.domain.entities.place.comment.Comment
 import com.special.domain.entities.user.PointResult
 import kotlinx.coroutines.flow.Flow
 
 interface PlaceRepository {
-    fun updateCoordinate(coordinates: Pair<Coordinate, Coordinate>)
+    fun updateCoordinate(coordinates: CoordinateBounds)
 
     val places: Flow<List<Place>>
     val placeCount: Flow<NearPlaces>
     val pointResult: Flow<PointResult>
+    val currentPlace: Flow<Place>
+
+    fun selectPlace(place: Place)
 
     suspend fun registerPlace(request: RequestRegisterPlace)
 

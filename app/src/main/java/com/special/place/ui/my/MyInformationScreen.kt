@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +27,8 @@ import com.special.place.ui.theme.*
 
 @Composable
 fun MyInformationScreen(vm: MyInformationViewModel) {
+    val userInfo by vm.userInfo.observeAsState()
 
-    val userInfo = vm.userInfo.observeAsState().value!!
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,13 +55,13 @@ fun MyInformationScreen(vm: MyInformationViewModel) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        BadgeCard(userInfo.myBadge!!)
+        BadgeCard(userInfo?.myBadge)
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = userInfo.nickName ?: "", style = Title2)
+        Text(text = userInfo?.nickName ?: "", style = Title2)
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        LevelCard(userInfo.level!!, userInfo.myPoint, userInfo.progress!!)
+        LevelCard(userInfo?.level ?: 0, userInfo?.myPoint ?: 0, userInfo?.progress ?: 100f)
 
         Spacer(modifier = Modifier.height(20.dp))
         Row(
@@ -80,12 +81,12 @@ fun MyInformationScreen(vm: MyInformationViewModel) {
 }
 
 @Composable
-fun BadgeCard(badge: String) {
+fun BadgeCard(badge: String?) {
     Text(
         modifier = Modifier
             .background(color = Grey100, shape = RoundedCornerShape(16.dp))
             .padding(10.dp),
-        text = badge,
+        text = badge ?: "",
         style = Title1,
         fontSize = 14.sp
     )

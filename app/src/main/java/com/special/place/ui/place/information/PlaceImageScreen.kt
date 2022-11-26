@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,19 +23,18 @@ import com.google.accompanist.pager.rememberPagerState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PlaceImageScreen(vm: PlaceDetailViewModel, imageList: List<*>) {
+fun PlaceImageScreen(vm: PlaceDetailViewModel) {
     ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+        val imageList: List<String> by vm.imageList.observeAsState(listOf())
         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val (imageView, dots) = createRefs()
-
-        val place = vm.placeInfo.observeAsState()
 
         val state = rememberPagerState()
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(screenWidth),
-            count = place.value?.imageList?.size ?: 0, state = state
+            count = imageList.size, state = state
         ) { page ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,7 +46,7 @@ fun PlaceImageScreen(vm: PlaceDetailViewModel, imageList: List<*>) {
                         width = Dimension.wrapContent
                     }) {
                 AsyncImage(
-                    model = vm.coilRequest(place.value!!.imageList[page].toString()),
+                    model = vm.coilRequest(imageList[page]),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()

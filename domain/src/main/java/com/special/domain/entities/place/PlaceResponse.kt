@@ -1,8 +1,8 @@
 package com.special.domain.entities.place
 
 data class PlaceResponse(
-    val hiddenPlaces: List<Place>,
-    val landMarkPlaces: List<Place>,
+    val hiddenPlaceList: List<Place>,
+    val landMarkList: List<Place>,
     val hiddenPlaceCount: Int,
     val landMarkCount: Int
 ) {
@@ -10,8 +10,8 @@ data class PlaceResponse(
         fun empty() = PlaceResponse(
             hiddenPlaceCount = 0,
             landMarkCount = 0,
-            hiddenPlaces = listOf(),
-            landMarkPlaces = listOf()
+            hiddenPlaceList = listOf(),
+            landMarkList = listOf()
         )
     }
 }

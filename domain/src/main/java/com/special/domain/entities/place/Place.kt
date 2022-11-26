@@ -57,7 +57,7 @@ data class Place(
     val createdAt: String,
     val lastModifiedAt: String,
     val recommendCount: Int,
-    val nickName: String
+    val nickName: String?
 ) {
     companion object {
         fun mock() = Place(

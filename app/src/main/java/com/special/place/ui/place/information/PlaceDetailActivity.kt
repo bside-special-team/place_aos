@@ -10,9 +10,11 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -29,9 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
+import com.special.place.ui.UiState
+import com.special.place.ui.my.act.CommentItem
 import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
+import com.special.place.ui.place.information.comment.CommentRegisterEventListener
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.MyTopAppBar
 import com.special.place.ui.utils.PrimaryButton
@@ -43,8 +49,8 @@ import kotlinx.coroutines.launch
 const val PLACE_ID = "id"
 const val PLACE_NAME = "name"
 const val PLACE_TYPE = "type"
-const val PLACE_RECOMMEND_CNT = "3"
-const val PLACE_VISIT_CNT = "3"
+const val PLACE_RECOMMEND_CNT = "recommend"
+const val PLACE_VISIT_CNT = "visit"
 const val PLACE_WRITER_NAME = "writer"
 const val PLACE_IMAGES = "imageList"
 const val PLACE_HASH_TAGS = "hashTags"
@@ -80,26 +86,6 @@ class PlaceDetailActivity : ComponentActivity() {
         }
 
         val vm: PlaceDetailViewModel by viewModels()
-        val id = intent.getStringExtra(PLACE_ID) ?: ""
-        val name = intent.getStringExtra(PLACE_NAME) ?: ""
-        val type = intent.getStringExtra(PLACE_TYPE) ?: ""
-        val recommendCnt = intent.getIntExtra(PLACE_RECOMMEND_CNT, 0)
-        val visitCnt = intent.getIntExtra(PLACE_VISIT_CNT, 0)
-        val writerName = intent.getStringExtra(PLACE_WRITER_NAME) ?: ""
-        val imageList = intent.getSerializableExtra(PLACE_IMAGES) as List<*>
-        val hashTags = intent.getSerializableExtra(PLACE_HASH_TAGS) as List<*>
-        vm.setPlaceInfo(
-            PlaceInfo(
-                id,
-                name,
-                type,
-                recommendCnt,
-                visitCnt,
-                writerName,
-                imageList,
-                hashTags
-            )
-        )
 
         setContent {
             PlaceTheme {
@@ -146,11 +132,17 @@ class PlaceDetailActivity : ComponentActivity() {
                                     currentBottomSheet?.let {
                                         SheetLayout(
                                             bottomSheetType = it,
-                                            vm = vm
+                                            vm = vm,
+                                            closeCallback = {
+                                                coroutineScope.launch {
+                                                    bottomSheetState.hide()
+                                                }
+                                            }
                                         )
                                     }
 //                                    BottomSheetScreen(vm, bottomSheetContent, screenHeight)
                                 },
+
                                 sheetState = bottomSheetState,
                                 sheetShape = RoundedCornerShape(36.dp)
                             ) {
@@ -174,7 +166,7 @@ class PlaceDetailActivity : ComponentActivity() {
                                                         end.linkTo(parent.end)
                                                     }
                                             ) {
-                                                PlaceImageScreen(vm, imageList)
+                                                PlaceImageScreen(vm)
                                                 Column() {
                                                     Spacer(
                                                         modifier = Modifier
@@ -213,8 +205,9 @@ class PlaceDetailActivity : ComponentActivity() {
                                                 PlaceInfoScreen(vm)
                                             }
                                         }
-                                        items(3) {
-                                            CommentScreen(vm)
+                                        items(listOf<CommentPlace>()) { item ->
+                                            CommentItem(item)
+                                            Spacer(modifier = Modifier.height(20.dp))
                                         }
                                     }
                                 }
@@ -230,10 +223,11 @@ class PlaceDetailActivity : ComponentActivity() {
 @Composable
 fun SheetLayout(
     bottomSheetType: BottomSheetType,
-    vm: PlaceDetailViewModel
+    vm: PlaceDetailViewModel,
+    closeCallback: () -> Unit
 ) {
     when (bottomSheetType) {
-        BottomSheetType.TYPE1 -> CommentBottomSheetScreen(vm)
+        BottomSheetType.TYPE1 -> CommentBottomSheetScreen(vm, closeCallback)
         BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen(vm)
     }
 }
@@ -315,13 +309,18 @@ fun DeletePlaceBottomSheetScreen(vm: PlaceDetailViewModel) {
 }
 
 @Composable
-fun CommentBottomSheetScreen(vm: PlaceDetailViewModel) {
-
+fun CommentBottomSheetScreen(eventListener: CommentRegisterEventListener, closeCallback: () -> Unit) {
+    val uiState: UiState by eventListener.commentResult.observeAsState(initial = UiState.Init)
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
     var text by remember { mutableStateOf("") }
     var textFieldWidth by remember { mutableStateOf(1.dp) }
     var textFieldColor by remember { mutableStateOf(Grey300) }
+
+    if (uiState == UiState.Done) {
+        closeCallback.invoke()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -333,7 +332,7 @@ fun CommentBottomSheetScreen(vm: PlaceDetailViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Image(painter = painterResource(id = R.drawable.ic_close), contentDescription = "close")
+            Image(painter = painterResource(id = R.drawable.ic_close), contentDescription = "close", modifier = Modifier.clickable(onClick = closeCallback))
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "댓글을 작성해주세요",
@@ -399,7 +398,13 @@ fun CommentBottomSheetScreen(vm: PlaceDetailViewModel) {
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        PrimaryButton(text = "작성 완료", modifier = Modifier.fillMaxWidth()) {}
+        PrimaryButton(
+            text = "작성 완료",
+            isNotProgress = uiState != UiState.Progress,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            eventListener.registerComment(text)
+        }
     }
 
 }

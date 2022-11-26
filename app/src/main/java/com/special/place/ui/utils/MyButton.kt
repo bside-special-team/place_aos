@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
@@ -37,17 +34,22 @@ fun PrimaryButton(text: String, clickListener: () -> Unit) {
 }
 
 @Composable
-fun PrimaryButton(text: String, modifier: Modifier, clickListener: () -> Unit) {
+fun PrimaryButton(text: String, isNotProgress: Boolean = true, modifier: Modifier, clickListener: () -> Unit) {
     Button(
         modifier = modifier
             .height(56.dp),
         shape = RoundedCornerShape(20.dp),
+        enabled = isNotProgress,
         colors = ButtonDefaults.buttonColors(Purple500),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp
         ),
         onClick = { clickListener() }) {
-        Text(text = text, style = Subtitle2, color = Color.White)
+        if (isNotProgress) {
+            Text(text = text, style = Subtitle2, color = Color.White)
+        } else {
+            CircularProgressIndicator()
+        }
     }
 }
 

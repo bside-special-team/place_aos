@@ -36,10 +36,10 @@ interface PlaceApi {
     ): PlaceResponse
 
     @POST("/api/v1/places/check-in")
-    suspend fun visitPlace(@Field("placeId") placeId: String): BaseResponse<Place>
+    suspend fun visitPlace(@Query("placeId") placeId: String): BaseResponse<Place>
 
     @POST("/api/v1/places/recommendation")
-    suspend fun recommendPlace(@Field("placeId") placeId: String): BaseResponse<Place>
+    suspend fun recommendPlace(@Query("placeId") placeId: String): BaseResponse<Place>
 
     @Multipart
     @POST("/api/v1/images")

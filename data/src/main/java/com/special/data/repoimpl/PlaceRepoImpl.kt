@@ -16,22 +16,32 @@ import javax.inject.Singleton
 class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSource) :
     PlaceRepository {
 
-    private val coordinatesFlow: MutableSharedFlow<Pair<Coordinate, Coordinate>> = MutableSharedFlow(replay = 1)
+    private val _currentPlace: MutableSharedFlow<Place> = MutableSharedFlow(replay = 1)
+    override val currentPlace: Flow<Place>
+        get() = _currentPlace
+
+    override fun selectPlace(place: Place) {
+        CoroutineScope(Dispatchers.Default).launch {
+            _currentPlace.emit(place)
+        }
+    }
+
+    private val coordinatesFlow: MutableSharedFlow<CoordinateBounds> = MutableSharedFlow(replay = 1)
     private val _pointResult: MutableStateFlow<PointResult> = MutableStateFlow(PointResult.empty())
 
     override val pointResult: Flow<PointResult> = _pointResult
 
-    override fun updateCoordinate(coordinates: Pair<Coordinate, Coordinate>) {
+    override fun updateCoordinate(coordinates: CoordinateBounds) {
         runBlocking { coordinatesFlow.emit(coordinates) }
     }
 
     @OptIn(FlowPreview::class)
     override val places: Flow<List<Place>>
-        get() = coordinatesFlow.debounce(200).map {
-            placeRemote.boundsPlaces(from = it.first, to = it.second).getOrDefault(PlaceResponse.empty())
+        get() = coordinatesFlow.distinctUntilChanged().debounce(200).map {
+            placeRemote.boundsPlaces(from = it.from, to = it.to).getOrDefault(PlaceResponse.empty())
         }.map {
             _placeCount.emit(NearPlaces(hiddenPlaceCount = it.hiddenPlaceCount, landmarkCount = it.landMarkCount))
-            it.hiddenPlaces + it.landMarkPlaces
+            it.hiddenPlaceList + it.landMarkList
         }
 
     private val _placeCount: MutableSharedFlow<NearPlaces> = MutableSharedFlow(replay = 1)

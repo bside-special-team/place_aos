@@ -46,7 +46,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.place.information.PlaceDetailActivity" />
+        <activity
+            android:name=".ui.place.information.PlaceDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

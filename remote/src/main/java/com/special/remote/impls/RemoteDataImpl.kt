@@ -29,7 +29,7 @@ class RemoteDataImpl @Inject constructor(
 
     override suspend fun allPlaces(): Result<List<Place>> {
         return tokenData.checkToken {
-            client.allPlaces().let { it.landMarkPlaces + it.hiddenPlaces }
+            client.allPlaces().let { it.landMarkList + it.hiddenPlaceList }
         }
     }
 
