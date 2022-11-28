@@ -7,11 +7,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 import com.special.place.ui.base.BaseActivity
 import com.special.place.ui.my.act.MyPostData
@@ -51,6 +55,7 @@ class MyInformationActivity : BaseActivity() {
 
 
         setContent {
+            val visitedPlaces: List<Place> by vm.currentVisitedPlace.observeAsState(listOf())
             PlaceTheme {
                 Surface(
                     modifier = Modifier
@@ -95,14 +100,11 @@ class MyInformationActivity : BaseActivity() {
                                         style = Title1
                                     )
                                 }
-                                items(vm.currentVisitedPlace.value!!.size) {
+                                items(visitedPlaces) { place ->
                                     Column(
                                         modifier = Modifier.padding(horizontal = 24.dp)
                                     ) {
-                                        PostItem(
-                                            vm = vm,
-                                            index = it
-                                        )
+                                        PostItem(place)
                                     }
                                 }
                             }
