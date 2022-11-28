@@ -2,6 +2,7 @@ package com.special.place.ui.my.postlist
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,8 +38,8 @@ fun PostList(list: List<Place>) {
         state = scrollState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(list.size) {
-            PostItem(vm = MyInformationViewModel(), it)
+        items(list) { place ->
+            PostItem(place)
         }
     }
 }
