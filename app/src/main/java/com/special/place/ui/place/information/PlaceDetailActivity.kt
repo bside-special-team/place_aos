@@ -34,7 +34,6 @@ import androidx.constraintlayout.compose.Dimension
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 import com.special.place.ui.UiState
-import com.special.place.ui.my.act.CommentItem
 import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
 import com.special.place.ui.place.information.comment.CommentRegisterEventListener
 import com.special.place.ui.theme.*
@@ -208,7 +207,7 @@ class PlaceDetailActivity : ComponentActivity() {
                                         }
 
                                         items(commentList) { item ->
-                                            CommentItem(item)
+                                            CommentList(item)
                                             Spacer(modifier = Modifier.height(20.dp))
                                         }
                                     }

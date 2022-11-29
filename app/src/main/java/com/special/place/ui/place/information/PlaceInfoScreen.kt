@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.PlaceType
 import com.special.place.resource.R
 import com.special.place.ui.my.postlist.TagList
@@ -215,5 +216,48 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommen
                 Text(text = "이 장소를 추천하기", style = Subtitle2, color = Purple700)
             }
         }
+    }
+}
+
+@Composable
+fun CommentList(comment: CommentPlace) {
+    Column(
+        modifier = Modifier
+            .background(color = Grey200, shape = RoundedCornerShape(20.dp))
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 20.dp, top = 16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = comment.comment.user.nickName + "님", fontSize = 16.sp, color = Grey900,
+                style = Subtitle2
+            )
+            Row(
+                modifier = Modifier.padding(end = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = comment.comment.createdAt, color = Grey600, style = Caption
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots"
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 18.dp, 20.dp),
+            text = comment.comment.comment,
+            fontSize = 16.sp,
+            color = Grey900,
+            style = BodyLong2
+        )
     }
 }
