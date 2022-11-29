@@ -242,56 +242,91 @@ fun DeletePlaceBottomSheetScreen(vm: PlaceDetailViewModel) {
             .padding(vertical = 32.dp, horizontal = 28.dp)
     ) {
         // TODO 삭제요청 컨텐츠
-
         Text(text = "이 게시물을 삭제 요청하는 이유", style = Title2, fontSize = 20.sp)
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = "3건 이상의 신고가 들어오면 자동 삭제됩니다", style = Subtitle1, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(32.dp))
-        Box(
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth()
-                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
-                .clickable { vm.pickPlaceDeleteReason(0) },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "해당 위치에 없는 게시물이에요",
-                style = Subtitle2, color = Color.Black,
-                textAlign = TextAlign.Center
-            )
-        }
+        DeletePlaceReasonBox(vm = vm)
 
-        Spacer(modifier = Modifier.height(12.dp))
-        Box(
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth()
-                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
-                .clickable { vm.pickPlaceDeleteReason(1) },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "부적절한 내용이 있어요",
-                style = Subtitle2, color = Color.Black,
-                textAlign = TextAlign.Center
-            )
-        }
+    }
+}
 
-        Spacer(modifier = Modifier.height(12.dp))
-        Box(
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth()
-                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
-                .clickable { vm.pickPlaceDeleteReason(2) },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "중복 작성된 게시물이에요",
-                style = Subtitle2, color = Color.Black,
-                textAlign = TextAlign.Center
-            )
+@Composable
+fun DeletePlaceReasonBox(vm: PlaceDetailViewModel) {
+    val options = listOf(
+        "해당 위치에 없는 게시물이에요",
+        "부적절한 내용이 있어요",
+        "중복 작성된 게시물이에요"
+    )
+    var selectedOption by remember {
+        mutableStateOf("")
+    }
+    val onSelectionChange = { text: String ->
+        selectedOption = text
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        options.forEach { text ->
+            Row(
+                modifier = Modifier
+                    .padding(
+                        all = 12.dp,
+                    ),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(56.dp)
+                        .fillMaxWidth()
+                        .border(
+                            width = 2.dp,
+                            shape = RoundedCornerShape(20.dp),
+                            color =
+                            if (text == selectedOption) {
+                                Purple700
+                            } else {
+                                Grey200
+                            }
+                        )
+                        .background(
+                            shape = RoundedCornerShape(20.dp),
+                            color =
+                            if (text == selectedOption) {
+                                Purple100
+                            } else {
+                                Grey200
+
+                            }
+                        )
+                        .clickable {
+                            onSelectionChange(text)
+                            var idx: Int = 0
+                            when (text) {
+                                "해당 위치에 없는 게시물이에요" -> idx = 0
+                                "부적절한 내용이 있어요" -> idx = 1
+                                "중복 작성된 게시물이에요" -> idx = 2
+
+                            }
+                            // Todo 플레이스 삭제 요청 이유
+                            // vm.pickPlaceDeleteReason(idx)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = text,
+                        style = Subtitle2, color =
+                        if (text == selectedOption) {
+                            Purple700
+                        } else {
+                            Color.Black
+                        },
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
         Spacer(modifier = Modifier.height(40.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -300,11 +335,21 @@ fun DeletePlaceBottomSheetScreen(vm: PlaceDetailViewModel) {
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.fillMaxWidth(0.05f))
-            PrimaryButtonDisable(
-                text = "삭제 요청하기",
-                clickListener = { vm.placeDeleteRequestClick() },
-                modifier = Modifier.weight(1f)
-            )
+            if (selectedOption != "") {
+                PrimaryButton(
+                    text = "삭제 요청하기",
+                    clickListener = { },
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                PrimaryButtonDisable(
+                    text = "삭제 요청하기",
+                    clickListener = { vm.placeDeleteRequestClick() },
+                    modifier = Modifier.weight(1f)
+                )
+
+            }
+
         }
     }
 }
