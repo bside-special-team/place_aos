@@ -205,11 +205,28 @@ class PlaceDetailActivity : ComponentActivity() {
                                                 PlaceInfoScreen(vm)
                                             }
                                         }
-
-                                        items(commentList) { item ->
-                                            CommentList(item)
-                                            Spacer(modifier = Modifier.height(20.dp))
+                                        if (commentList.isEmpty()) {
+                                            items(1) {
+                                                Column(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    horizontalAlignment = Alignment.CenterHorizontally
+                                                ) {
+                                                    Image(
+                                                        painter = painterResource(R.drawable.ic_empty_comment),
+                                                        contentDescription = null
+                                                    )
+                                                    Spacer(modifier = Modifier.height(20.dp))
+                                                    Text(text = "작성된 댓글이 없어요", style = Subtitle2)
+                                                    Spacer(modifier = Modifier.height(80.dp))
+                                                }
+                                            }
+                                        } else {
+                                            items(commentList) { item ->
+                                                CommentList(item)
+                                                Spacer(modifier = Modifier.height(20.dp))
+                                            }
                                         }
+
                                     }
                                 }
                             }
@@ -229,30 +246,30 @@ fun SheetLayout(
 ) {
     when (bottomSheetType) {
         BottomSheetType.TYPE1 -> CommentBottomSheetScreen(vm, closeCallback)
-        BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen(vm)
+        BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen(vm, closeCallback)
     }
 }
 
 @Composable
-fun DeletePlaceBottomSheetScreen(vm: PlaceDetailViewModel) {
+fun DeletePlaceBottomSheetScreen(vm: PlaceDetailViewModel, closeCallback: () -> Unit) {
     Column(
         modifier = Modifier
+            .padding(vertical = 32.dp, horizontal = 28.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(vertical = 32.dp, horizontal = 28.dp)
     ) {
         // TODO 삭제요청 컨텐츠
         Text(text = "이 게시물을 삭제 요청하는 이유", style = Title2, fontSize = 20.sp)
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = "3건 이상의 신고가 들어오면 자동 삭제됩니다", style = Subtitle1, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(32.dp))
-        DeletePlaceReasonBox(vm = vm)
-
+        DeletePlaceReasonBox(vm, closeCallback)
     }
 }
 
 @Composable
-fun DeletePlaceReasonBox(vm: PlaceDetailViewModel) {
+fun DeletePlaceReasonBox(vm: PlaceDetailViewModel, closeCallback: () -> Unit) {
+
     val options = listOf(
         "해당 위치에 없는 게시물이에요",
         "부적절한 내용이 있어요",
@@ -271,12 +288,7 @@ fun DeletePlaceReasonBox(vm: PlaceDetailViewModel) {
         modifier = Modifier.fillMaxWidth(),
     ) {
         options.forEach { text ->
-            Row(
-                modifier = Modifier
-                    .padding(
-                        all = 12.dp,
-                    ),
-            ) {
+            Column {
                 Box(
                     modifier = Modifier
                         .height(56.dp)
@@ -326,14 +338,17 @@ fun DeletePlaceReasonBox(vm: PlaceDetailViewModel) {
                         textAlign = TextAlign.Center
                     )
                 }
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
         Spacer(modifier = Modifier.height(40.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             SecondaryButton(
-                text = "닫기", clickListener = {},
+                text = "닫기",
                 modifier = Modifier.weight(1f)
-            )
+            ) {
+                closeCallback.invoke()
+            }
             Spacer(modifier = Modifier.fillMaxWidth(0.05f))
             if (selectedOption != "") {
                 PrimaryButton(
@@ -355,7 +370,10 @@ fun DeletePlaceReasonBox(vm: PlaceDetailViewModel) {
 }
 
 @Composable
-fun CommentBottomSheetScreen(eventListener: CommentRegisterEventListener, closeCallback: () -> Unit) {
+fun CommentBottomSheetScreen(
+    eventListener: CommentRegisterEventListener,
+    closeCallback: () -> Unit
+) {
     val uiState: UiState by eventListener.commentResult.observeAsState(initial = UiState.Init)
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
@@ -378,7 +396,11 @@ fun CommentBottomSheetScreen(eventListener: CommentRegisterEventListener, closeC
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Image(painter = painterResource(id = R.drawable.ic_close), contentDescription = "close", modifier = Modifier.clickable(onClick = closeCallback))
+            Image(
+                painter = painterResource(id = R.drawable.ic_close),
+                contentDescription = "close",
+                modifier = Modifier.clickable(onClick = closeCallback)
+            )
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "댓글을 작성해주세요",

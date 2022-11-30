@@ -9,8 +9,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +25,7 @@ import com.special.place.resource.R
 import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.LandMarkProgressBar
+import com.special.place.util.DateUtils
 
 @Composable
 fun PlaceInfoScreen(
@@ -152,6 +152,7 @@ fun PlaceInfoScreen(
 
 @Composable
 fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommend_cnt: Int) {
+    var progress by remember { mutableStateOf(0.0f) }
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -172,8 +173,9 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommen
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+                progress = recommend_cnt.toFloat() / 20
                 LandMarkProgressBar(
-                    progress = 0.7f,
+                    progress = progress,
                     startIcon = R.drawable.ic_hidden_place_purple,
                     endIcon = R.drawable.ic_landmark_purple
                 )
@@ -223,8 +225,8 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommen
 fun CommentList(comment: CommentPlace) {
     Column(
         modifier = Modifier
+            .padding(horizontal = 24.dp)
             .background(color = Grey200, shape = RoundedCornerShape(20.dp))
-            .fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
@@ -241,12 +243,15 @@ fun CommentList(comment: CommentPlace) {
                 modifier = Modifier.padding(end = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val commentDay = comment.comment.createdAt
                 Text(
-                    text = comment.comment.createdAt, color = Grey600, style = Caption
+                    text = "${DateUtils.commentTime(commentDay)}일 전",
+                    color = Grey600,
+                    style = Caption
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots"
+                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots",
                 )
             }
         }
