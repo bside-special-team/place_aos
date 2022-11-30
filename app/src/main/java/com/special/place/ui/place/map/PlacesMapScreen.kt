@@ -1,6 +1,5 @@
 package com.special.place.ui.place.map
 
-import android.util.Log
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -72,15 +71,9 @@ fun PlacesMapScreen(
         }
     }
 
-    if (cameraPosition.isMoving.not()) {
-        // TODO: 이벤트 수신이 계속 되고 있음.
-
-        val position = cameraPosition.position
-        position.let { eventListener.updateCameraPosition(cameraPosition) }
-
-        Log.d(
-            "CameraState",
-            "Lat=${position.target.latitude}, Lng=${position.target.longitude}, ZoomLevel=${position.zoom}"
-        )
+    if (cameraPosition.isMoving.not() && cameraPosition.cameraUpdateReason == CameraUpdateReason.GESTURE) {
+        // 카메라가 움직임이 끝낙고, 움직인 이유가 사용자의 제스쳐 일때만 이벤트 발생
+        eventListener.updateTrackingMode(LocationTrackingMode.NoFollow)
+        eventListener.updateCameraPosition(cameraPosition)
     }
 }
