@@ -43,8 +43,12 @@ class PlaceDetailViewModel @Inject constructor(
     private val _setBottomSheetComment: MutableLiveData<String> = MutableLiveData()
     override val setBottomSheetComment: LiveData<String> = _setBottomSheetComment
 
-    private val _setBottomSheetDelete: MutableLiveData<String> = MutableLiveData()
-    override val setBottomSheetDelete: LiveData<String> = _setBottomSheetDelete
+    private val _setBottomSheetDeleteComment: MutableLiveData<String> = MutableLiveData()
+    override val setBottomSheetDeleteComment: LiveData<String> = _setBottomSheetDeleteComment
+
+    private val _setBottomSheetDeletePlace: MutableLiveData<String> = MutableLiveData()
+    override val setBottomSheetDeletePlace: LiveData<String> = _setBottomSheetDeletePlace
+
     override fun bookmarkPlace(id: String) {
         TODO("Not yet implemented")
     }
@@ -64,7 +68,11 @@ class PlaceDetailViewModel @Inject constructor(
     override fun placeDeleteBtnClick() {
 
 //        _setBottomSheet.value = "placeDelete"
-        _setBottomSheetDelete.postValue("placeDelete")
+        _setBottomSheetDeletePlace.postValue("placeDelete")
+    }
+
+    override fun commentDeleteMenuClick(id: String) {
+        _setBottomSheetDeleteComment.postValue(id)
     }
 
     override fun coilRequest(uuid: String): ImageRequest {

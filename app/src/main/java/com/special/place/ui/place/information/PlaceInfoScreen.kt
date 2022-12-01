@@ -2,13 +2,11 @@ package com.special.place.ui.place.information
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -29,7 +27,7 @@ import com.special.place.util.DateUtils
 
 @Composable
 fun PlaceInfoScreen(
-    vm: PlaceDetailViewModel
+    vm: PlaceDetailListener
 ) {
     val place by vm.placeInfo.observeAsState()
     val name = place?.name ?: ""
@@ -151,7 +149,7 @@ fun PlaceInfoScreen(
 }
 
 @Composable
-fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommend_cnt: Int) {
+fun LandMarkCard(vm: PlaceDetailListener, id: String, type: PlaceType, recommend_cnt: Int) {
     var progress by remember { mutableStateOf(0.0f) }
     Card(
         modifier = Modifier
@@ -222,7 +220,10 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommen
 }
 
 @Composable
-fun CommentList(comment: CommentPlace) {
+fun CommentList(vm: PlaceDetailListener, comment: CommentPlace) {
+    var isDropDownMenu by remember {
+        mutableStateOf(false)
+    }
     Column(
         modifier = Modifier
             .padding(horizontal = 24.dp)
@@ -244,15 +245,30 @@ fun CommentList(comment: CommentPlace) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val commentDay = comment.comment.createdAt
+                val text = when (DateUtils.commentTime(commentDay)) {
+                    0L -> "오늘"
+                    else -> "${DateUtils.commentTime(commentDay)}일 전"
+                }
                 Text(
-                    text = "${DateUtils.commentTime(commentDay)}일 전",
+                    text = text,
                     color = Grey600,
                     style = Caption
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots",
+                    modifier = Modifier.clickable { isDropDownMenu = true },
+                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots"
                 )
+                DropdownMenu(
+                    expanded = isDropDownMenu,
+                    onDismissRequest = { isDropDownMenu = false }) {
+                    DropdownMenuItem(onClick = {
+                        vm.commentDeleteMenuClick(comment.comment.id)
+                        isDropDownMenu = false
+                    }) {
+                        Text(text = "삭제 요청하기", style = BodyLong2)
+                    }
+                }
             }
         }
 
