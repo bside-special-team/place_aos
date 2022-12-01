@@ -12,7 +12,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -61,19 +60,25 @@ fun MyInformationScreen(vm: MyInformationViewModel) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        LevelCard(userInfo?.level ?: 0, userInfo?.myPoint ?: 0, userInfo?.progress ?: 100f)
+        LevelCard(userInfo?.level ?: 0, userInfo?.myPoint ?: 0, userInfo?.progress ?: 0f)
 
         Spacer(modifier = Modifier.height(20.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             Arrangement.SpaceBetween
         ) {
-            MyButton(stringResource(id = R.string.btn_my_act), "MyAct", R.drawable.ic_fire_solid)
-            Spacer(modifier = Modifier.height(20.dp))
+            MyButton(
+                stringResource(id = R.string.btn_my_act),
+                "MyAct",
+                R.drawable.ic_fire_solid,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.weight(0.1f))
             MyButton(
                 stringResource(id = R.string.btn_my_badge),
                 "MyBadge",
-                R.drawable.ic_trophy_star_solid
+                R.drawable.ic_trophy_star_solid,
+                modifier = Modifier.weight(1f)
             )
         }
 
@@ -120,20 +125,12 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
                     style = Title1,
                     fontSize = 14.sp
                 )
-                Row {
-                    Text(
-                        text = stringResource(id = R.string.txt_next_level_point, point),
-                        color = Color.White,
-                        style = Title1,
-                        fontSize = 14.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Image(
-                        painter = painterResource(R.drawable.ic_info_circle),
-                        contentDescription = "info",
-                        colorFilter = ColorFilter.tint(Purple100)
-                    )
-                }
+                Text(
+                    text = stringResource(id = R.string.txt_next_level_point, point),
+                    color = Color.White,
+                    style = Title1,
+                    fontSize = 14.sp
+                )
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -174,13 +171,12 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
 
 
 @Composable
-fun MyButton(buttonText: String, intentText: String, icon: Int) {
+fun MyButton(buttonText: String, intentText: String, icon: Int, modifier: Modifier) {
     val ctx = LocalContext.current
 
     Button(
-        modifier = Modifier
-            .height(80.dp)
-            .width(146.dp),
+        modifier = modifier
+            .height(80.dp),
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(Purple100),
         onClick = {

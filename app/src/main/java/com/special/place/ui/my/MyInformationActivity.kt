@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 import com.special.place.ui.base.BaseActivity
+import com.special.place.ui.my.act.EmptyScreen
 import com.special.place.ui.my.act.MyPostData
 import com.special.place.ui.my.postlist.PostItem
 import com.special.place.ui.my.setting.SettingActivity
@@ -100,13 +101,20 @@ class MyInformationActivity : BaseActivity() {
                                         style = Title1
                                     )
                                 }
-                                items(visitedPlaces) { place ->
-                                    Column(
-                                        modifier = Modifier.padding(horizontal = 24.dp)
-                                    ) {
-                                        PostItem(place)
+                                if (visitedPlaces.isEmpty()) {
+                                    items(1) {
+                                        EmptyScreen(text = "최근 방문한 장소가 없어요 \uD83E\uDD72")
+                                    }
+                                } else {
+                                    items(visitedPlaces) { place ->
+                                        Column(
+                                            modifier = Modifier.padding(horizontal = 24.dp)
+                                        ) {
+                                            PostItem(place)
+                                        }
                                     }
                                 }
+
                             }
                         })
 

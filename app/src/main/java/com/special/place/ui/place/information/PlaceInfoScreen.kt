@@ -17,12 +17,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.flowlayout.FlowRow
 import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.PlaceType
 import com.special.place.resource.R
-import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.LandMarkProgressBar
+import com.special.place.ui.widget.HashtagChip
 import com.special.place.util.DateUtils
 
 @Composable
@@ -54,27 +55,20 @@ fun PlaceInfoScreen(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "${writerName}님의 발견",
-                    color = Purple500,
-                    style = Title1,
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Lv2 | 콜럼버스",
-                    modifier = Modifier
-                        .background(color = Purple100, shape = RoundedCornerShape(6.dp))
-                        .padding(horizontal = 5.dp),
-                    color = Purple500, style = Title1, fontSize = 11.sp
-                )
-            }
-            Image(
-                painter = painterResource(id = R.drawable.ic_bookmark_grey),
-                contentDescription = "bookmark"
+            Text(
+                text = "${writerName}님의 발견",
+                color = Purple500,
+                style = Title1,
+                fontSize = 14.sp
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Lv2 | 콜럼버스",
+                modifier = Modifier
+                    .background(color = Purple100, shape = RoundedCornerShape(6.dp))
+                    .padding(horizontal = 5.dp),
+                color = Purple500, style = Title1, fontSize = 11.sp
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
@@ -114,7 +108,14 @@ fun PlaceInfoScreen(
             Text(text = "${recommendCnt}명", style = Caption, color = Grey600)
         }
         Spacer(modifier = Modifier.height(20.dp))
-        TagList(list = hashTags)
+        FlowRow(
+            mainAxisSpacing = 6.dp, crossAxisSpacing = 12.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            hashTags.forEach {
+                HashtagChip(content = it)
+            }
+        }
         Spacer(
             modifier = Modifier
                 .padding(vertical = 20.dp)

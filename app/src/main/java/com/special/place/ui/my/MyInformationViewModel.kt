@@ -35,7 +35,7 @@ class MyInformationViewModel @Inject constructor(
         get() = MutableLiveData(listOf())
 
     override val myPlace: LiveData<List<Place>>
-        get() = MutableLiveData()
+        get() = MutableLiveData(listOf())
 
     override fun bookmarkPlace(id: String) {
 
