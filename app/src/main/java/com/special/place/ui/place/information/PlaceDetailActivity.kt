@@ -223,10 +223,10 @@ class PlaceDetailActivity : ComponentActivity() {
                                                     modifier = Modifier.fillMaxWidth(),
                                                     horizontalAlignment = Alignment.CenterHorizontally
                                                 ) {
-//                                                    Image(
-//                                                        painter = painterResource(R.drawable.ic_empty_comment),
-//                                                        contentDescription = null
-//                                                    )
+                                                    Image(
+                                                        painter = painterResource(R.drawable.ic_empty_comment),
+                                                        contentDescription = null
+                                                    )
                                                     Spacer(modifier = Modifier.height(20.dp))
                                                     Text(text = "작성된 댓글이 없어요", style = Subtitle2)
                                                     Spacer(modifier = Modifier.height(80.dp))
