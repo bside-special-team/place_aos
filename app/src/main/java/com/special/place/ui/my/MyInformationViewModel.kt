@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.Place
+import com.special.domain.entities.user.LevelInfo
 import com.special.domain.entities.user.User
 import com.special.domain.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,8 @@ class MyInformationViewModel @Inject constructor(
             emit(it)
         }
     }
+
+    override val nextLevel: LiveData<LevelInfo> = liveData { emit(userRepo.nextLevel()) }
 
     override val myBookmarkPlace: LiveData<List<Place>>
         get() = MutableLiveData(listOf())

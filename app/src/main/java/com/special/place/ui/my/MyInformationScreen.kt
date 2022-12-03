@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
+import com.special.domain.entities.user.LevelInfo
 import com.special.place.resource.R
 import com.special.place.ui.my.act.MyActActivity
 import com.special.place.ui.theme.*
@@ -27,6 +28,7 @@ import com.special.place.ui.theme.*
 @Composable
 fun MyInformationScreen(vm: MyInformationViewModel) {
     val userInfo by vm.userInfo.observeAsState()
+    val nextLevel by vm.nextLevel.observeAsState(LevelInfo.none())
 
     Column(
         modifier = Modifier
@@ -54,13 +56,13 @@ fun MyInformationScreen(vm: MyInformationViewModel) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        BadgeCard(userInfo?.myBadge)
+        BadgeCard(userInfo?.label)
         Spacer(modifier = Modifier.height(20.dp))
         Text(text = userInfo?.nickName ?: "", style = Title2)
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        LevelCard(userInfo?.level ?: 0, userInfo?.myPoint ?: 0, userInfo?.progress ?: 0f)
+        LevelCard(nextLevel = nextLevel.level, nextLevelPoint = nextLevel.minPoint, myPoint = userInfo?.point ?: 0)
 
         Spacer(modifier = Modifier.height(20.dp))
         Row(
@@ -98,7 +100,7 @@ fun BadgeCard(badge: String?) {
 }
 
 @Composable
-fun LevelCard(level: Int, point: Int, progress: Float) {
+fun LevelCard(nextLevel: Int, nextLevelPoint: Int, myPoint: Int) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -126,7 +128,7 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
                     fontSize = 14.sp
                 )
                 Text(
-                    text = stringResource(id = R.string.txt_next_level_point, point),
+                    text = stringResource(id = R.string.txt_next_level_point, nextLevelPoint - myPoint),
                     color = Color.White,
                     style = Title1,
                     fontSize = 14.sp
@@ -135,7 +137,7 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
             Spacer(modifier = Modifier.height(30.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = level.toString(),
+                    text = (nextLevel - 1).toString(),
                     modifier = Modifier
                         .height(28.dp)
                         .width(28.dp)
@@ -146,7 +148,7 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
                     style = Subtitle4
                 )
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = myPoint.toFloat() / nextLevelPoint.toFloat(),
                     backgroundColor = Purple300,
                     color = Color.White,
                     modifier = Modifier
@@ -154,7 +156,7 @@ fun LevelCard(level: Int, point: Int, progress: Float) {
                         .weight(1f)
                 )
                 Text(
-                    text = (level + 1).toString(),
+                    text = nextLevel.toString(),
                     modifier = Modifier
                         .height(28.dp)
                         .width(28.dp)
