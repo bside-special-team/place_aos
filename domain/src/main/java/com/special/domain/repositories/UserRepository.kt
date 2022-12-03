@@ -1,5 +1,6 @@
 package com.special.domain.repositories
 
+import com.special.domain.entities.place.Place
 import com.special.domain.entities.user.LevelInfo
 import com.special.domain.entities.user.LoginStatus
 import com.special.domain.entities.user.SocialLoginResponse
@@ -30,4 +31,6 @@ interface UserRepository {
 
     suspend fun deleteComment(commentId: String)
     suspend fun modifyComment(commentId: String, comment: String)
+
+    suspend fun recentPlaces(): List<Place>
 }

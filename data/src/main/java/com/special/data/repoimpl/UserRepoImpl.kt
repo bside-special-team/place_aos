@@ -4,6 +4,7 @@ import android.util.Log
 import com.special.domain.datasources.LoginRemoteDataSource
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.datasources.TokenDataSource
+import com.special.domain.entities.place.Place
 import com.special.domain.entities.user.*
 import com.special.domain.entities.user.badge.Badge
 import com.special.domain.exception.RetrySocialLogin
@@ -133,6 +134,12 @@ class UserRepoImpl @Inject constructor(
     override suspend fun modifyComment(commentId: String, comment: String) {
         withContext(Dispatchers.IO) {
             remote.modifyComment(commentId = commentId, comment = comment)
+        }
+    }
+
+    override suspend fun recentPlaces(): List<Place> {
+        return withContext(Dispatchers.IO) {
+            remote.recentPlaces()
         }
     }
 }

@@ -38,4 +38,6 @@ interface RemoteDataSource {
     suspend fun deleteComment(commentId: String)
 
     suspend fun modifyComment(commentId: String, comment: String)
+
+    suspend fun recentPlaces(): List<Place>
 }

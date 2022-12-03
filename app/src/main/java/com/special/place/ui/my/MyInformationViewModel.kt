@@ -17,8 +17,7 @@ class MyInformationViewModel @Inject constructor(
     private val userRepo: UserRepository
 ) : ViewModel(), MyInformationEventListener {
 
-    override val currentVisitedPlace: LiveData<List<Place>>
-        get() = MutableLiveData(listOf())
+    override val currentVisitedPlace: LiveData<List<Place>> = liveData { emit(userRepo.recentPlaces()) }
 
     override val userInfo: LiveData<User> = liveData {
         userRepo.currentUser()?.let {

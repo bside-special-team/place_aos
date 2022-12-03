@@ -101,4 +101,8 @@ class RemoteDataImpl @Inject constructor(
     override suspend fun modifyComment(commentId: String, comment: String) {
         client.modifyComment(CommentModifyRequest(commentId = commentId, comment = comment))
     }
+
+    override suspend fun recentPlaces(): List<Place> {
+        return client.recentVisitPlaces()
+    }
 }
