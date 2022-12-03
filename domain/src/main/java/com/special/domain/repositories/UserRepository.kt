@@ -29,4 +29,5 @@ interface UserRepository {
     suspend fun nextLevel(): LevelInfo
 
     suspend fun deleteComment(commentId: String)
+    suspend fun modifyComment(commentId: String, comment: String)
 }

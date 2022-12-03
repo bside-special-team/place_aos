@@ -21,6 +21,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.PlaceType
 import com.special.place.resource.R
+import com.special.place.ui.my.act.CommentEventListener
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.LandMarkProgressBar
 import com.special.place.ui.widget.HashtagChip
@@ -221,10 +222,10 @@ fun LandMarkCard(vm: PlaceDetailListener, id: String, type: PlaceType, recommend
 }
 
 @Composable
-fun CommentList(vm: PlaceDetailListener, comment: CommentPlace) {
-    var isDropDownMenu by remember {
-        mutableStateOf(false)
-    }
+fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
+    var isDropDownMenu by remember { mutableStateOf(false) }
+    val isMyComment = vm.isMyComment(comment)
+
     Column(
         modifier = Modifier
             .padding(horizontal = 24.dp)
@@ -263,11 +264,26 @@ fun CommentList(vm: PlaceDetailListener, comment: CommentPlace) {
                 DropdownMenu(
                     expanded = isDropDownMenu,
                     onDismissRequest = { isDropDownMenu = false }) {
-                    DropdownMenuItem(onClick = {
-                        vm.commentDeleteMenuClick(comment.comment.id)
-                        isDropDownMenu = false
-                    }) {
-                        Text(text = "삭제 요청하기", style = BodyLong2)
+                    if (isMyComment) {
+                        DropdownMenuItem(onClick = {
+                            vm.checkModifyComment()
+                            isDropDownMenu = false
+                        }) {
+                            Text(text = "수정", style = BodyLong2)
+                        }
+                        DropdownMenuItem(onClick = {
+                            vm.checkDeleteComment()
+                            isDropDownMenu = false
+                        }) {
+                            Text(text = "삭제", style = BodyLong2)
+                        }
+                    } else {
+                        DropdownMenuItem(onClick = {
+                            vm.reportComment()
+                            isDropDownMenu = false
+                        }) {
+                            Text(text = "삭제 요청하기", style = BodyLong2)
+                        }
                     }
                 }
             }

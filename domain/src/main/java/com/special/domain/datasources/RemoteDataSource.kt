@@ -36,4 +36,6 @@ interface RemoteDataSource {
     suspend fun levelInfo(): List<LevelInfo>
 
     suspend fun deleteComment(commentId: String)
+
+    suspend fun modifyComment(commentId: String, comment: String)
 }

@@ -97,4 +97,8 @@ class RemoteDataImpl @Inject constructor(
     override suspend fun deleteComment(commentId: String) {
         client.deleteComment(CommentModifyRequest(commentId = commentId))
     }
+
+    override suspend fun modifyComment(commentId: String, comment: String) {
+        client.modifyComment(CommentModifyRequest(commentId = commentId, comment = comment))
+    }
 }

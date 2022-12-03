@@ -13,6 +13,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -29,6 +30,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.special.place.resource.R
 import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.my.postlist.PostScreen
+import com.special.place.ui.place.information.comment.CommentViewModel
 import com.special.place.ui.theme.Grey500
 import com.special.place.ui.theme.PlaceTheme
 import com.special.place.ui.theme.Subtitle2
@@ -50,6 +52,7 @@ data class MyPostData(
 class MyActActivity : ComponentActivity() {
 
     private val vm: MyInformationViewModel by viewModels()
+    private val commentVM: CommentViewModel by viewModels()
 
     companion object {
         fun newIntent(context: Context) = Intent(context, MyActActivity::class.java)
@@ -177,17 +180,19 @@ class MyActActivity : ComponentActivity() {
 
                     )
 
-                    var dialogShow: Boolean by remember {
-                        mutableStateOf(true)
-                    }
+                    val dialogShow: Boolean by commentVM.showDeleteCommentDialog.observeAsState(initial = false)
 
                     if (dialogShow) {
                         CustomDialog(
                             title = "댓글을 삭제 하시겠습니까?",
                             primaryButtonText = "삭제",
                             secondaryButtonText = "취소",
-                            setShowDialog = { bool -> dialogShow = bool },
-                            callback = { /*TODO*/ })
+                            setShowDialog = { bool ->
+                                if (bool) {
+                                    commentVM.hideDeleteCommentDialog()
+                                }
+                            },
+                            callback = { commentVM.doDeleteComment() })
                     }
 
                 }

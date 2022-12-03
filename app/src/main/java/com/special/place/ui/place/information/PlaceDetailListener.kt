@@ -21,7 +21,6 @@ interface PlaceDetailListener {
 
     fun commentBtnClick()
     fun placeDeleteBtnClick()
-    fun commentDeleteMenuClick(id: String)
     fun coilRequest(uuid: String): ImageRequest
 
 

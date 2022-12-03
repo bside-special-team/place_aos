@@ -5,10 +5,7 @@ import coil.request.ImageRequest
 import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.combine
-import com.special.domain.entities.place.comment.Comment
 import com.special.domain.repositories.PlaceRepository
-import com.special.place.ui.UiState
-import com.special.place.ui.place.information.comment.CommentRegisterEventListener
 import com.special.place.util.CoilRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
@@ -20,11 +17,10 @@ class PlaceDetailViewModel @Inject constructor(
     private val coilRequest: CoilRequest,
     private val placeRepo: PlaceRepository,
 ) : ViewModel(),
-    PlaceDetailListener, CommentRegisterEventListener {
+    PlaceDetailListener {
 
     private val _currentPlace: LiveData<Place> = placeRepo.currentPlace.asLiveData()
 
-    private val _comment: MutableLiveData<List<Comment>> = MutableLiveData()
     override val comments: LiveData<List<CommentPlace>> = placeRepo.currentPlace.map { place ->
         placeRepo.commentList(place.id, 0).list.map {
             place.combine(it)
@@ -71,10 +67,6 @@ class PlaceDetailViewModel @Inject constructor(
         _setBottomSheetDeletePlace.postValue("placeDelete")
     }
 
-    override fun commentDeleteMenuClick(id: String) {
-        _setBottomSheetDeleteComment.postValue(id)
-    }
-
     override fun coilRequest(uuid: String): ImageRequest {
         return coilRequest.myImageRequest(uuid)
     }
@@ -85,28 +77,6 @@ class PlaceDetailViewModel @Inject constructor(
 
     override fun placeDeleteRequestClick() {
         TODO("Not yet implemented")
-    }
-
-    private val _commentResult: MutableLiveData<UiState> = MutableLiveData()
-    override val commentResult: LiveData<UiState> = _commentResult
-
-    override fun registerComment(comment: String) {
-        val targetId = _currentPlace.value?.id
-
-        if (targetId == null || comment.isBlank()) {
-            _commentResult.postValue(UiState.Error(IllegalArgumentException()))
-            return
-        }
-
-        viewModelScope.launch {
-            _commentResult.postValue(UiState.Progress)
-            runCatching { placeRepo.registerComment(targetId = targetId, comment = comment) }.onFailure {
-                _commentResult.postValue(UiState.Error(it))
-            }.onSuccess {
-                _commentResult.postValue(UiState.Done)
-            }
-
-        }
     }
 
 }
