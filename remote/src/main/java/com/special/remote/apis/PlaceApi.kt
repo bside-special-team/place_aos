@@ -5,6 +5,7 @@ import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.PlaceResponse
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.entities.place.comment.Comment
+import com.special.domain.entities.place.comment.CommentModifyRequest
 import com.special.domain.entities.place.comment.CommentRequest
 import com.special.domain.entities.place.comment.CommentResponse
 import com.special.domain.entities.user.LevelInfo
@@ -48,6 +49,12 @@ interface PlaceApi {
     @POST("/api/v1/comments")
     suspend fun registerComments(@Body comment: CommentRequest): BaseResponse<Comment>
 
+    @DELETE("/api/v1/comments")
+    suspend fun deleteComment(@Body request: CommentModifyRequest): BaseResponse<Comment>
+
+    @PATCH("/api/v1/comments")
+    suspend fun modifyComment(@Body request: CommentModifyRequest): BaseResponse<Comment>
+
     @GET("/api/v1/comments/places/{placeId}")
     suspend fun placeComments(@Path("placeId") placeId: String, @Query("lastTimestamp") lastTimeStamp: Long, @Query("limit") limit: Int): CommentResponse
 
@@ -59,4 +66,11 @@ interface PlaceApi {
 
     @GET("/api/v1/users/levels")
     suspend fun levelInfo(): List<LevelInfo>
+
+    @GET("/api/v1/places/recent-visited")
+    suspend fun recentVisitPlaces(): List<Place>
+
+    @GET("/api/v1/places/myPlace")
+    suspend fun myPlaces(): List<Place>
+
 }

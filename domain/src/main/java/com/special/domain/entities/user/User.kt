@@ -18,6 +18,24 @@ data class User(
     val progress: Float?,
     val point: Int,
     val label: String
-)
+) {
+    companion object {
+        fun mock() = User(
+            id = "1234",
+            loginType = null,
+            subject = null,
+            email = null,
+            nickName = null,
+            pushAlarm = false,
+            marketingAlarm = false,
+            myPoint = 0,
+            myBadge = null,
+            level = 0,
+            progress = 0f,
+            point = 0,
+            label = ""
+        )
+    }
+}
 
 data class NickNameUpdate(val nickName: String)

@@ -17,12 +17,13 @@ import com.special.place.ui.theme.*
 
 @Composable
 fun CustomDialog(
-    value: String,
-    subValue: String,
-    buttonValue: String,
-    subButtonValue: String,
+    title: String,
+    message: String? = null,
+    primaryButtonText: String,
+    secondaryButtonText: String,
     setShowDialog: (Boolean) -> Unit,
-    setValue: (String) -> Unit
+    callback: () -> Unit,
+    subCallback: (() -> Unit)? = null
 ) {
 
     Dialog(onDismissRequest = { setShowDialog(false) }) {
@@ -44,13 +45,13 @@ fun CustomDialog(
                 ) {
 
                     Text(
-                        text = value,
+                        text = title,
                         style = Title1
                     )
-                    if (subValue != "") {
+                    if (message != null && message != "") {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = subValue,
+                            text = message,
                             style = Subtitle1
                         )
                     }
@@ -60,6 +61,7 @@ fun CustomDialog(
                     ) {
                         Button(
                             onClick = {
+                                subCallback?.invoke()
                                 setShowDialog(false)
                             },
                             shape = RoundedCornerShape(20.dp),
@@ -74,12 +76,14 @@ fun CustomDialog(
                             )
                         ) {
                             Text(
-                                text = buttonValue,
+                                text = secondaryButtonText,
                                 style = Subtitle2,
                             )
                         }
+                        Box(modifier = Modifier.width(16.dp))
                         Button(
                             onClick = {
+                                callback()
                                 setShowDialog(false)
                             },
                             shape = RoundedCornerShape(20.dp),
@@ -89,7 +93,7 @@ fun CustomDialog(
                                 .height(56.dp)
                         ) {
                             Text(
-                                text = subButtonValue,
+                                text = primaryButtonText,
                                 style = Subtitle2,
                                 color = Color.White
                             )

@@ -34,4 +34,6 @@ interface RemoteDataSource {
     suspend fun commentList(placeId: String, lastTimestamp: Long): Paging<Comment>
 
     suspend fun levelInfo(): List<LevelInfo>
+
+    suspend fun deleteComment(commentId: String)
 }

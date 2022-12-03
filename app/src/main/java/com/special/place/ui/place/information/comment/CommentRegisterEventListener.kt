@@ -6,4 +6,6 @@ import com.special.place.ui.UiState
 interface CommentRegisterEventListener {
     fun registerComment(comment: String)
     val commentResult: LiveData<UiState>
+
+
 }

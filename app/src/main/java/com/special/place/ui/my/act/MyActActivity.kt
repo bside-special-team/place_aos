@@ -11,10 +11,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -32,6 +29,7 @@ import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.my.postlist.PostScreen
 import com.special.place.ui.theme.PlaceTheme
 import com.special.place.ui.theme.Subtitle4
+import com.special.place.ui.utils.CustomDialog
 import com.special.place.ui.utils.MyTopAppBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -160,6 +158,19 @@ class MyActActivity : ComponentActivity() {
                         }
 
                     )
+
+                    var dialogShow: Boolean by remember {
+                        mutableStateOf(true)
+                    }
+
+                    if (dialogShow) {
+                        CustomDialog(
+                            title = "댓글을 삭제 하시겠습니까?",
+                            primaryButtonText = "삭제",
+                            secondaryButtonText = "취소",
+                            setShowDialog = { bool -> dialogShow = bool },
+                            callback = { /*TODO*/ })
+                    }
 
                 }
             }

@@ -123,4 +123,10 @@ class UserRepoImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun deleteComment(commentId: String) {
+        withContext(Dispatchers.IO) {
+            remote.deleteComment(commentId)
+        }
+    }
 }

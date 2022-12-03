@@ -27,4 +27,6 @@ interface UserRepository {
     suspend fun modifyNickName(nickName: String)
 
     suspend fun nextLevel(): LevelInfo
+
+    suspend fun deleteComment(commentId: String)
 }

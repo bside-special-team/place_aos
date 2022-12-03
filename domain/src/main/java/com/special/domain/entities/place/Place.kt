@@ -1,5 +1,7 @@
 package com.special.domain.entities.place
 
+import com.special.domain.entities.user.User
+
 /*
 {
   "createdAt": "2022-11-19T16:14:55.681Z",
@@ -50,6 +52,7 @@ data class Place(
     val id: String,
     val placeType: PlaceType,
     val coordinate: Coordinate,
+    val writer: User,
     val name: String,
     val imageUuids: List<String>,
     val visitCount: Int,
@@ -57,21 +60,23 @@ data class Place(
     val createdAt: String,
     val lastModifiedAt: String,
     val recommendCount: Int,
-    val nickName: String?
-) {
+
+    ) {
     companion object {
         fun mock() = Place(
             id = "id",
             placeType = PlaceType.Hidden,
             coordinate = Coordinate("37.5666102", "126.9783881"),
+            writer = User.mock(),
             name = "목업 플레이스",
             imageUuids = listOf(),
             visitCount = 0,
             hashTags = listOf(),
             createdAt = "",
             lastModifiedAt = "",
-            recommendCount = 0,
-            nickName = "방방방"
+            recommendCount = 0
         )
     }
+
+    val nickName: String? = writer.nickName
 }

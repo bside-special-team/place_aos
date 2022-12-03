@@ -22,7 +22,8 @@ interface PlaceEventListener {
     val hiddenPlaceCount: LiveData<Int>
     val landmarkCount: LiveData<Int>
 
-    val distance: LiveData<String>
+    val distanceText: LiveData<String>
+    val distance: LiveData<Int>
 
     fun clickTourStart()
 

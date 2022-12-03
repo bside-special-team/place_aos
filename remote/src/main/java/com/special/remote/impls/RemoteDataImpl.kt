@@ -8,6 +8,7 @@ import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.PlaceResponse
 import com.special.domain.entities.place.RequestRegisterPlace
 import com.special.domain.entities.place.comment.Comment
+import com.special.domain.entities.place.comment.CommentModifyRequest
 import com.special.domain.entities.place.comment.CommentRequest
 import com.special.domain.entities.user.LevelInfo
 import com.special.domain.entities.user.NickNameUpdate
@@ -91,5 +92,9 @@ class RemoteDataImpl @Inject constructor(
 
     override suspend fun levelInfo(): List<LevelInfo> {
         return client.levelInfo()
+    }
+
+    override suspend fun deleteComment(commentId: String) {
+        client.deleteComment(CommentModifyRequest(commentId = commentId))
     }
 }

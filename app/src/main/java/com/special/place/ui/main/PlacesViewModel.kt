@@ -82,7 +82,7 @@ class PlacesViewModel @Inject constructor(
         return coilRequest.myImageRequest(uuid)
     }
 
-    override val distance: LiveData<String> = _currentPlace.map {
+    override val distanceText: LiveData<String> = _currentPlace.map {
         val currentLatLnt = _currentLocation.value?.toLatLnt()
 
         if (currentLatLnt == null) {
@@ -96,6 +96,12 @@ class PlacesViewModel @Inject constructor(
                 "$distance m"
             }
         }
+    }
+
+    override val distance: LiveData<Int> = _currentPlace.map { currentPlace ->
+        _currentLocation.value?.toLatLnt()?.let {
+            currentPlace.coordinate.toLatLng().distanceTo(it).toInt()
+        } ?: Int.MAX_VALUE
     }
 }
 
