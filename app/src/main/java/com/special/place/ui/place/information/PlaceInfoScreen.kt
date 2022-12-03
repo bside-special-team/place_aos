@@ -2,15 +2,12 @@ package com.special.place.ui.place.information
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,15 +17,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.flowlayout.FlowRow
+import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.PlaceType
 import com.special.place.resource.R
-import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.theme.*
 import com.special.place.ui.utils.LandMarkProgressBar
+import com.special.place.ui.widget.HashtagChip
+import com.special.place.util.DateUtils
 
 @Composable
 fun PlaceInfoScreen(
-    vm: PlaceDetailViewModel
+    vm: PlaceDetailListener
 ) {
     val place by vm.placeInfo.observeAsState()
     val name = place?.name ?: ""
@@ -55,27 +55,20 @@ fun PlaceInfoScreen(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "${writerName}님의 발견",
-                    color = Purple500,
-                    style = Title1,
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Lv2 | 콜럼버스",
-                    modifier = Modifier
-                        .background(color = Purple100, shape = RoundedCornerShape(6.dp))
-                        .padding(horizontal = 5.dp),
-                    color = Purple500, style = Title1, fontSize = 11.sp
-                )
-            }
-            Image(
-                painter = painterResource(id = R.drawable.ic_bookmark_grey),
-                contentDescription = "bookmark"
+            Text(
+                text = "${writerName}님의 발견",
+                color = Purple500,
+                style = Title1,
+                fontSize = 14.sp
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Lv2 | 콜럼버스",
+                modifier = Modifier
+                    .background(color = Purple100, shape = RoundedCornerShape(6.dp))
+                    .padding(horizontal = 5.dp),
+                color = Purple500, style = Title1, fontSize = 11.sp
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
@@ -115,7 +108,14 @@ fun PlaceInfoScreen(
             Text(text = "${recommendCnt}명", style = Caption, color = Grey600)
         }
         Spacer(modifier = Modifier.height(20.dp))
-        TagList(list = hashTags)
+        FlowRow(
+            mainAxisSpacing = 6.dp, crossAxisSpacing = 12.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            hashTags.forEach {
+                HashtagChip(content = it)
+            }
+        }
         Spacer(
             modifier = Modifier
                 .padding(vertical = 20.dp)
@@ -150,7 +150,8 @@ fun PlaceInfoScreen(
 }
 
 @Composable
-fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommend_cnt: Int) {
+fun LandMarkCard(vm: PlaceDetailListener, id: String, type: PlaceType, recommend_cnt: Int) {
+    var progress by remember { mutableStateOf(0.0f) }
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -171,8 +172,9 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommen
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+                progress = recommend_cnt.toFloat() / 20
                 LandMarkProgressBar(
-                    progress = 0.7f,
+                    progress = progress,
                     startIcon = R.drawable.ic_hidden_place_purple,
                     endIcon = R.drawable.ic_landmark_purple
                 )
@@ -215,5 +217,69 @@ fun LandMarkCard(vm: PlaceDetailViewModel, id: String, type: PlaceType, recommen
                 Text(text = "이 장소를 추천하기", style = Subtitle2, color = Purple700)
             }
         }
+    }
+}
+
+@Composable
+fun CommentList(vm: PlaceDetailListener, comment: CommentPlace) {
+    var isDropDownMenu by remember {
+        mutableStateOf(false)
+    }
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .background(color = Grey200, shape = RoundedCornerShape(20.dp))
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 20.dp, top = 16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = comment.comment.user.nickName + "님", fontSize = 16.sp, color = Grey900,
+                style = Subtitle2
+            )
+            Row(
+                modifier = Modifier.padding(end = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val commentDay = comment.comment.createdAt
+                val text = when (DateUtils.commentTime(commentDay)) {
+                    0L -> "오늘"
+                    else -> "${DateUtils.commentTime(commentDay)}일 전"
+                }
+                Text(
+                    text = text,
+                    color = Grey600,
+                    style = Caption
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Image(
+                    modifier = Modifier.clickable { isDropDownMenu = true },
+                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots"
+                )
+                DropdownMenu(
+                    expanded = isDropDownMenu,
+                    onDismissRequest = { isDropDownMenu = false }) {
+                    DropdownMenuItem(onClick = {
+                        vm.commentDeleteMenuClick(comment.comment.id)
+                        isDropDownMenu = false
+                    }) {
+                        Text(text = "삭제 요청하기", style = BodyLong2)
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 18.dp, 20.dp),
+            text = comment.comment.comment,
+            fontSize = 16.sp,
+            color = Grey900,
+            style = BodyLong2
+        )
     }
 }

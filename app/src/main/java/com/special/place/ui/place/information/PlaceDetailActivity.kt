@@ -3,6 +3,7 @@ package com.special.place.ui.place.information
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,6 +29,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +38,6 @@ import androidx.constraintlayout.compose.Dimension
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
 import com.special.place.ui.UiState
-import com.special.place.ui.my.act.CommentItem
 import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
 import com.special.place.ui.place.information.comment.CommentRegisterEventListener
 import com.special.place.ui.theme.*
@@ -104,7 +107,7 @@ class PlaceDetailActivity : ComponentActivity() {
                     }
                     val onDelete: () -> Unit = {
                         vm.placeDeleteBtnClick()
-                        currentBottomSheet = BottomSheetType.TYPE2
+
                     }
                     vm.setBottomSheetComment.observe(this) {
                         coroutineScope.launch {
@@ -112,9 +115,17 @@ class PlaceDetailActivity : ComponentActivity() {
                             bottomSheetState.show()
                         }
                     }
-                    vm.setBottomSheetDelete.observe(this) {
+                    vm.setBottomSheetDeletePlace.observe(this) {
                         coroutineScope.launch {
+                            currentBottomSheet = BottomSheetType.TYPE2
                             bottomSheetState.show()
+                        }
+                    }
+                    vm.setBottomSheetDeleteComment.observe(this) {
+                        coroutineScope.launch {
+                            currentBottomSheet = BottomSheetType.TYPE3
+                            bottomSheetState.show()
+                            Log.d("여기", it)
                         }
                     }
                     Scaffold(
@@ -145,7 +156,7 @@ class PlaceDetailActivity : ComponentActivity() {
                                 },
 
                                 sheetState = bottomSheetState,
-                                sheetShape = RoundedCornerShape(36.dp)
+                                sheetShape = RoundedCornerShape(topStart = 36.dp, topEnd = 36.dp)
                             ) {
                                 ConstraintLayout {
 
@@ -206,11 +217,28 @@ class PlaceDetailActivity : ComponentActivity() {
                                                 PlaceInfoScreen(vm)
                                             }
                                         }
-
-                                        items(commentList) { item ->
-                                            CommentItem(item)
-                                            Spacer(modifier = Modifier.height(20.dp))
+                                        if (commentList.isEmpty()) {
+                                            items(1) {
+                                                Column(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    horizontalAlignment = Alignment.CenterHorizontally
+                                                ) {
+                                                    Image(
+                                                        painter = painterResource(R.drawable.ic_empty_comment),
+                                                        contentDescription = null
+                                                    )
+                                                    Spacer(modifier = Modifier.height(20.dp))
+                                                    Text(text = "작성된 댓글이 없어요", style = Subtitle2)
+                                                    Spacer(modifier = Modifier.height(80.dp))
+                                                }
+                                            }
+                                        } else {
+                                            items(commentList) { item ->
+                                                CommentList(vm, item)
+                                                Spacer(modifier = Modifier.height(20.dp))
+                                            }
                                         }
+
                                     }
                                 }
                             }
@@ -229,89 +257,192 @@ fun SheetLayout(
     closeCallback: () -> Unit
 ) {
     when (bottomSheetType) {
-        BottomSheetType.TYPE1 -> CommentBottomSheetScreen(vm, closeCallback)
-        BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen(vm)
+        BottomSheetType.TYPE1 -> CommentBottomSheetScreen(vm, closeCallback) // 댓글 작성
+        BottomSheetType.TYPE2 -> DeletePlaceBottomSheetScreen(
+            vm,
+            closeCallback,
+            BottomSheetType.TYPE2
+        ) // 장소 삭제 요청
+        BottomSheetType.TYPE3 -> DeleteCommentBottomSheetScreen(
+            vm,
+            closeCallback,
+            BottomSheetType.TYPE3
+        ) // 댓글 삭제 요청
     }
 }
 
 @Composable
-fun DeletePlaceBottomSheetScreen(vm: PlaceDetailViewModel) {
+fun DeletePlaceBottomSheetScreen(
+    vm: PlaceDetailListener,
+    closeCallback: () -> Unit,
+    type: BottomSheetType
+) {
     Column(
         modifier = Modifier
+            .padding(vertical = 32.dp, horizontal = 28.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(vertical = 32.dp, horizontal = 28.dp)
     ) {
-        // TODO 삭제요청 컨텐츠
-
+        val options = listOf(
+            "해당 위치에 없는 게시물이에요",
+            "부적절한 내용이 있어요",
+            "중복 작성된 게시물이에요"
+        )
         Text(text = "이 게시물을 삭제 요청하는 이유", style = Title2, fontSize = 20.sp)
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = "3건 이상의 신고가 들어오면 자동 삭제됩니다", style = Subtitle1, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(32.dp))
-        Box(
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth()
-                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
-                .clickable { vm.pickPlaceDeleteReason(0) },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "해당 위치에 없는 게시물이에요",
-                style = Subtitle2, color = Color.Black,
-                textAlign = TextAlign.Center
-            )
-        }
+        DeletePlaceReasonBox(options, vm, closeCallback, type)
+    }
+}
 
+@Composable
+fun DeleteCommentBottomSheetScreen(
+    vm: PlaceDetailListener,
+    closeCallback: () -> Unit,
+    type: BottomSheetType
+) {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 32.dp, horizontal = 28.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        val options = listOf(
+            "개인정보 노출 우려가 있어요",
+            "선정적 내용이 있어요",
+            "광고성 내용이 있어요"
+        )
+        Text(text = "이 댓글을 삭제 요청하는 이유", style = Title2, fontSize = 20.sp)
         Spacer(modifier = Modifier.height(12.dp))
-        Box(
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth()
-                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
-                .clickable { vm.pickPlaceDeleteReason(1) },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "부적절한 내용이 있어요",
-                style = Subtitle2, color = Color.Black,
-                textAlign = TextAlign.Center
-            )
-        }
+        Text(text = "3건 이상의 신고가 들어오면 자동 삭제됩니다", style = Subtitle1, fontSize = 16.sp)
+        Spacer(modifier = Modifier.height(32.dp))
+        DeletePlaceReasonBox(options, vm, closeCallback, type)
+    }
+}
 
-        Spacer(modifier = Modifier.height(12.dp))
-        Box(
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth()
-                .background(color = Grey200, shape = RoundedCornerShape(20.dp))
-                .clickable { vm.pickPlaceDeleteReason(2) },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "중복 작성된 게시물이에요",
-                style = Subtitle2, color = Color.Black,
-                textAlign = TextAlign.Center
-            )
+@Composable
+fun DeletePlaceReasonBox(
+    options: List<String>,
+    vm: PlaceDetailListener,
+    closeCallback: () -> Unit,
+    type: BottomSheetType
+) {
+
+    var selectedOption by remember {
+        mutableStateOf("")
+    }
+    val onSelectionChange = { text: String ->
+        selectedOption = text
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        options.forEach { text ->
+            Column {
+                Box(
+                    modifier = Modifier
+                        .height(56.dp)
+                        .fillMaxWidth()
+                        .border(
+                            width = 2.dp,
+                            shape = RoundedCornerShape(20.dp),
+                            color =
+                            if (text == selectedOption) {
+                                Purple700
+                            } else {
+                                Grey200
+                            }
+                        )
+                        .background(
+                            shape = RoundedCornerShape(20.dp),
+                            color =
+                            if (text == selectedOption) {
+                                Purple100
+                            } else {
+                                Grey200
+
+                            }
+                        )
+                        .clickable {
+                            onSelectionChange(text)
+                            var idx: Int = 0
+                            if (type == BottomSheetType.TYPE2) {
+                                when (text) {
+                                    "해당 위치에 없는 게시물이에요" -> idx = 0
+                                    "부적절한 내용이 있어요" -> idx = 1
+                                    "중복 작성된 게시물이에요" -> idx = 2
+                                }
+                                // Todo 플레이스 삭제 요청 이유
+                                // vm.pickPlaceDeleteReason(idx)
+                            } else {
+                                when (text) {
+                                    "개인정보 노출 우려가 있어요" -> idx = 0
+                                    "선정적 내용이 있어요" -> idx = 1
+                                    "광고성 내용이 있어요" -> idx = 2
+                                }
+                                // Todo 댓글 삭제 요청 이유
+                            }
+
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = text,
+                        style = Subtitle2, color =
+                        if (text == selectedOption) {
+                            Purple700
+                        } else {
+                            Color.Black
+                        },
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
         Spacer(modifier = Modifier.height(40.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             SecondaryButton(
-                text = "닫기", clickListener = {},
+                text = "닫기",
                 modifier = Modifier.weight(1f)
-            )
+            ) {
+                closeCallback.invoke()
+            }
             Spacer(modifier = Modifier.fillMaxWidth(0.05f))
-            PrimaryButtonDisable(
-                text = "삭제 요청하기",
-                clickListener = { vm.placeDeleteRequestClick() },
-                modifier = Modifier.weight(1f)
-            )
+            if (selectedOption != "") {
+                PrimaryButton(
+                    text = "삭제 요청하기",
+                    clickListener = {
+                        if (type == BottomSheetType.TYPE2) {
+                            vm.placeDeleteRequestClick()
+                        } else {
+                            // todo 댓글삭제 요청 버튼 클릭
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                PrimaryButtonDisable(
+                    text = "삭제 요청하기",
+                    clickListener = {},
+                    modifier = Modifier.weight(1f)
+                )
+
+            }
+
         }
     }
 }
 
 @Composable
-fun CommentBottomSheetScreen(eventListener: CommentRegisterEventListener, closeCallback: () -> Unit) {
+fun CommentBottomSheetScreen(
+    eventListener: CommentRegisterEventListener,
+    closeCallback: () -> Unit
+) {
     val uiState: UiState by eventListener.commentResult.observeAsState(initial = UiState.Init)
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
@@ -327,14 +458,18 @@ fun CommentBottomSheetScreen(eventListener: CommentRegisterEventListener, closeC
         modifier = Modifier
             .fillMaxWidth()
             .addFocusCleaner(focusManager)
-            .fillMaxHeight()
+            .wrapContentHeight()
             .padding(24.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Image(painter = painterResource(id = R.drawable.ic_close), contentDescription = "close", modifier = Modifier.clickable(onClick = closeCallback))
+            Image(
+                painter = painterResource(id = R.drawable.ic_close),
+                contentDescription = "close",
+                modifier = Modifier.clickable(onClick = closeCallback)
+            )
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "댓글을 작성해주세요",
@@ -363,7 +498,7 @@ fun CommentBottomSheetScreen(eventListener: CommentRegisterEventListener, closeC
             ) {
                 TextField(
                     value = text,
-                    onValueChange = { text = it.take(6) },
+                    onValueChange = { text = it.take(100) },
                     modifier = Modifier
                         .focusRequester(focusRequester = focusRequester)
                         .onFocusChanged {
@@ -379,7 +514,9 @@ fun CommentBottomSheetScreen(eventListener: CommentRegisterEventListener, closeC
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                 )
             }
             Box(
@@ -422,5 +559,5 @@ fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit =
 }
 
 enum class BottomSheetType {
-    TYPE1, TYPE2
+    TYPE1, TYPE2, TYPE3
 }

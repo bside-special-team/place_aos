@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -27,7 +29,9 @@ import com.google.accompanist.pager.rememberPagerState
 import com.special.place.resource.R
 import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.my.postlist.PostScreen
+import com.special.place.ui.theme.Grey500
 import com.special.place.ui.theme.PlaceTheme
+import com.special.place.ui.theme.Subtitle2
 import com.special.place.ui.theme.Subtitle4
 import com.special.place.ui.utils.CustomDialog
 import com.special.place.ui.utils.MyTopAppBar
@@ -61,7 +65,7 @@ class MyActActivity : ComponentActivity() {
 
         val pages = listOf(
             resources.getString(R.string.tab_my_post), resources.getString(R.string.tab_my_comment),
-            resources.getString(R.string.tab_recommend), resources.getString(R.string.tab_bookmark)
+            resources.getString(R.string.tab_recommend)
         )
         setContent {
             PlaceTheme {
@@ -110,7 +114,8 @@ class MyActActivity : ComponentActivity() {
                                                 tabWidth = tabWidths[pagerState.currentPage]
                                             )
                                         )
-                                    }
+                                    },
+                                    modifier = Modifier.padding(start = 12.dp)
                                 ) {
                                     pages.forEachIndexed { index, title ->
                                         Tab(
@@ -140,18 +145,31 @@ class MyActActivity : ComponentActivity() {
                                     state = pagerState,
                                 ) { page ->
                                     when (page) {
-                                        0 -> PostScreen(
-                                            vm.myPlace.value!!
-                                        ) // 내 게시물
-                                        1 -> MyCommentScreen(
-                                            vm.myCommentPlace.value!!
-                                        ) // 내 댓글
-                                        2 -> PostScreen(
-                                            vm.myRecommendPlace.value!!
-                                        ) // 추천
-                                        3 -> PostScreen(
-                                            vm.myBookmarkPlace.value!!
-                                        ) // 북마크
+                                        0 -> if (vm.myPlace.value!!.isEmpty()) {
+                                            EmptyScreen("작성한 게시물이 없어요 \uD83E\uDD72")
+                                        } else {
+                                            PostScreen(
+                                                vm.myPlace.value!!
+                                            )
+                                        }
+                                        1 -> if (vm.myCommentPlace.value!!.isEmpty()) {
+                                            EmptyScreen("작성한 댓글이 없어요 \uD83E\uDD72")
+                                        } else {
+                                            MyCommentScreen(
+                                                vm.myCommentPlace.value!!
+                                            )
+                                        }
+                                        2 -> if (vm.myRecommendPlace.value!!.isEmpty()) {
+                                            EmptyScreen("추천한 게시물이 없어요 \uD83E\uDD72")
+                                        } else {
+                                            PostScreen(
+                                                vm.myRecommendPlace.value!!
+                                            )
+                                        }
+
+//                                        3 -> PostScreen(
+//                                            vm.myBookmarkPlace.value!!
+//                                        ) // 북마크
                                     }
                                 }
                             }
@@ -200,4 +218,27 @@ fun Modifier.customTabIndicatorOffset(
         .wrapContentSize(Alignment.BottomStart)
         .offset(x = indicatorOffset)
         .width(currentTabWidth)
+}
+
+@Composable
+fun EmptyScreen(text: String) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(72.dp))
+        Image(
+            painter = painterResource(R.drawable.ic_empty_comment),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = text,
+            style = Subtitle2,
+            color = Grey500
+        )
+        Spacer(modifier = Modifier.height(200.dp))
+    }
 }

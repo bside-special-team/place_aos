@@ -12,7 +12,8 @@ interface PlaceDetailListener {
     val imageList: LiveData<List<String>>
 
     val setBottomSheetComment: LiveData<String>
-    val setBottomSheetDelete: LiveData<String>
+    val setBottomSheetDeletePlace: LiveData<String>
+    val setBottomSheetDeleteComment: LiveData<String>
 
     fun recommendPlace(id: String)
     fun bookmarkPlace(id: String)
@@ -20,6 +21,7 @@ interface PlaceDetailListener {
 
     fun commentBtnClick()
     fun placeDeleteBtnClick()
+    fun commentDeleteMenuClick(id: String)
     fun coilRequest(uuid: String): ImageRequest
 
 
