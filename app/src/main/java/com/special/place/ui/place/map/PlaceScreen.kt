@@ -12,6 +12,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -27,7 +28,10 @@ import com.special.place.resource.R
 import com.special.place.ui.Route
 import com.special.place.ui.base.RouteListener
 import com.special.place.ui.main.toLatLnt
-import com.special.place.ui.theme.*
+import com.special.place.ui.theme.Grey400
+import com.special.place.ui.theme.Grey500
+import com.special.place.ui.theme.Grey900
+import com.special.place.ui.theme.Purple500
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -125,9 +129,10 @@ fun PlaceScreen(
 
             /* 내 정보 버튼 */
             Box(modifier = Modifier
-                .clickable { routeListener.requestRoute(Route.MyInfoPage) }
                 .size(58.dp)
                 .background(color = Grey900, shape = RoundedCornerShape(18.dp))
+                .clip(RoundedCornerShape(18.dp))
+                .clickable { routeListener.requestRoute(Route.MyInfoPage) }
                 .constrainAs(myInfoButton) {
                     end.linkTo(tourButton.start, margin = 20.dp, goneMargin = 10.dp)
                     bottom.linkTo(parent.bottom, margin = 44.dp)
@@ -148,16 +153,18 @@ fun PlaceScreen(
 
             /* 플레이스 작성 버튼 */
             Box(modifier = Modifier
+                .size(58.dp)
+                .background(color = Grey900, shape = RoundedCornerShape(18.dp))
+                .clip(RoundedCornerShape(18.dp))
                 .clickable {
-                    val lastLocation = (locationSource as? FusedLocationSource)?.lastLocation?.toLatLnt()
+                    val lastLocation =
+                        (locationSource as? FusedLocationSource)?.lastLocation?.toLatLnt()
                     routeListener.requestRoute(
                         Route.PlaceRegisterPage(
                             lastLocation
                         )
                     )
                 }
-                .size(58.dp)
-                .background(color = Grey900, shape = RoundedCornerShape(18.dp))
                 .constrainAs(registerButton) {
                     start.linkTo(tourButton.end, margin = 20.dp, goneMargin = 10.dp)
                     bottom.linkTo(parent.bottom, margin = 44.dp)
@@ -209,6 +216,7 @@ fun PlaceScreen(
 
             /* 사용방법 버튼 */
             Box(modifier = Modifier
+                .clip(CircleShape)
                 .clickable {
                     //TODO: 가이드 화면 노출 (온보딩??)
 
