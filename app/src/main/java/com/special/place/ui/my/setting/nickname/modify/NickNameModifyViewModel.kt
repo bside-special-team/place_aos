@@ -23,7 +23,7 @@ class NickNameModifyViewModel @Inject constructor(private val userRepo: UserRepo
         get() = _nickname
 
     override fun updateNickname(nickName: String) {
-        _nickname.postValue(nickName)
+        _nickname.value = nickName
     }
 
     override fun doModify() {
