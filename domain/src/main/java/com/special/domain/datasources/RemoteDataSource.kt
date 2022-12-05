@@ -25,6 +25,8 @@ interface RemoteDataSource {
 
     suspend fun recommendPlace(placeId: String): PointResult
 
+    suspend fun myRecommendPlaces(): List<Place>
+
     suspend fun registerComment(comment: CommentRequest): PointResult
 
     suspend fun updateNickName(nickName: String)
@@ -40,4 +42,10 @@ interface RemoteDataSource {
     suspend fun modifyComment(commentId: String, comment: String)
 
     suspend fun recentPlaces(): List<Place>
+
+    suspend fun myPlaces(): List<Place>
+
+    suspend fun reportPlace(placeId: String)
+
+    suspend fun reportComment(commentId: String)
 }

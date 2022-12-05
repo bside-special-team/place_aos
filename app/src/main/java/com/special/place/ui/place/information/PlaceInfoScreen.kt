@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
 import com.special.domain.entities.place.CommentPlace
+import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.PlaceType
 import com.special.place.resource.R
 import com.special.place.ui.my.act.CommentEventListener
@@ -31,14 +32,14 @@ import com.special.place.util.DateUtils
 fun PlaceInfoScreen(
     vm: PlaceDetailListener
 ) {
-    val place by vm.placeInfo.observeAsState()
-    val name = place?.name ?: ""
-    val type = place?.placeType ?: PlaceType.Hidden
-    val recommendCnt = place?.recommendCount ?: 0
-    val visitCnt = place?.visitCount ?: 0
-    val writerName = place?.nickName ?: "Unknown"
-    val hashTags = place?.hashTags ?: listOf()
-    val id = place?.id ?: ""
+    val place: Place by vm.placeInfo.observeAsState(Place.mock())
+    val name = place.name
+    val type = place.placeType
+    val recommendCnt = place.recommendCount
+    val visitCnt = place.visitCount
+    val writerName = place.writer.displayName()
+    val hashTags = place.hashTags
+    val id = place.id
 
     val placeType = if (type == PlaceType.Hidden) {
         "히든플레이스"
@@ -239,7 +240,7 @@ fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = comment.comment.user.nickName + "님", fontSize = 16.sp, color = Grey900,
+                text = comment.comment.user.displayName() + "님", fontSize = 16.sp, color = Grey900,
                 style = Subtitle2
             )
             Row(

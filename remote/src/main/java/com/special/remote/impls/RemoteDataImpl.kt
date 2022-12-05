@@ -3,10 +3,8 @@ package com.special.remote.impls
 import com.special.domain.datasources.RemoteDataSource
 import com.special.domain.datasources.TokenDataSource
 import com.special.domain.entities.Paging
-import com.special.domain.entities.place.Coordinate
-import com.special.domain.entities.place.Place
-import com.special.domain.entities.place.PlaceResponse
-import com.special.domain.entities.place.RequestRegisterPlace
+import com.special.domain.entities.ReportType
+import com.special.domain.entities.place.*
 import com.special.domain.entities.place.comment.Comment
 import com.special.domain.entities.place.comment.CommentModifyRequest
 import com.special.domain.entities.place.comment.CommentRequest
@@ -72,6 +70,10 @@ class RemoteDataImpl @Inject constructor(
         return client.recommendPlace(placeId).pointResult
     }
 
+    override suspend fun myRecommendPlaces(): List<Place> {
+        return client.myRecommendPlaces()
+    }
+
     override suspend fun registerComment(comment: CommentRequest): PointResult {
         return client.registerComments(comment).pointResult
     }
@@ -105,4 +107,28 @@ class RemoteDataImpl @Inject constructor(
     override suspend fun recentPlaces(): List<Place> {
         return client.recentVisitPlaces()
     }
+
+    override suspend fun myPlaces(): List<Place> {
+        return client.myPlaces()
+    }
+
+    override suspend fun reportComment(commentId: String) {
+        return client.block(
+            RequestReport(
+                targetId = commentId,
+                type = ReportType.Comment
+            )
+        )
+    }
+
+    override suspend fun reportPlace(placeId: String) {
+        return client.block(
+            RequestReport(
+                targetId = placeId,
+                type = ReportType.Place
+            )
+        )
+    }
+
+
 }

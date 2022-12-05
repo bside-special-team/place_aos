@@ -4,6 +4,7 @@ import com.special.domain.entities.BaseResponse
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.place.PlaceResponse
 import com.special.domain.entities.place.RequestRegisterPlace
+import com.special.domain.entities.place.RequestReport
 import com.special.domain.entities.place.comment.Comment
 import com.special.domain.entities.place.comment.CommentModifyRequest
 import com.special.domain.entities.place.comment.CommentRequest
@@ -42,6 +43,9 @@ interface PlaceApi {
     @POST("/api/v1/places/recommendation")
     suspend fun recommendPlace(@Query("placeId") placeId: String): BaseResponse<Place>
 
+    @GET("/api/v1/places/recommendation")
+    suspend fun myRecommendPlaces(): List<Place>
+
     @Multipart
     @POST("/api/v1/images")
     suspend fun uploadImage(@Part images: List<MultipartBody.Part>): List<String>
@@ -73,4 +77,6 @@ interface PlaceApi {
     @GET("/api/v1/places/myPlace")
     suspend fun myPlaces(): List<Place>
 
+    @POST("/api/v1/block")
+    suspend fun block(@Body request: RequestReport)
 }

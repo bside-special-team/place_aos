@@ -65,6 +65,8 @@ data class User(
             label = ""
         )
     }
+
+    fun displayName(): String = nickName ?: "익명"
 }
 
 data class NickNameUpdate(val nickName: String)

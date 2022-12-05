@@ -83,19 +83,19 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
     }
 
     override suspend fun reportPlace(placeId: String) {
-        TODO("Not yet implemented")
+        placeRemote.reportPlace(placeId)
     }
 
     override suspend fun myPlaces(page: Int): Paging<Place> {
-        TODO("Not yet implemented")
+        return Paging(isLast = true, placeRemote.myPlaces())
     }
 
     override suspend fun visitedPlaces(page: Int): Paging<Place> {
-        TODO("Not yet implemented")
+        return Paging(isLast = true, placeRemote.recentPlaces())
     }
 
     override suspend fun myLikePlace(page: Int): Paging<Place> {
-        TODO("Not yet implemented")
+        return Paging(isLast = true, list = placeRemote.myRecommendPlaces())
     }
 
     override suspend fun commentList(targetId: String, lastTimestamp: Long): Paging<Comment> {

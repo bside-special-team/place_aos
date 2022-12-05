@@ -20,9 +20,7 @@ class MyInformationViewModel @Inject constructor(
     override val currentVisitedPlace: LiveData<List<Place>> = liveData { emit(userRepo.recentPlaces()) }
 
     override val userInfo: LiveData<User> = liveData {
-        userRepo.currentUser()?.let {
-            emit(it)
-        }
+        userRepo.currentUser()?.let { emit(it) }
     }
 
     override val nextLevel: LiveData<LevelInfo> = liveData { emit(userRepo.nextLevel()) }
