@@ -26,7 +26,6 @@ import com.special.place.ui.widget.EmptyChipClickable
 import com.special.place.ui.widget.HashtagChipClickable
 import com.special.place.ui.widget.InputHashtag
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HashtagStep(eventListener: HashtagEventListener) {
     val selectedTags: List<String> by eventListener.hashtags.observeAsState(initial = listOf())
