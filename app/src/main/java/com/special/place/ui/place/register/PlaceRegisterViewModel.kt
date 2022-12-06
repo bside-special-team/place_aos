@@ -31,7 +31,7 @@ class PlaceRegisterViewModel @Inject constructor(
     override fun setPlaceName(name: String) {
         val newRequest = _placeRequest.value?.copy(name = name)
 
-        _placeRequest.postValue(newRequest)
+        _placeRequest.value = newRequest
     }
 
     override fun updateCameraPosition(coordinate: Coordinate) {

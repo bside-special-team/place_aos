@@ -126,6 +126,7 @@ fun PlaceBottomSheet(
         }
 
         Box(modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
             .clickable {
                 routeListener.requestRoute(Route.PlaceDetailPage(place = place))
             }
@@ -146,6 +147,7 @@ fun PlaceBottomSheet(
         }
 
         Box(modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
             .clickable {
                 if (distance <= 50) {
                     eventListener.clickVisitPlace(place.id)
