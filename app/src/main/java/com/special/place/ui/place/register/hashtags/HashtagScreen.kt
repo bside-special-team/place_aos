@@ -1,6 +1,5 @@
 package com.special.place.ui.place.register.hashtags
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +20,7 @@ import com.special.place.ui.UiState
 import com.special.place.ui.theme.Grey300
 import com.special.place.ui.theme.Grey900
 import com.special.place.ui.utils.PrimaryButton
+import com.special.place.ui.utils.PrimaryButtonDisable
 import com.special.place.ui.widget.CenterAlignedTopAppBar
 import com.special.place.ui.widget.EmptyChipClickable
 import com.special.place.ui.widget.HashtagChipClickable
@@ -116,15 +116,25 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                 Box(modifier = Modifier.height(80.dp))
             }
 
-            PrimaryButton(
-                text = "완료",
-                isNotProgress = uiState != UiState.Progress,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(24.dp)
-            ) {
-                eventListener.next()
+            if (selectedTags.isNotEmpty()) {
+                PrimaryButton(
+                    text = "완료",
+                    isNotProgress = uiState != UiState.Progress,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                ) {
+                    eventListener.next()
+                }
+            } else {
+                PrimaryButtonDisable(
+                    text = "완료",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                ) {}
             }
         }
 

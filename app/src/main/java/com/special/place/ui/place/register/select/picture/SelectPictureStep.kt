@@ -34,6 +34,7 @@ import com.special.place.ui.theme.Grey200
 import com.special.place.ui.theme.Grey600
 import com.special.place.ui.theme.Subtitle5
 import com.special.place.ui.utils.NextButton
+import com.special.place.ui.utils.NextDisableButton
 import com.special.place.ui.utils.PrimaryButton
 import com.special.place.ui.widget.CenterAlignedTopAppBar
 
@@ -110,13 +111,22 @@ fun SelectPictureStep(eventListener: SelectPictureEventListener) {
                 }
             }
 
-            NextButton(
-                buttonName = "다음 ${imageList.size}/5", clickListener = {
-                    eventListener.next()
-                }, modifier = Modifier
-                    .padding(bottom = 24.dp, end = 24.dp)
-                    .align(Alignment.BottomEnd)
-            )
+            if (imageList.isNotEmpty()) {
+                NextButton(
+                    buttonName = "다음 ${imageList.size}/5", clickListener = {
+                        eventListener.next()
+                    }, modifier = Modifier
+                        .padding(bottom = 24.dp, end = 24.dp)
+                        .align(Alignment.BottomEnd)
+                )
+            } else {
+                NextDisableButton(
+                    buttonName = "다음 ${imageList.size}/5", modifier = Modifier
+                        .padding(bottom = 24.dp, end = 24.dp)
+                        .align(Alignment.BottomEnd)
+                )
+            }
+
         }
     }
 }

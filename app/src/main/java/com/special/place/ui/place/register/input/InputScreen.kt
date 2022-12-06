@@ -30,6 +30,7 @@ import com.special.place.ui.theme.Grey300
 import com.special.place.ui.theme.Grey600
 import com.special.place.ui.theme.Grey900
 import com.special.place.ui.utils.NextButton
+import com.special.place.ui.utils.NextDisableButton
 import com.special.place.ui.widget.CenterAlignedTopAppBar
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -113,12 +114,19 @@ fun InputPlaceNameStep(eventListener: PlaceInputEventListener) {
                 Text(text = text.length.toString() + "/10", style = Body1, color = Grey600)
             }
 
-            NextButton("다음", clickListener = {
-                eventListener.next()
-            }, modifier = Modifier.constrainAs(nextRef) {
-                end.linkTo(parent.end, margin = 24.dp)
-                bottom.linkTo(parent.bottom, margin = 24.dp)
-            })
+            if (text.length >= 2) {
+                NextButton("다음", clickListener = {
+                    eventListener.next()
+                }, modifier = Modifier.constrainAs(nextRef) {
+                    end.linkTo(parent.end, margin = 24.dp)
+                    bottom.linkTo(parent.bottom, margin = 24.dp)
+                })
+            } else {
+                NextDisableButton("다음", modifier = Modifier.constrainAs(nextRef) {
+                    end.linkTo(parent.end, margin = 24.dp)
+                    bottom.linkTo(parent.bottom, margin = 24.dp)
+                })
+            }
         }
     }
 }
