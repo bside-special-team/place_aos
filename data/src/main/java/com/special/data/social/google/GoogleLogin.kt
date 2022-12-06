@@ -41,11 +41,15 @@ class GoogleLogin constructor(context: Context, private val callback: LoginCallb
         }
 
     private fun checkResponse(task: Task<GoogleSignInAccount>): SocialLoginResponse {
-        val idToken = task.result.idToken
-        return if (task.isSuccessful && idToken != null) {
-            SocialLoginResponse.success(type = LoginType.Google, idToken = idToken)
-        } else {
-            SocialLoginResponse.notLogin()
+        try {
+            val idToken = task.result.idToken
+            return if (task.isSuccessful && idToken != null) {
+                SocialLoginResponse.success(type = LoginType.Google, idToken = idToken)
+            } else {
+                SocialLoginResponse.notLogin()
+            }
+        } catch (e: Exception) {
+            return SocialLoginResponse.notLogin()
         }
     }
 

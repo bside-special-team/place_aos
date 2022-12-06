@@ -92,6 +92,12 @@ class RemoteDataImpl @Inject constructor(
         }
     }
 
+    override suspend fun myCommentList(lastTimestamp: Long): Paging<Comment> {
+        return client.myComments(lastTimestamp, limit = 30).let {
+            Paging(isLast = !it.hasNext, list = it.comments)
+        }
+    }
+
     override suspend fun levelInfo(): List<LevelInfo> {
         return client.levelInfo()
     }

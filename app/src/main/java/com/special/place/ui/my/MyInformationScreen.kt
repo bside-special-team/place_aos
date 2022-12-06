@@ -16,11 +16,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.special.domain.entities.user.LevelInfo
+import com.special.place.levelEmojiMap
 import com.special.place.resource.R
 import com.special.place.ui.my.act.MyActActivity
 import com.special.place.ui.theme.*
@@ -43,16 +45,23 @@ fun MyInformationScreen(vm: MyInformationViewModel) {
         Spacer(modifier = Modifier.height(18.5.dp))
         // 임시 이미지
         Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .width(80.dp)
                 .height(80.dp)
                 .background(color = Grey100, shape = RoundedCornerShape(30.dp))
         ) {
-            Image(
-                painter = painterResource(R.drawable.ic_logo),
-                contentDescription = "avatar",
-                contentScale = ContentScale.Crop,            // crop the image if it's not a square
-            )
+            val currentLevelEmoji = levelEmojiMap[nextLevel.level - 1]
+            if (currentLevelEmoji != null) {
+                Text(text = currentLevelEmoji, style = TextStyle(fontSize = 32.sp))
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.ic_logo),
+                    contentDescription = "avatar",
+                    contentScale = ContentScale.Crop,            // crop the image if it's not a square
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

@@ -71,6 +71,7 @@ object Deps {
         const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:1.2.1"
         const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
         const val flowLayout = "com.google.accompanist:accompanist-flowlayout:0.27.0"
+        const val paging = "androidx.paging:paging-compose:1.0.0-alpha17"
     }
 
     object Coil {

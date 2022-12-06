@@ -18,16 +18,23 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.special.domain.entities.place.CommentPlace
 import com.special.place.resource.R
+import com.special.place.ui.my.MyInformationViewModel
+import com.special.place.ui.my.postlist.PostList
 import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
 import com.special.place.ui.theme.*
 
 @Composable
 fun MyCommentScreen(
-    postList: List<CommentPlace>
+    vm: MyInformationViewModel
 ) {
+    val comments = vm.myCommentPlace.collectAsLazyPagingItems()
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -37,22 +44,39 @@ fun MyCommentScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CommentPostList(postList)
+        when {
+            comments.loadState.refresh is LoadState.Loading -> {
+                //TODO: PROGRESS
+            }
+            comments.loadState.append is LoadState.Loading -> {
+                //TODO: PROGRESS
+            }
+            comments.loadState.refresh is LoadState.Error || comments.itemCount < 1 -> {
+                EmptyScreen("작성한 댓글이 없어요 \uD83E\uDD72")
+            }
+            else -> CommentPostList(comments)
+        }
+
+
+
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
-fun CommentPostList(pList: List<CommentPlace>) {
+fun CommentPostList(comments: LazyPagingItems<CommentPlace>) {
     val scrollState = rememberLazyListState()
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         state = scrollState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(pList) { item ->
-            CommentItem(item)
-            Spacer(modifier = Modifier.height(24.dp))
+        items(comments) { item ->
+            if (item != null) {
+                CommentItem(item)
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }

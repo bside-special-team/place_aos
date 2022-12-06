@@ -148,27 +148,9 @@ class MyActActivity : ComponentActivity() {
                                     state = pagerState,
                                 ) { page ->
                                     when (page) {
-                                        0 -> if (vm.myPlace.value!!.isEmpty()) {
-                                            EmptyScreen("작성한 게시물이 없어요 \uD83E\uDD72")
-                                        } else {
-                                            PostScreen(
-                                                vm.myPlace.value!!
-                                            )
-                                        }
-                                        1 -> if (vm.myCommentPlace.value!!.isEmpty()) {
-                                            EmptyScreen("작성한 댓글이 없어요 \uD83E\uDD72")
-                                        } else {
-                                            MyCommentScreen(
-                                                vm.myCommentPlace.value!!
-                                            )
-                                        }
-                                        2 -> if (vm.myRecommendPlace.value!!.isEmpty()) {
-                                            EmptyScreen("추천한 게시물이 없어요 \uD83E\uDD72")
-                                        } else {
-                                            PostScreen(
-                                                vm.myRecommendPlace.value!!
-                                            )
-                                        }
+                                        0 -> PostScreen(vm, PostType.MyPlaces)
+                                        1 -> MyCommentScreen(vm)
+                                        2 -> PostScreen(vm, PostType.RecommendPlaces)
 
 //                                        3 -> PostScreen(
 //                                            vm.myBookmarkPlace.value!!

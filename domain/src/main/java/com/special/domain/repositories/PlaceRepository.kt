@@ -38,6 +38,8 @@ interface PlaceRepository {
 
     suspend fun myLikePlace(page: Int): Paging<Place>
 
+    suspend fun myComments(page: Int): Paging<CommentPlace>
+
     suspend fun commentList(targetId: String, lastTimestamp: Long): Paging<Comment>
 
     suspend fun registerComment(targetId: String, comment: String)

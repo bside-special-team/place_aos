@@ -59,6 +59,9 @@ interface PlaceApi {
     @PATCH("/api/v1/comments")
     suspend fun modifyComment(@Body request: CommentModifyRequest): BaseResponse<Comment>
 
+    @GET
+    suspend fun myComments(@Query("lastTimestamp") lastTimeStamp: Long, @Query("limit") limit: Int): CommentResponse
+
     @GET("/api/v1/comments/places/{placeId}")
     suspend fun placeComments(@Path("placeId") placeId: String, @Query("lastTimestamp") lastTimeStamp: Long, @Query("limit") limit: Int): CommentResponse
 

@@ -104,6 +104,17 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
         }
     }
 
+    override suspend fun myComments(page: Int): Paging<CommentPlace> {
+        return placeRemote.myCommentList(page.toLong()).let {
+            Paging(
+                isLast = it.isLast,
+                list = it.list.map {
+                    Place.mock().combine(it)
+                }
+            )
+        }
+    }
+
     override suspend fun registerComment(targetId: String, comment: String) {
         withContext(Dispatchers.IO) {
             _pointResult.emit(placeRemote.registerComment(CommentRequest(placeId = targetId, comment = comment)))
