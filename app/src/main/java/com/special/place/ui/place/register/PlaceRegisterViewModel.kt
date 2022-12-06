@@ -60,6 +60,10 @@ class PlaceRegisterViewModel @Inject constructor(
     private val _hashtags: MutableLiveData<List<String>> = MutableLiveData()
     override val hashtags: LiveData<List<String>> = _hashtags
 
+    private val _editMode: MutableLiveData<Boolean> = MutableLiveData()
+    override val editMode: LiveData<Boolean> = _editMode
+
+
     override fun updateHashtag(hashtag: String) {
         val origins = hashtags.value ?: listOf()
         if (origins.contains(hashtag)) {
@@ -67,6 +71,11 @@ class PlaceRegisterViewModel @Inject constructor(
         } else {
             _hashtags.postValue(origins.plus(hashtag))
         }
+    }
+
+
+    override fun updateEditMode(editMode: Boolean) {
+        _editMode.value = editMode
     }
 
     private val _step: MutableLiveData<PlaceRegisterStep> =
