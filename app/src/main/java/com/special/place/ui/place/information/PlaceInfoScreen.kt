@@ -266,12 +266,13 @@ fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
                     expanded = isDropDownMenu,
                     onDismissRequest = { isDropDownMenu = false }) {
                     if (isMyComment) {
-                        DropdownMenuItem(onClick = {
-                            vm.checkModifyComment()
-                            isDropDownMenu = false
-                        }) {
-                            Text(text = "수정", style = BodyLong2)
-                        }
+                        // TODO API 오류로 임시 숨김 처리
+//                        DropdownMenuItem(onClick = {
+//                            vm.checkModifyComment()
+//                            isDropDownMenu = false
+//                        }) {
+//                            Text(text = "수정", style = BodyLong2)
+//                        }
                         DropdownMenuItem(onClick = {
                             vm.checkDeleteComment()
                             isDropDownMenu = false
