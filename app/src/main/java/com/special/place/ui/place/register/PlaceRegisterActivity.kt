@@ -84,9 +84,8 @@ class PlaceRegisterActivity : ComponentActivity() {
         vm.uiState.observe(this) {
             if (it == UiState.Done) {
                 Toast.makeText(applicationContext, "등록 되었습니다.", Toast.LENGTH_SHORT).show()
-
                 finish()
-            } else {
+            } else if (it is UiState.Error) {
                 Toast.makeText(applicationContext, "등록에 실패 하였습니다.", Toast.LENGTH_SHORT).show()
             }
         }
