@@ -2,6 +2,7 @@ package com.special.place.ui.my.act
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -62,7 +63,7 @@ fun MyCommentScreen(
         }
         items(comments) { item ->
             if (item != null) {
-                CommentItem(item)
+                CommentItem(item, vm)
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
@@ -93,7 +94,7 @@ private fun LazyListScope.Empty() {
 }
 
 @Composable
-fun CommentItem(comment: CommentPlace) {
+fun CommentItem(comment: CommentPlace, vm: MyInformationViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -154,7 +155,12 @@ fun CommentItem(comment: CommentPlace) {
             Spacer(modifier = Modifier.width(16.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_dots),
-                contentDescription = "dots"
+                contentDescription = "dots",
+                modifier = Modifier.clickable {
+                    comment.comment.place?.let {
+                        vm.showPlaceDetail(it)
+                    }
+                }
             )
         }
         Row() {
@@ -189,7 +195,11 @@ fun CommentItem(comment: CommentPlace) {
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots"
+                    painter = painterResource(id = R.drawable.ic_dots),
+                    contentDescription = "dots",
+                    modifier = Modifier.clickable {
+                        vm.deleteComment(comment.comment)
+                    }
                 )
             }
         }

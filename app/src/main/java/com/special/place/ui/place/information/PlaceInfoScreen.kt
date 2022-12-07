@@ -223,7 +223,7 @@ fun LandMarkCard(vm: PlaceDetailListener, id: String, type: PlaceType, recommend
 }
 
 @Composable
-fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
+fun CommentItem(vm: CommentEventListener, comment: CommentPlace) {
     var isDropDownMenu by remember { mutableStateOf(false) }
     val isMyComment: Boolean by vm.isMyComment(comment).observeAsState(initial = false)
 

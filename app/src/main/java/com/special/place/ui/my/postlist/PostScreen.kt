@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,10 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.special.domain.entities.place.Place
 import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.my.act.EmptyScreen
 import com.special.place.ui.my.act.PostType
@@ -67,7 +64,7 @@ fun PostScreen(
         } else {
             items(places) { place ->
                 if (place != null) {
-                    PostItem(place)
+                    PostItem(place, vm)
                     Spacer(modifier = Modifier.height(24.dp))
                 }
             }
@@ -98,23 +95,6 @@ private fun LazyListScope.Empty(postType: PostType) {
             EmptyScreen("작성한 게시물이 없어요 \uD83E\uDD72")
         } else {
             EmptyScreen("추천한 게시물이 없어요 \uD83E\uDD72")
-        }
-    }
-}
-
-@Composable
-fun PostList(list: LazyPagingItems<Place>) {
-    val scrollState = rememberLazyListState()
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        state = scrollState,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        items(list) { place ->
-            if (place != null) {
-                PostItem(place)
-            }
         }
     }
 }

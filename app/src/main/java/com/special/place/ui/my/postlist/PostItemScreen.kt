@@ -1,6 +1,7 @@
 package com.special.place.ui.my.postlist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -15,13 +16,14 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
+import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.theme.Body1
 import com.special.place.ui.theme.Subtitle4
 import com.special.place.ui.widget.HashtagChip
 
 
 @Composable
-fun PostItem(place: Place) {
+fun PostItem(place: Place, vm: MyInformationViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +64,10 @@ fun PostItem(place: Place) {
             }
             Image(
                 painter = painterResource(id = R.drawable.ic_dots),
-                contentDescription = "dots"
+                contentDescription = "dots",
+                modifier = Modifier.clickable {
+                    vm.showPlaceDetail(place)
+                }
             )
         }
         FlowRow(

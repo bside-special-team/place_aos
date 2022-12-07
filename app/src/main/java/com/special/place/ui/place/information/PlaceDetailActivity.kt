@@ -265,7 +265,7 @@ class PlaceDetailActivity : ComponentActivity() {
                                             }
                                         } else {
                                             items(commentList) { item ->
-                                                CommentList(commentVM, item)
+                                                CommentItem(commentVM, item)
                                                 Spacer(modifier = Modifier.height(20.dp))
                                             }
                                         }
