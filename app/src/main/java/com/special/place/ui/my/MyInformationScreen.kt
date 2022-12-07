@@ -6,8 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,11 +25,14 @@ import com.special.place.levelEmojiMap
 import com.special.place.resource.R
 import com.special.place.ui.my.act.MyActActivity
 import com.special.place.ui.theme.*
+import com.special.place.ui.utils.CustomDialog
 
 @Composable
 fun MyInformationScreen(vm: MyInformationViewModel) {
+    val ctx = LocalContext.current
     val userInfo by vm.userInfo.observeAsState()
     val nextLevel by vm.nextLevel.observeAsState(LevelInfo.none())
+    var showDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -80,19 +82,25 @@ fun MyInformationScreen(vm: MyInformationViewModel) {
         ) {
             MyButton(
                 stringResource(id = R.string.btn_my_act),
-                "MyAct",
                 R.drawable.ic_fire_solid,
                 modifier = Modifier.weight(1f)
-            )
+            ) {
+                val intent = Intent(ctx, MyActActivity::class.java)
+                startActivity(ctx, intent, null)
+            }
             Spacer(modifier = Modifier.weight(0.1f))
             MyButton(
                 stringResource(id = R.string.btn_my_badge),
-                "MyBadge",
                 R.drawable.ic_trophy_star_solid,
                 modifier = Modifier.weight(1f)
-            )
+            ) { showDialog = true }
         }
+    }
 
+    if (showDialog) {
+        CustomDialog(title = "차후 지원 예정.", primaryButtonText = "확인", setShowDialog = {
+            showDialog = it
+        })
     }
 }
 
@@ -182,23 +190,13 @@ fun LevelCard(nextLevel: Int, nextLevelPoint: Int, myPoint: Int) {
 
 
 @Composable
-fun MyButton(buttonText: String, intentText: String, icon: Int, modifier: Modifier) {
-    val ctx = LocalContext.current
-
+fun MyButton(buttonText: String, icon: Int, modifier: Modifier, callback: () -> Unit) {
     Button(
         modifier = modifier
             .height(80.dp),
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(Purple100),
-        onClick = {
-            if (intentText == "MyAct") {
-                val intent = Intent(ctx, MyActActivity::class.java)
-                startActivity(ctx, intent, null)
-            }
-            if (intentText == "MyBadge") {
-                // 나의 뱃지
-            }
-        },
+        onClick = callback,
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp
         )
