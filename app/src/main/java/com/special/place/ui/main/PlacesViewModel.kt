@@ -33,10 +33,9 @@ class PlacesViewModel @Inject constructor(
     private val _trackingMode: MutableLiveData<LocationTrackingMode> = MutableLiveData()
     override val trackingMode: LiveData<LocationTrackingMode> = _trackingMode
 
-    override val visibleCurrentLocationButton: LiveData<Boolean> =
-        Transformations.map(_cameraBounds) {
-            _trackingMode.value != LocationTrackingMode.Follow
-        }
+    override val visibleCurrentLocationButton: LiveData<Boolean> = _trackingMode.map {
+        it != LocationTrackingMode.Follow
+    }
 
     override fun updateCameraPosition(camera: CameraPositionState) {
         camera.contentBounds?.toCoordinate()?.let {
