@@ -1,7 +1,10 @@
 package com.special.place.ui.my
 
 import androidx.lifecycle.*
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.special.domain.entities.place.CommentPlace
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.user.LevelInfo
@@ -11,7 +14,6 @@ import com.special.domain.repositories.UserRepository
 import com.special.place.MyPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,9 +24,7 @@ class MyInformationViewModel @Inject constructor(
 
     override val currentVisitedPlace: LiveData<List<Place>> = liveData { emit(userRepo.recentPlaces()) }
 
-    override val userInfo: LiveData<User> = liveData {
-        userRepo.currentUser()?.let { emit(it) }
-    }
+    override val userInfo: LiveData<User> = userRepo.currentUser.asLiveData()
 
     override val nextLevel: LiveData<LevelInfo> = liveData { emit(userRepo.nextLevel()) }
 

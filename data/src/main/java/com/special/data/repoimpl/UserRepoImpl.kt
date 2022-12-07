@@ -13,6 +13,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,11 +26,9 @@ class UserRepoImpl @Inject constructor(
 
     private val _loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val loginStatus: Flow<LoginStatus> = _loginStatus
-    private var _user: User? = null
+    private var _user: MutableStateFlow<User> = MutableStateFlow(User.mock())
 
-    override fun currentUser(): User? {
-        return _user
-    }
+    override val currentUser: Flow<User> = _user
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
@@ -37,7 +36,8 @@ class UserRepoImpl @Inject constructor(
                 if (tokenData.isLogin) {
                     _loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
                     withContext(Dispatchers.IO) {
-                        _user = remote.checkUser()
+                        val user = remote.checkUser()
+                        _user.emit(user)
                     }
                 } else {
                     _loginStatus.emit(LoginStatus.empty())
@@ -55,7 +55,8 @@ class UserRepoImpl @Inject constructor(
                 tokenData.updateLoginType(response.type)
                 tokenData.updateToken(token)
 
-                _user = remote.checkUser()
+                val user = remote.checkUser()
+                _user.emit(user)
 
                 LoginStatus.success(response.type, token)
             } else {
@@ -97,6 +98,8 @@ class UserRepoImpl @Inject constructor(
     override suspend fun modifyNickName(nickName: String) {
         withContext(Dispatchers.IO) {
             remote.updateNickName(nickName)
+            val user = remote.checkUser()
+            _user.emit(user)
         }
     }
 
@@ -113,7 +116,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun nextLevel(): LevelInfo {
         return withContext(Dispatchers.IO) {
-            val userData = _user
+            val userData = _user.value
             if (userData != null) {
                 val allLevelInfo = remote.levelInfo()
                 allLevelInfo.find { it.minPoint > userData.point } ?: allLevelInfo.last()
@@ -141,5 +144,7 @@ class UserRepoImpl @Inject constructor(
         }
     }
 
-
+    override fun getLastUser(): User {
+        return _user.value
+    }
 }

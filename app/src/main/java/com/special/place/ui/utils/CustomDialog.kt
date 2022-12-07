@@ -20,9 +20,9 @@ fun CustomDialog(
     title: String,
     message: String? = null,
     primaryButtonText: String,
-    secondaryButtonText: String,
+    secondaryButtonText: String? = null,
     setShowDialog: (Boolean) -> Unit,
-    callback: () -> Unit,
+    callback: (() -> Unit)? = null,
     subCallback: (() -> Unit)? = null
 ) {
 
@@ -59,31 +59,33 @@ fun CustomDialog(
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Button(
-                            onClick = {
-                                subCallback?.invoke()
-                                setShowDialog(false)
-                            },
-                            shape = RoundedCornerShape(20.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                Grey200
-                            ),
-                            modifier = Modifier
-                                .width(124.dp)
-                                .height(56.dp),
-                            elevation = elevation(
-                                defaultElevation = 0.dp
-                            )
-                        ) {
-                            Text(
-                                text = secondaryButtonText,
-                                style = Subtitle2,
-                            )
+                        if (secondaryButtonText != null) {
+                            Button(
+                                onClick = {
+                                    subCallback?.invoke()
+                                    setShowDialog(false)
+                                },
+                                shape = RoundedCornerShape(20.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    Grey200
+                                ),
+                                modifier = Modifier
+                                    .width(124.dp)
+                                    .height(56.dp),
+                                elevation = elevation(
+                                    defaultElevation = 0.dp
+                                )
+                            ) {
+                                Text(
+                                    text = secondaryButtonText,
+                                    style = Subtitle2,
+                                )
+                            }
+                            Box(modifier = Modifier.width(16.dp))
                         }
-                        Box(modifier = Modifier.width(16.dp))
                         Button(
                             onClick = {
-                                callback()
+                                callback?.invoke()
                                 setShowDialog(false)
                             },
                             shape = RoundedCornerShape(20.dp),

@@ -5,17 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.special.domain.repositories.UserRepository
+import com.special.place.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NickNameModifyViewModel @Inject constructor(private val userRepo: UserRepository) : ViewModel(), NickNameModifyEventListener {
     private val _nickname: MutableLiveData<String> = MutableLiveData()
+    override val uiState: MutableLiveData<UiState> = MutableLiveData(UiState.Init)
 
     init {
-        userRepo.currentUser()?.nickName?.let {
-            _nickname.postValue(it)
+        viewModelScope.launch {
+            userRepo.currentUser.collectLatest {
+                _nickname.postValue(it.nickName)
+            }
         }
     }
 
@@ -29,12 +34,24 @@ class NickNameModifyViewModel @Inject constructor(private val userRepo: UserRepo
     override fun doModify() {
         val nickName = _nickname.value
         if (nickName.isNullOrBlank()) {
-
+            uiState.postValue(UiState.Error(IllegalArgumentException()))
             return
         }
         viewModelScope.launch {
-            userRepo.modifyNickName(nickName)
+            uiState.postValue(UiState.Progress)
+
+            runCatching {
+                userRepo.modifyNickName(nickName)
+            }.onSuccess {
+                uiState.postValue(UiState.Done)
+            }.onFailure {
+                uiState.postValue(UiState.Error(it))
+            }
         }
+    }
+
+    fun hideDialog() {
+        uiState.postValue(UiState.Init)
     }
 
 

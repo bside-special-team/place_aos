@@ -18,11 +18,7 @@ class CommentViewModel @Inject constructor(
     private val placeRepo: PlaceRepository,
     private val userRepo: UserRepository
 ) : ViewModel(), CommentEventListener {
-    private val userInfo: LiveData<User> = liveData {
-        userRepo.currentUser()?.let {
-            emit(it)
-        }
-    }
+    private val userInfo: LiveData<User> = userRepo.currentUser.asLiveData()
 
     private val _targetComment: MutableLiveData<CommentPlace> = MutableLiveData()
     override val targetComment: LiveData<CommentPlace> = _targetComment

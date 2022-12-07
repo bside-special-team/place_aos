@@ -30,7 +30,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.special.place.ui.UiState
 import com.special.place.ui.theme.*
+import com.special.place.ui.utils.CustomDialog
 import com.special.place.ui.utils.MyTopAppBar
 import com.special.place.ui.utils.PrimaryButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,12 +74,30 @@ class NicknameModifyActivity : ComponentActivity() {
                             NicknameModifyScreen(vm)
                         })
 
+                    val uiState: UiState by vm.uiState.observeAsState(initial = UiState.Init)
 
+                    if (uiState is UiState.Error) {
+                        val exception = (uiState as UiState.Error).exception
+                        if (exception is IllegalArgumentException) {
+                            CustomDialog(title = "닉네임을 입력 해 주세요.",
+                                primaryButtonText = "확인",
+                                setShowDialog = { bool -> if (!bool) vm.hideDialog() }
+                            )
+                        }
+
+                    }
                 }
             }
         }
+
+        initViewModel()
     }
 
+    private fun initViewModel() {
+        vm.uiState.observe(this) {
+            if (it == UiState.Done) finish()
+        }
+    }
 }
 
 @Composable
@@ -87,6 +107,7 @@ fun NicknameModifyScreen(eventListener: NickNameModifyEventListener) {
     val text: String by eventListener.name.observeAsState(initial = "")
     var textFieldWidth by remember { mutableStateOf(1.dp) }
     var textFieldColor by remember { mutableStateOf(Grey300) }
+    val uiState: UiState by eventListener.uiState.observeAsState(initial = UiState.Init)
 
     Column(
         modifier = Modifier
@@ -157,7 +178,11 @@ fun NicknameModifyScreen(eventListener: NickNameModifyEventListener) {
                 )
             }
         }
-        PrimaryButton(text = stringResource(com.special.place.resource.R.string.btn_modify_done)) { eventListener.doModify() }
+        PrimaryButton(
+            text = stringResource(com.special.place.resource.R.string.btn_modify_done),
+            isNotProgress = uiState != UiState.Progress,
+            modifier = Modifier.fillMaxWidth()
+        ) { eventListener.doModify() }
     }
 }
 
