@@ -225,7 +225,7 @@ fun LandMarkCard(vm: PlaceDetailListener, id: String, type: PlaceType, recommend
 @Composable
 fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
     var isDropDownMenu by remember { mutableStateOf(false) }
-    val isMyComment = vm.isMyComment(comment)
+    val isMyComment: Boolean by vm.isMyComment(comment).observeAsState(initial = false)
 
     Column(
         modifier = Modifier
@@ -280,7 +280,7 @@ fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
                         }
                     } else {
                         DropdownMenuItem(onClick = {
-                            vm.reportComment()
+                            vm.reportComment(comment)
                             isDropDownMenu = false
                         }) {
                             Text(text = "삭제 요청하기", style = BodyLong2)

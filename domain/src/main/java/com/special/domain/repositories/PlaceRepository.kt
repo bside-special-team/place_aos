@@ -30,7 +30,9 @@ interface PlaceRepository {
 
     suspend fun removePlace(targetId: String)
 
-    suspend fun reportPlace(placeId: String)
+    suspend fun reportPlace(placeId: String, reason: String)
+
+    suspend fun reportComment(commentId: String, reason: String)
 
     suspend fun myPlaces(page: Int): Paging<Place>
 

@@ -8,6 +8,7 @@ import com.special.domain.entities.place.comment.CommentRequest
 import com.special.domain.entities.user.PointResult
 import com.special.domain.repositories.PlaceRepository
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSource) :
     PlaceRepository {
 
-    private val _currentPlace: MutableSharedFlow<Place> = MutableSharedFlow(replay = 1)
+    private val _currentPlace: MutableSharedFlow<Place> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val currentPlace: Flow<Place>
         get() = _currentPlace
 
@@ -82,8 +83,12 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
         TODO("Not yet implemented")
     }
 
-    override suspend fun reportPlace(placeId: String) {
-        placeRemote.reportPlace(placeId)
+    override suspend fun reportPlace(placeId: String, reason: String) {
+        placeRemote.reportPlace(placeId, reason)
+    }
+
+    override suspend fun reportComment(commentId: String, reason: String) {
+        placeRemote.reportComment(commentId, reason)
     }
 
     override suspend fun myPlaces(page: Int): Paging<Place> {

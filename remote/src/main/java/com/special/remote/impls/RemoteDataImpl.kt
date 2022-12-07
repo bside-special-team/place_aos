@@ -118,20 +118,22 @@ class RemoteDataImpl @Inject constructor(
         return client.myPlaces()
     }
 
-    override suspend fun reportComment(commentId: String) {
+    override suspend fun reportComment(commentId: String, reason: String) {
         return client.block(
             RequestReport(
                 targetId = commentId,
-                type = ReportType.Comment
+                type = ReportType.Comment,
+                blockReason = reason
             )
         )
     }
 
-    override suspend fun reportPlace(placeId: String) {
+    override suspend fun reportPlace(placeId: String, reason: String) {
         return client.block(
             RequestReport(
                 targetId = placeId,
-                type = ReportType.Place
+                type = ReportType.Place,
+                blockReason = reason
             )
         )
     }

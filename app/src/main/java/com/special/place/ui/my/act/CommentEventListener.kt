@@ -5,6 +5,8 @@ import com.special.domain.entities.place.CommentPlace
 import com.special.place.ui.UiState
 
 interface CommentEventListener {
+    val comments: LiveData<List<CommentPlace>>
+
     fun registerComment(comment: String)
 
     val commentResult: LiveData<UiState>
@@ -14,16 +16,21 @@ interface CommentEventListener {
     val showDeleteCommentDialog: LiveData<Boolean>
     val showBottomSheetReportComment: LiveData<Boolean>
     val showBottomSheetCommentModify: LiveData<Boolean>
+    val hideBottomSheet: LiveData<Boolean>
 
-    fun isMyComment(comment: CommentPlace): Boolean
+    fun isMyComment(comment: CommentPlace): LiveData<Boolean>
 
     fun checkDeleteComment()
     fun checkModifyComment()
 
-    fun reportComment()
+    fun reportReason(reason: String)
+
+    fun reportComment(comment: CommentPlace)
 
     fun hideDeleteCommentDialog()
 
     fun doDeleteComment()
     fun doModifyComment(comment: String)
+
+    fun commentDeleteRequestClick()
 }
