@@ -37,7 +37,7 @@ fun PlaceInfoScreen(
     val type = place.placeType
     val recommendCnt = place.recommendCount
     val visitCnt = place.visitCount
-    val writerName = place.writer.displayName()
+    val writerName = place.nickName
     val hashTags = place.hashTags
     val id = place.id
 
