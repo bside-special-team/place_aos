@@ -4,11 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,16 +20,23 @@ import com.special.place.ui.UiState
 import com.special.place.ui.theme.Grey300
 import com.special.place.ui.theme.Grey900
 import com.special.place.ui.utils.PrimaryButton
+import com.special.place.ui.utils.PrimaryButtonDisable
 import com.special.place.ui.widget.CenterAlignedTopAppBar
 import com.special.place.ui.widget.EmptyChipClickable
 import com.special.place.ui.widget.HashtagChipClickable
+import com.special.place.ui.widget.InputHashtag
 
 @Composable
 fun HashtagStep(eventListener: HashtagEventListener) {
     val selectedTags: List<String> by eventListener.hashtags.observeAsState(initial = listOf())
     val uiState: UiState by eventListener.uiState.observeAsState(initial = UiState.Init)
     val scrollState = rememberScrollState()
-//    var editMode by remember { mutableStateOf(false) }
+    val editMode: Boolean by eventListener.editMode.observeAsState(initial = false)
+    val tagSize = if (editMode) {
+        selectedTags.size + 1
+    } else {
+        selectedTags.size
+    }
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = "키워드로 장소를 소개해주세요") {
@@ -46,13 +50,13 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                     .verticalScroll(scrollState)
             ) {
 
-                if (selectedTags.isEmpty()) {
+                if (selectedTags.isEmpty() && !editMode) {
                     Text(
                         text = "아래 카테고리에서 선택하거나\n이 곳을 눌러 직접 작성해보세요!",
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .clickable {
-//                                editMode = true;
+                                eventListener.updateEditMode(true)
                             }
                             .padding(top = 16.dp)
                             .align(Alignment.CenterHorizontally)
@@ -68,14 +72,19 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                                 eventListener.updateHashtag(it)
                             }
                         }
+                        if (editMode) {
+                            InputHashtag(eventListener)
+                        }
                         EmptyChipClickable {
-//                                    editMode = true
+                            if (tagSize < 5) {
+                                eventListener.updateEditMode(true)
+                            }
                         }
                     }
                 }
 
                 Text(
-                    text = "${selectedTags.size}/5", modifier = Modifier
+                    text = "$tagSize/5", modifier = Modifier
                         .padding(top = 14.dp, end = 24.dp)
                         .align(Alignment.End)
                 )
@@ -97,7 +106,9 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                 ) {
                     DEFAULT_HASHTAGS.forEach {
                         HashtagChipClickable(content = it, select = selectedTags.contains(it)) {
-                            eventListener.updateHashtag(it)
+                            if (tagSize < 5) {
+                                eventListener.updateHashtag(it)
+                            }
                         }
                     }
                 }
@@ -105,27 +116,28 @@ fun HashtagStep(eventListener: HashtagEventListener) {
                 Box(modifier = Modifier.height(80.dp))
             }
 
-            PrimaryButton(
-                text = "완료",
-                isNotProgress = uiState != UiState.Progress,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(24.dp)
-            ) {
-                eventListener.next()
+            if (selectedTags.isNotEmpty()) {
+                PrimaryButton(
+                    text = "완료",
+                    isNotProgress = uiState != UiState.Progress,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                ) {
+                    eventListener.next()
+                }
+            } else {
+                PrimaryButtonDisable(
+                    text = "완료",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                ) {}
             }
         }
 
-    }
-}
-
-@Composable
-fun InputHashtag() {
-    Box {
-        Row {
-
-        }
     }
 }
 

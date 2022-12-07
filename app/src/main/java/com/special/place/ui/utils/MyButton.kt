@@ -163,3 +163,21 @@ fun NextButton(buttonName: String, clickListener: () -> Unit, modifier: Modifier
         Icon(Icons.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.White)
     }
 }
+
+@Composable
+fun NextDisableButton(buttonName: String, modifier: Modifier) {
+    Button(
+        shape = RoundedCornerShape(20.dp),
+        colors = ButtonDefaults.buttonColors(Grey300),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
+        onClick = { },
+        modifier = modifier
+            .size(width = 100.dp, height = 56.dp)
+    ) {
+        Text(text = buttonName, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight(700))
+        Box(modifier = Modifier.width(4.dp))
+        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.White)
+    }
+}
