@@ -72,6 +72,7 @@ object Deps {
         const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
         const val flowLayout = "com.google.accompanist:accompanist-flowlayout:0.27.0"
         const val paging = "androidx.paging:paging-compose:1.0.0-alpha17"
+        const val webView = "com.google.accompanist:accompanist-webview:0.24.13-rc"
     }
 
     object Coil {

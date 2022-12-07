@@ -99,6 +99,7 @@ dependencies {
     implementation(Deps.Compose.systemUiController)
     implementation(Deps.Compose.flowLayout)
     implementation(Deps.Compose.paging)
+    implementation(Deps.Compose.webView)
 
     debugImplementation(Deps.Compose.tooling)
     debugImplementation(Deps.Compose.manifest)

@@ -50,6 +50,8 @@
             android:name=".ui.place.information.PlaceDetailActivity"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity android:name=".ui.my.setting.PolicyActivity" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="@string/naver_map_client_id" />
