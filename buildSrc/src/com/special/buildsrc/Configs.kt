@@ -6,7 +6,7 @@ object Configs {
     const val targetSdkVersion = 33
 
     const val versionCode = 7
-    const val versionName = "0.0.7ㅂ"
+    const val versionName = "0.0.7"
 
     const val composeVersion = "1.3.1"
 
