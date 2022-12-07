@@ -9,12 +9,10 @@ import com.special.domain.entities.user.*
 import com.special.domain.entities.user.badge.Badge
 import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,7 +23,7 @@ class UserRepoImpl @Inject constructor(
     private val tokenData: TokenDataSource
 ) : UserRepository {
 
-    private val _loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow(replay = 1)
+    private val _loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val loginStatus: Flow<LoginStatus> = _loginStatus
     private var _user: User? = null
 
@@ -65,7 +63,7 @@ class UserRepoImpl @Inject constructor(
             }
         }
 
-        withContext(Dispatchers.Default) {
+        runBlocking {
             Log.d("loginUserRepo", "isLogin == ${statue.isLogin}")
             val result = _loginStatus.tryEmit(statue)
 
