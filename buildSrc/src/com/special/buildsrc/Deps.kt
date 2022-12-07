@@ -76,6 +76,7 @@ object Deps {
 
     object Coil {
         const val coilCompose = "io.coil-kt:coil-compose:2.0.0-rc01"
+        const val coilGifs = "io.coil-kt:coil-gif:2.0.0-rc01"
     }
 
     object Retrofit {

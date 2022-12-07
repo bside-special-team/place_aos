@@ -37,7 +37,7 @@
             android:name=".ui.login.LoginActivity"
             android:clearTaskOnLaunch="true" />
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name=".ui.splash.OnBoardingActivity"
             android:exported="true"
             android:noHistory="true">
             <intent-filter>

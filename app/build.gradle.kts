@@ -107,6 +107,10 @@ dependencies {
         // 'coil'과 'naverMap'이 의존성 충돌 발생.
         exclude(group = "androidx.appcompat", module = "appcompat-resources")
     }
+    implementation(Deps.Coil.coilGifs) {
+        // 'coil'과 'naverMap'이 의존성 충돌 발
+        exclude(group = "androidx.appcompat", module = "appcompat-resources")
+    }
 
     implementation(Deps.Hilt.android)
     kapt(Deps.Hilt.compiler)
