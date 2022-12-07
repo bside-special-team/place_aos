@@ -37,22 +37,16 @@ fun PostScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when {
-            places.loadState.refresh is LoadState.Loading -> {
-                //TODO: PROGRESS
+        if (places.itemCount < 1) {
+            if (postType == PostType.MyPlaces) {
+                EmptyScreen("작성한 게시물이 없어요 \uD83E\uDD72")
+            } else {
+                EmptyScreen("추천한 게시물이 없어요 \uD83E\uDD72")
             }
-            places.loadState.append is LoadState.Loading -> {
-                //TODO: PROGRESS
-            }
-            places.loadState.refresh is LoadState.Error || places.itemCount < 1 -> {
-                if (postType == PostType.MyPlaces) {
-                    EmptyScreen("작성한 게시물이 없어요 \uD83E\uDD72")
-                } else {
-                    EmptyScreen("추천한 게시물이 없어요 \uD83E\uDD72")
-                }
-            }
-            else -> PostList(places)
+        } else {
+            PostList(places)
         }
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

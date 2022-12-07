@@ -44,21 +44,11 @@ fun MyCommentScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when {
-            comments.loadState.refresh is LoadState.Loading -> {
-                //TODO: PROGRESS
-            }
-            comments.loadState.append is LoadState.Loading -> {
-                //TODO: PROGRESS
-            }
-            comments.loadState.refresh is LoadState.Error || comments.itemCount < 1 -> {
-                EmptyScreen("작성한 댓글이 없어요 \uD83E\uDD72")
-            }
-            else -> CommentPostList(comments)
+        if (comments.itemCount < 1) {
+            EmptyScreen("작성한 댓글이 없어요 \uD83E\uDD72")
+        } else {
+            CommentPostList(comments)
         }
-
-
-
 
         Spacer(modifier = Modifier.height(16.dp))
     }
