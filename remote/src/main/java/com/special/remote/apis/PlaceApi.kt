@@ -59,7 +59,7 @@ interface PlaceApi {
     @PATCH("/api/v1/comments")
     suspend fun modifyComment(@Body request: CommentModifyRequest): BaseResponse<Comment>
 
-    @GET
+    @GET("/api/v1/my/comments")
     suspend fun myComments(@Query("lastTimestamp") lastTimeStamp: Long, @Query("limit") limit: Int): CommentResponse
 
     @GET("/api/v1/comments/places/{placeId}")
@@ -78,7 +78,7 @@ interface PlaceApi {
     suspend fun recentVisitPlaces(): List<Place>
 
     @GET("/api/v1/places/myPlace")
-    suspend fun myPlaces(): List<Place>
+    suspend fun myPlaces(@Query("lastTimestamp") lastTimeStamp: Long, @Query("limit") limit: Int): List<Place>
 
     @POST("/api/v1/block")
     suspend fun block(@Body request: RequestReport)

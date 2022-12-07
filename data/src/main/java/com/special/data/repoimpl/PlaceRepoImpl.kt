@@ -113,9 +113,7 @@ class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSourc
         return placeRemote.myCommentList(page.toLong()).let {
             Paging(
                 isLast = it.isLast,
-                list = it.list.map {
-                    Place.mock().combine(it)
-                }
+                list = it.list.map(Comment::convert)
             )
         }
     }

@@ -21,3 +21,13 @@ fun Place.combine(comment: Comment) = CommentPlace(
     lastModifiedAt = comment.lastModifiedAt,
     comment = comment
 )
+
+fun Comment.convert() = CommentPlace(
+    id = place?.id ?: "",
+    placeType = place?.placeType ?: PlaceType.Hidden,
+    name = place?.name ?: "-",
+    hashTags = place?.hashTags ?: listOf(),
+    createdAt = createdAt,
+    lastModifiedAt = lastModifiedAt,
+    comment = this
+)

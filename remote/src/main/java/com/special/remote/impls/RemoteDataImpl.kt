@@ -115,7 +115,7 @@ class RemoteDataImpl @Inject constructor(
     }
 
     override suspend fun myPlaces(): List<Place> {
-        return client.myPlaces()
+        return client.myPlaces(0, limit = 30)
     }
 
     override suspend fun reportComment(commentId: String, reason: String) {

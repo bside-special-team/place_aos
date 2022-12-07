@@ -1,8 +1,13 @@
 package com.special.place.ui.my.postlist
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,24 +35,70 @@ fun PostScreen(
 
     val focusManager = LocalFocusManager.current
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .addFocusCleaner(focusManager)
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (places.itemCount < 1) {
-            if (postType == PostType.MyPlaces) {
-                EmptyScreen("작성한 게시물이 없어요 \uD83E\uDD72")
-            } else {
-                EmptyScreen("추천한 게시물이 없어요 \uD83E\uDD72")
+
+        when (val state = places.loadState.prepend) {
+            is LoadState.NotLoading -> Unit
+            is LoadState.Loading -> {
+                Loading()
             }
-        } else {
-            PostList(places)
+            is LoadState.Error -> {
+                Empty(postType)
+            }
+        }
+        when (val state = places.loadState.refresh) {
+            is LoadState.NotLoading -> Unit
+            is LoadState.Loading -> {
+                Loading()
+            }
+            is LoadState.Error -> {
+                Empty(postType)
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        if (places.itemCount == 0) {
+            Empty(postType)
+        } else {
+            items(places) { place ->
+                if (place != null) {
+                    PostItem(place)
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
+        }
+
+        when (val state = places.loadState.append) {
+            is LoadState.NotLoading -> Unit
+            is LoadState.Loading -> {
+                Loading()
+            }
+            is LoadState.Error -> {
+                Empty(postType)
+            }
+        }
+    }
+}
+
+
+private fun LazyListScope.Loading() {
+    item {
+        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+    }
+}
+
+private fun LazyListScope.Empty(postType: PostType) {
+    item {
+        if (postType == PostType.MyPlaces) {
+            EmptyScreen("작성한 게시물이 없어요 \uD83E\uDD72")
+        } else {
+            EmptyScreen("추천한 게시물이 없어요 \uD83E\uDD72")
+        }
     }
 }
 
