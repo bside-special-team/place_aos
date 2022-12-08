@@ -53,8 +53,8 @@ interface PlaceApi {
     @POST("/api/v1/comments")
     suspend fun registerComments(@Body comment: CommentRequest): BaseResponse<Comment>
 
-    @DELETE("/api/v1/comments")
-    suspend fun deleteComment(@Body request: CommentModifyRequest): BaseResponse<Comment>
+    @DELETE("/api/v1/comments/{commentId}")
+    suspend fun deleteComment(@Path("commentId") commentId: String): BaseResponse<Comment>
 
     @PATCH("/api/v1/comments")
     suspend fun modifyComment(@Body request: CommentModifyRequest): BaseResponse<Comment>
