@@ -19,7 +19,9 @@ class NickNameModifyViewModel @Inject constructor(private val userRepo: UserRepo
     init {
         viewModelScope.launch {
             userRepo.currentUser.collectLatest {
-                _nickname.postValue(it.nickName)
+                if (it.nickName != null) {
+                    _nickname.postValue(it.nickName)
+                }
             }
         }
     }
