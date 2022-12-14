@@ -219,8 +219,7 @@ fun PlaceScreen(
                 .clip(CircleShape)
                 .clickable {
                     //TODO: 가이드 화면 노출 (온보딩??)
-
-                    routeListener.requestRoute(Route.Logout)
+                    routeListener.requestRoute(Route.TutorialPage)
                 }
                 .background(Grey900, shape = CircleShape)
                 .size(36.dp)
