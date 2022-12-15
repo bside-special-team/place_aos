@@ -7,6 +7,7 @@ import com.special.domain.datasources.TokenDataSource
 import com.special.domain.entities.place.Place
 import com.special.domain.entities.user.*
 import com.special.domain.entities.user.badge.Badge
+import com.special.domain.exception.ExceptionListener
 import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
 import kotlinx.coroutines.*
@@ -21,10 +22,12 @@ import javax.inject.Singleton
 class UserRepoImpl @Inject constructor(
     private val loginRemote: LoginRemoteDataSource,
     private val remote: RemoteDataSource,
-    private val tokenData: TokenDataSource
+    private val tokenData: TokenDataSource,
+    private val exceptionListener: ExceptionListener
 ) : UserRepository {
 
-    private val _loginStatus: MutableSharedFlow<LoginStatus> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _loginStatus: MutableSharedFlow<LoginStatus> =
+        MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val loginStatus: Flow<LoginStatus> = _loginStatus
     private var _user: MutableStateFlow<User> = MutableStateFlow(User.mock())
 
@@ -49,26 +52,29 @@ class UserRepoImpl @Inject constructor(
     }
 
     override suspend fun socialLogin(response: SocialLoginResponse) {
-        val statue = withContext(Dispatchers.IO) {
-            if (response.isLogin && response.idToken != null) {
-                val token = loginRemote.socialLogin(response.idToken!!)
-                tokenData.updateLoginType(response.type)
-                tokenData.updateToken(token)
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val status = if (response.isLogin && response.idToken != null) {
+                    val token = loginRemote.socialLogin(response.idToken!!)
+                    tokenData.updateLoginType(response.type)
+                    tokenData.updateToken(token)
 
-                val user = remote.checkUser()
-                _user.emit(user)
+                    val user = remote.checkUser()
+                    _user.emit(user)
 
-                LoginStatus.success(response.type, token)
-            } else {
-                LoginStatus.empty()
+                    LoginStatus.success(response.type, token)
+                } else {
+                    LoginStatus.empty()
+                }
+
+                Log.d("loginUserRepo", "isLogin == ${status.isLogin}")
+                val result = _loginStatus.tryEmit(status)
+
+                Log.d("loginUserRepo", "emit!, $result")
+            }.onFailure {
+                it.printStackTrace()
+                exceptionListener.updateException(it)
             }
-        }
-
-        runBlocking {
-            Log.d("loginUserRepo", "isLogin == ${statue.isLogin}")
-            val result = _loginStatus.tryEmit(statue)
-
-            Log.d("loginUserRepo", "emit!, $result")
         }
     }
 

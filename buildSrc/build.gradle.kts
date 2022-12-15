@@ -28,6 +28,7 @@ buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.43.2")
+        classpath("com.google.gms:google-services:4.3.14")
     }
 }
 
@@ -51,4 +52,6 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.43.2")
 
+    implementation("com.google.gms:google-services:4.3.14")
+    implementation("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
 }

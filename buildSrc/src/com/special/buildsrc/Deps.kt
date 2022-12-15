@@ -53,6 +53,17 @@ object Deps {
         }
     }
 
+    object Firebase {
+        object Versions {
+            const val firebase = "31.1.1"
+        }
+
+        const val bom = "com.google.firebase:firebase-bom:${Versions.firebase}"
+
+        const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
+        const val analytics = "com.google.firebase:firebase-analytics-ktx"
+    }
+
     object Compose {
         object Versions {
             const val core = "1.3.0-beta01"
