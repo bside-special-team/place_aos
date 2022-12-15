@@ -52,7 +52,7 @@ data class Place(
     val id: String,
     val placeType: PlaceType,
     val coordinate: Coordinate,
-    val writer: User,
+    val writer: User?,
     val name: String,
     val imageUuids: List<String>,
     val visitCount: Int,
@@ -78,5 +78,5 @@ data class Place(
         )
     }
 
-    val nickName: String? = writer.nickName
+    val nickName: String = writer?.displayName() ?: "익명"
 }

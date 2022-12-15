@@ -10,6 +10,7 @@ import com.special.place.ui.login.LoginActivity
 import com.special.place.ui.login.LoginViewModel
 import com.special.place.ui.main.MainActivity
 import com.special.place.ui.my.MyInformationActivity
+import com.special.place.ui.my.setting.PolicyActivity
 import com.special.place.ui.my.setting.nickname.modify.NicknameModifyActivity
 import com.special.place.ui.place.information.PlaceDetailActivity
 import com.special.place.ui.place.register.PlaceRegisterActivity
@@ -35,6 +36,7 @@ open class BaseActivity : ComponentActivity() {
                 Route.Logout -> loginVM.logout()
                 Route.ModifyNickNamePage -> startActivity(NicknameModifyActivity.newIntent(this))
                 Route.TutorialPage -> startActivity(OnBoardingActivity.newIntent(this))
+                Route.PolicyPage -> startActivity(PolicyActivity.newIntent(this))
 
                 is Route.PlaceRegisterPage -> startActivity(
                     PlaceRegisterActivity.newIntent(

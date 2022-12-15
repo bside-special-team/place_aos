@@ -103,7 +103,7 @@ class RemoteDataImpl @Inject constructor(
     }
 
     override suspend fun deleteComment(commentId: String) {
-        client.deleteComment(CommentModifyRequest(commentId = commentId))
+        client.deleteComment(commentId)
     }
 
     override suspend fun modifyComment(commentId: String, comment: String) {
@@ -115,23 +115,25 @@ class RemoteDataImpl @Inject constructor(
     }
 
     override suspend fun myPlaces(): List<Place> {
-        return client.myPlaces()
+        return client.myPlaces(0, limit = 30)
     }
 
-    override suspend fun reportComment(commentId: String) {
+    override suspend fun reportComment(commentId: String, reason: String) {
         return client.block(
             RequestReport(
                 targetId = commentId,
-                type = ReportType.Comment
+                type = ReportType.Comment,
+                blockReason = reason
             )
         )
     }
 
-    override suspend fun reportPlace(placeId: String) {
+    override suspend fun reportPlace(placeId: String, reason: String) {
         return client.block(
             RequestReport(
                 targetId = placeId,
-                type = ReportType.Place
+                type = ReportType.Place,
+                blockReason = reason
             )
         )
     }

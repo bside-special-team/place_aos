@@ -53,6 +53,17 @@ object Deps {
         }
     }
 
+    object Firebase {
+        object Versions {
+            const val firebase = "31.1.1"
+        }
+
+        const val bom = "com.google.firebase:firebase-bom:${Versions.firebase}"
+
+        const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
+        const val analytics = "com.google.firebase:firebase-analytics-ktx"
+    }
+
     object Compose {
         object Versions {
             const val core = "1.3.0-beta01"
@@ -72,6 +83,7 @@ object Deps {
         const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
         const val flowLayout = "com.google.accompanist:accompanist-flowlayout:0.27.0"
         const val paging = "androidx.paging:paging-compose:1.0.0-alpha17"
+        const val webView = "com.google.accompanist:accompanist-webview:0.24.13-rc"
     }
 
     object Coil {

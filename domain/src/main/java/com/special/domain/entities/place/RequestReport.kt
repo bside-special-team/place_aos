@@ -4,5 +4,6 @@ import com.special.domain.entities.ReportType
 
 data class RequestReport(
     val targetId: String,
-    val type: ReportType
+    val type: ReportType,
+    val blockReason: String
 )

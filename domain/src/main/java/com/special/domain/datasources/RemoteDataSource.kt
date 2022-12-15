@@ -47,7 +47,7 @@ interface RemoteDataSource {
 
     suspend fun myPlaces(): List<Place>
 
-    suspend fun reportPlace(placeId: String)
+    suspend fun reportPlace(placeId: String, reason: String)
 
-    suspend fun reportComment(commentId: String)
+    suspend fun reportComment(commentId: String, reason: String)
 }

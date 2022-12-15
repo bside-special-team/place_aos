@@ -3,6 +3,7 @@ package com.special.place.ui.place.information
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -90,7 +91,7 @@ class PlaceDetailActivity : ComponentActivity() {
         val vm: PlaceDetailViewModel by viewModels()
 
         setContent {
-            val commentList by vm.comments.observeAsState(listOf())
+            val commentList by commentVM.comments.observeAsState(listOf())
 
             PlaceTheme {
                 Surface(
@@ -102,7 +103,7 @@ class PlaceDetailActivity : ComponentActivity() {
                     val bottomSheetState =
                         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-                    var currentBottomSheet: BottomSheetType? by remember {
+                    var currentBottomSheet: BottomSheetType by remember {
                         mutableStateOf(BottomSheetType.CommentRegister)
                     }
                     val onDelete: () -> Unit = {
@@ -118,6 +119,7 @@ class PlaceDetailActivity : ComponentActivity() {
                         }
                     }
                     commentVM.showBottomSheetReportComment.observe(this) {
+                        Log.d(this::class.java.name, "showBottomSheetReportComment :: $it")
                         if (!it) return@observe
 
                         coroutineScope.launch {
@@ -125,16 +127,30 @@ class PlaceDetailActivity : ComponentActivity() {
                             bottomSheetState.show()
                         }
                     }
-                    vm.setBottomSheetComment.observe(this) {
+
+                    commentVM.hideBottomSheet.observe(this) {
+                        Log.d(this::class.java.name, "hideBottomSheet :: $it")
+                        coroutineScope.launch {
+                            if (it) {
+                                bottomSheetState.hide()
+                            }
+                        }
+                    }
+
+                    vm.showBottomSheetComment.observe(this) {
                         coroutineScope.launch {
                             currentBottomSheet = BottomSheetType.CommentRegister
                             bottomSheetState.show()
                         }
                     }
-                    vm.setBottomSheetDeletePlace.observe(this) {
+                    vm.showBottomSheetDeletePlace.observe(this) {
                         coroutineScope.launch {
-                            currentBottomSheet = BottomSheetType.ReportPlace
-                            bottomSheetState.show()
+                            if (it) {
+                                currentBottomSheet = BottomSheetType.ReportPlace
+                                bottomSheetState.show()
+                            } else {
+                                bottomSheetState.hide()
+                            }
                         }
                     }
 //                    vm.setBottomSheetDeleteComment.observe(this) {
@@ -157,18 +173,16 @@ class PlaceDetailActivity : ComponentActivity() {
                         content = {
                             ModalBottomSheetLayout(
                                 sheetContent = {
-                                    currentBottomSheet?.let {
-                                        SheetLayout(
-                                            bottomSheetType = it,
-                                            vm = vm,
-                                            commentViewModel = commentVM,
-                                            closeCallback = {
-                                                coroutineScope.launch {
-                                                    bottomSheetState.hide()
-                                                }
+                                    SheetLayout(
+                                        bottomSheetType = currentBottomSheet,
+                                        vm = vm,
+                                        commentViewModel = commentVM,
+                                        closeCallback = {
+                                            coroutineScope.launch {
+                                                bottomSheetState.hide()
                                             }
-                                        )
-                                    }
+                                        }
+                                    )
 //                                    BottomSheetScreen(vm, bottomSheetContent, screenHeight)
                                 },
 
@@ -251,7 +265,7 @@ class PlaceDetailActivity : ComponentActivity() {
                                             }
                                         } else {
                                             items(commentList) { item ->
-                                                CommentList(commentVM, item)
+                                                CommentItem(commentVM, item)
                                                 Spacer(modifier = Modifier.height(20.dp))
                                             }
                                         }
@@ -270,7 +284,7 @@ class PlaceDetailActivity : ComponentActivity() {
                             primaryButtonText = "삭제",
                             secondaryButtonText = "취소",
                             setShowDialog = { bool ->
-                                if (bool) {
+                                if (!bool) {
                                     commentVM.hideDeleteCommentDialog()
                                 }
                             },
@@ -289,25 +303,30 @@ fun SheetLayout(
     commentViewModel: CommentViewModel,
     closeCallback: () -> Unit
 ) {
+    Log.d("SheetLayout", "bottomSheetType :: $bottomSheetType")
     when (bottomSheetType) {
         BottomSheetType.CommentRegister -> CommentBottomSheetScreen(commentViewModel, closeCallback = closeCallback) // 댓글 작성
         BottomSheetType.ReportPlace -> DeletePlaceBottomSheetScreen(
             vm,
+            commentViewModel,
             closeCallback,
             BottomSheetType.ReportPlace
         ) // 장소 삭제 요청
         BottomSheetType.ReportComment -> DeleteCommentBottomSheetScreen(
             vm,
+            commentViewModel,
             closeCallback,
             BottomSheetType.ReportComment
         ) // 댓글 삭제 요청
         BottomSheetType.ModifyComment -> CommentBottomSheetScreen(commentViewModel, isModify = true, closeCallback = closeCallback) // 댓글 수정
+        BottomSheetType.Close -> {}
     }
 }
 
 @Composable
 fun DeletePlaceBottomSheetScreen(
-    vm: PlaceDetailListener,
+    placeListener: PlaceDetailListener,
+    commentListener: CommentEventListener,
     closeCallback: () -> Unit,
     type: BottomSheetType
 ) {
@@ -326,13 +345,14 @@ fun DeletePlaceBottomSheetScreen(
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = "3건 이상의 신고가 들어오면 자동 삭제됩니다", style = Subtitle1, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(32.dp))
-        DeletePlaceReasonBox(options, vm, closeCallback, type)
+        DeletePlaceReasonBox(options, placeListener, commentListener, closeCallback, type)
     }
 }
 
 @Composable
 fun DeleteCommentBottomSheetScreen(
-    vm: PlaceDetailListener,
+    placeListener: PlaceDetailListener,
+    commentListener: CommentEventListener,
     closeCallback: () -> Unit,
     type: BottomSheetType
 ) {
@@ -351,14 +371,15 @@ fun DeleteCommentBottomSheetScreen(
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = "3건 이상의 신고가 들어오면 자동 삭제됩니다", style = Subtitle1, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(32.dp))
-        DeletePlaceReasonBox(options, vm, closeCallback, type)
+        DeletePlaceReasonBox(options, placeListener, commentListener, closeCallback, type)
     }
 }
 
 @Composable
 fun DeletePlaceReasonBox(
     options: List<String>,
-    vm: PlaceDetailListener,
+    placeListener: PlaceDetailListener,
+    commentListener: CommentEventListener,
     closeCallback: () -> Unit,
     type: BottomSheetType
 ) {
@@ -403,22 +424,10 @@ fun DeletePlaceReasonBox(
                         )
                         .clickable {
                             onSelectionChange(text)
-                            var idx: Int = 0
                             if (type == BottomSheetType.ReportPlace) {
-                                when (text) {
-                                    "해당 위치에 없는 게시물이에요" -> idx = 0
-                                    "부적절한 내용이 있어요" -> idx = 1
-                                    "중복 작성된 게시물이에요" -> idx = 2
-                                }
-                                // Todo 플레이스 삭제 요청 이유
-                                // vm.pickPlaceDeleteReason(idx)
+                                placeListener.reportReason(text)
                             } else {
-                                when (text) {
-                                    "개인정보 노출 우려가 있어요" -> idx = 0
-                                    "선정적 내용이 있어요" -> idx = 1
-                                    "광고성 내용이 있어요" -> idx = 2
-                                }
-                                // Todo 댓글 삭제 요청 이유
+                                commentListener.reportReason(text)
                             }
 
                         },
@@ -452,9 +461,9 @@ fun DeletePlaceReasonBox(
                     text = "삭제 요청하기",
                     clickListener = {
                         if (type == BottomSheetType.ReportPlace) {
-                            vm.placeDeleteRequestClick()
+                            placeListener.placeDeleteRequestClick()
                         } else {
-                            // todo 댓글삭제 요청 버튼 클릭
+                            commentListener.commentDeleteRequestClick()
                         }
                     },
                     modifier = Modifier.weight(1f)
@@ -600,5 +609,5 @@ fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit =
 }
 
 enum class BottomSheetType {
-    CommentRegister, ReportPlace, ReportComment, ModifyComment
+    CommentRegister, ReportPlace, ReportComment, ModifyComment, Close
 }

@@ -23,6 +23,6 @@ class LoginViewModel @Inject constructor(
     }
 
     override fun getNickname(): String? {
-        return userRepo.currentUser()?.nickName
+        return userRepo.getLastUser().nickName
     }
 }

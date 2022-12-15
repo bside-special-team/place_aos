@@ -3,7 +3,6 @@ package com.special.place.ui.my.act
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -28,9 +27,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.special.place.resource.R
+import com.special.place.ui.Route
+import com.special.place.ui.base.BaseActivity
 import com.special.place.ui.my.MyInformationViewModel
 import com.special.place.ui.my.postlist.PostScreen
-import com.special.place.ui.place.information.comment.CommentViewModel
 import com.special.place.ui.theme.Grey500
 import com.special.place.ui.theme.PlaceTheme
 import com.special.place.ui.theme.Subtitle2
@@ -49,10 +49,9 @@ data class MyPostData(
 )
 
 @AndroidEntryPoint
-class MyActActivity : ComponentActivity() {
+class MyActActivity : BaseActivity() {
 
     private val vm: MyInformationViewModel by viewModels()
-    private val commentVM: CommentViewModel by viewModels()
 
     companion object {
         fun newIntent(context: Context) = Intent(context, MyActActivity::class.java)
@@ -162,7 +161,7 @@ class MyActActivity : ComponentActivity() {
 
                     )
 
-                    val dialogShow: Boolean by commentVM.showDeleteCommentDialog.observeAsState(initial = false)
+                    val dialogShow: Boolean by vm.showDeleteCommentDialog.observeAsState(initial = false)
 
                     if (dialogShow) {
                         CustomDialog(
@@ -171,14 +170,22 @@ class MyActActivity : ComponentActivity() {
                             secondaryButtonText = "취소",
                             setShowDialog = { bool ->
                                 if (bool) {
-                                    commentVM.hideDeleteCommentDialog()
+                                    vm.hideDeleteCommentDialog()
                                 }
                             },
-                            callback = { commentVM.doDeleteComment() })
+                            callback = { vm.doDeleteComment() })
                     }
 
                 }
             }
+        }
+
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        vm.routePlaceDetail.observe(this) {
+            routeVM.requestRoute(Route.PlaceDetailPage(it))
         }
     }
 }

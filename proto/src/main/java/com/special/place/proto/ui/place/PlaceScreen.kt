@@ -141,7 +141,7 @@ fun ImageMarkerAppend(
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
-                vm.updateBitmap(bitmap)
+                // vm.updateBitmap(bitmap)
             }
         }
 

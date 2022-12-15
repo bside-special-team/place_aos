@@ -2,11 +2,12 @@ package com.special.place.ui.my.act
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,13 +20,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.special.domain.entities.place.CommentPlace
 import com.special.place.resource.R
 import com.special.place.ui.my.MyInformationViewModel
-import com.special.place.ui.my.postlist.PostList
 import com.special.place.ui.my.postlist.TagList
 import com.special.place.ui.my.setting.nickname.modify.addFocusCleaner
 import com.special.place.ui.theme.*
@@ -37,42 +36,65 @@ fun MyCommentScreen(
     val comments = vm.myCommentPlace.collectAsLazyPagingItems()
     val focusManager = LocalFocusManager.current
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .addFocusCleaner(focusManager)
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (comments.itemCount < 1) {
-            EmptyScreen("작성한 댓글이 없어요 \uD83E\uDD72")
-        } else {
-            CommentPostList(comments)
+        when (val state = comments.loadState.prepend) {
+            is LoadState.NotLoading -> Unit
+            is LoadState.Loading -> {
+                Loading()
+            }
+            is LoadState.Error -> {
+                Empty()
+            }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-@Composable
-fun CommentPostList(comments: LazyPagingItems<CommentPlace>) {
-    val scrollState = rememberLazyListState()
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        state = scrollState,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        when (val state = comments.loadState.refresh) {
+            is LoadState.NotLoading -> Unit
+            is LoadState.Loading -> {
+                Loading()
+            }
+            is LoadState.Error -> {
+                Empty()
+            }
+        }
         items(comments) { item ->
             if (item != null) {
-                CommentItem(item)
+                CommentItem(item, vm)
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
+
+        when (val state = comments.loadState.append) {
+            is LoadState.NotLoading -> Unit
+            is LoadState.Loading -> {
+                Loading()
+            }
+            is LoadState.Error -> {
+                Empty()
+            }
+        }
+
+    }
+}
+
+private fun LazyListScope.Loading() {
+    item {
+        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+    }
+}
+
+private fun LazyListScope.Empty() {
+    item {
+        EmptyScreen("작성한 댓글이 없어요 \uD83E\uDD72")
     }
 }
 
 @Composable
-fun CommentItem(comment: CommentPlace) {
+fun CommentItem(comment: CommentPlace, vm: MyInformationViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -133,7 +155,12 @@ fun CommentItem(comment: CommentPlace) {
             Spacer(modifier = Modifier.width(16.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_dots),
-                contentDescription = "dots"
+                contentDescription = "dots",
+                modifier = Modifier.clickable {
+                    comment.comment.place?.let {
+                        vm.showPlaceDetail(it)
+                    }
+                }
             )
         }
         Row() {
@@ -168,7 +195,11 @@ fun CommentItem(comment: CommentPlace) {
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.ic_dots), contentDescription = "dots"
+                    painter = painterResource(id = R.drawable.ic_dots),
+                    contentDescription = "dots",
+                    modifier = Modifier.clickable {
+                        vm.deleteComment(comment.comment)
+                    }
                 )
             }
         }

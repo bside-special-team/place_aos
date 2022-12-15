@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.special.domain.entities.place.Place
 import com.special.place.resource.R
+import com.special.place.ui.Route
 import com.special.place.ui.base.BaseActivity
 import com.special.place.ui.my.act.EmptyScreen
 import com.special.place.ui.my.act.MyPostData
@@ -110,7 +111,7 @@ class MyInformationActivity : BaseActivity() {
                                         Column(
                                             modifier = Modifier.padding(horizontal = 24.dp)
                                         ) {
-                                            PostItem(place)
+                                            PostItem(place, vm)
                                         }
                                     }
                                 }
@@ -122,6 +123,13 @@ class MyInformationActivity : BaseActivity() {
             }
         }
 
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        vm.routePlaceDetail.observe(this) {
+            routeVM.requestRoute(Route.PlaceDetailPage(it))
+        }
     }
 }
 

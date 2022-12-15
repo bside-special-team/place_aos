@@ -50,7 +50,6 @@ fun SettingScreen(route: RouteListener, loginVM: LoginEventListener) {
             R.drawable.ic_info_circle,
             R.drawable.ic_arrow_right
         ) {
-            //TODO: 약관 및 동의 관리
             route.requestRoute(Route.PolicyPage)
         }
         SettingItem(

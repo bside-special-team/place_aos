@@ -6,6 +6,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -81,6 +83,10 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":resource"))
 
+    implementation(platform(Deps.Firebase.bom))
+    implementation(Deps.Firebase.analytics)
+    implementation(Deps.Firebase.crashlytics)
+
     implementation(Deps.Android.core)
     implementation(Deps.Android.runtimeKTX)
     implementation(Deps.Android.activityCompose)
@@ -99,6 +105,7 @@ dependencies {
     implementation(Deps.Compose.systemUiController)
     implementation(Deps.Compose.flowLayout)
     implementation(Deps.Compose.paging)
+    implementation(Deps.Compose.webView)
 
     debugImplementation(Deps.Compose.tooling)
     debugImplementation(Deps.Compose.manifest)

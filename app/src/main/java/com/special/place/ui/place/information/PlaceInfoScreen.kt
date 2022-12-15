@@ -37,7 +37,7 @@ fun PlaceInfoScreen(
     val type = place.placeType
     val recommendCnt = place.recommendCount
     val visitCnt = place.visitCount
-    val writerName = place.writer.displayName()
+    val writerName = place.nickName
     val hashTags = place.hashTags
     val id = place.id
 
@@ -223,9 +223,9 @@ fun LandMarkCard(vm: PlaceDetailListener, id: String, type: PlaceType, recommend
 }
 
 @Composable
-fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
+fun CommentItem(vm: CommentEventListener, comment: CommentPlace) {
     var isDropDownMenu by remember { mutableStateOf(false) }
-    val isMyComment = vm.isMyComment(comment)
+    val isMyComment: Boolean by vm.isMyComment(comment).observeAsState(initial = false)
 
     Column(
         modifier = Modifier
@@ -266,12 +266,13 @@ fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
                     expanded = isDropDownMenu,
                     onDismissRequest = { isDropDownMenu = false }) {
                     if (isMyComment) {
-                        DropdownMenuItem(onClick = {
-                            vm.checkModifyComment()
-                            isDropDownMenu = false
-                        }) {
-                            Text(text = "수정", style = BodyLong2)
-                        }
+                        // TODO API 오류로 임시 숨김 처리
+//                        DropdownMenuItem(onClick = {
+//                            vm.checkModifyComment()
+//                            isDropDownMenu = false
+//                        }) {
+//                            Text(text = "수정", style = BodyLong2)
+//                        }
                         DropdownMenuItem(onClick = {
                             vm.checkDeleteComment()
                             isDropDownMenu = false
@@ -280,7 +281,7 @@ fun CommentList(vm: CommentEventListener, comment: CommentPlace) {
                         }
                     } else {
                         DropdownMenuItem(onClick = {
-                            vm.reportComment()
+                            vm.reportComment(comment)
                             isDropDownMenu = false
                         }) {
                             Text(text = "삭제 요청하기", style = BodyLong2)
