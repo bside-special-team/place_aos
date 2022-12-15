@@ -3,15 +3,21 @@ package com.special.place.ui.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.special.data.utils.PrefsHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class OnBoardingViewModel @Inject constructor() : ViewModel(), OnBoardingListener {
+class OnBoardingViewModel @Inject constructor(
+    private val prefsHelper: PrefsHelper
+) : ViewModel(), OnBoardingListener {
     private val _onBoardingList: MutableLiveData<List<OnBoarding>> = MutableLiveData()
     override val onBoardingList: LiveData<List<OnBoarding>> = _onBoardingList
 
     fun init() {
+
+        prefsHelper.shownOnBoarding = true
+
         val list = mutableListOf<OnBoarding>()
         list.add(
             OnBoarding(
