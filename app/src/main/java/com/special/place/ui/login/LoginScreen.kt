@@ -15,12 +15,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.special.data.usecases.LoginUseCase
+import com.special.place.BuildConfig
 import com.special.place.resource.R
 import com.special.place.ui.theme.Purple500
 
@@ -31,7 +34,7 @@ fun LoginScreen(eventListener: LoginUseCase) {
             .background(Purple500)
             .fillMaxSize()
     ) {
-        val (logo, title, kakaoLoginButton, googleLoginButton) = createRefs()
+        val (logo, title, versionRef, kakaoLoginButton, googleLoginButton) = createRefs()
 
         createVerticalChain(logo, title, chainStyle = ChainStyle.Packed)
 
@@ -62,6 +65,14 @@ fun LoginScreen(eventListener: LoginUseCase) {
                     bottom.linkTo(kakaoLoginButton.top)
                 })
 
+        Text(
+            text = "v${BuildConfig.VERSION_NAME}",
+            style = TextStyle(color = Color.White, fontSize = 8.sp),
+            modifier = Modifier.constrainAs(versionRef) {
+                top.linkTo(title.bottom, margin = 8.dp)
+                linkTo(start = title.start, end = title.end)
+            })
+
         Box(modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .clickable {
@@ -82,9 +93,12 @@ fun LoginScreen(eventListener: LoginUseCase) {
                     .fillMaxSize()
                     .padding(start = 20.dp)
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_kakao_login), contentDescription = "kakao_icon")
+                Image(
+                    painter = painterResource(id = R.drawable.ic_kakao_login),
+                    contentDescription = "kakao_icon"
+                )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text("카카오톡으로 시작하기")
+                Text("카카오로 시작하기")
             }
         }
 
@@ -108,7 +122,10 @@ fun LoginScreen(eventListener: LoginUseCase) {
                     .fillMaxSize()
                     .padding(start = 20.dp)
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_google_login), contentDescription = "google_icon")
+                Image(
+                    painter = painterResource(id = R.drawable.ic_google_login),
+                    contentDescription = "google_icon"
+                )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text("구글로 시작하기")
             }
