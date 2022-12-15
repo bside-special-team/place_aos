@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.special.data.usecases.LoginUseCase
 import com.special.place.ui.base.BaseActivity
 import com.special.place.ui.main.MainActivity
@@ -35,6 +37,15 @@ class LoginActivity : BaseActivity() {
                 if (status.isLogin && isLoginView && loginVM.getNickname() == null) {
                     startActivity(NicknameModifyActivity.newIntent(this@LoginActivity))
                     finish()
+                }
+
+                if (!status.isLogin && isLoginView) {
+                    FirebaseCrashlytics.getInstance().log("LoginFailed $status")
+
+                    AlertDialog.Builder(this@LoginActivity)
+                        .setTitle("로그인에 실패 하였습니다.")
+                        .setPositiveButton("확인") { _, _ -> }
+                        .create().show()
                 }
             }
         }

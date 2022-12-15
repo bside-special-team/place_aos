@@ -7,6 +7,7 @@ import com.special.data.social.google.GoogleLogin
 import com.special.data.social.kakao.KakaoLogin
 import com.special.domain.entities.user.LoginType
 import com.special.domain.entities.user.SocialLoginResponse
+import com.special.domain.exception.ExceptionListener
 import com.special.domain.repositories.UserRepository
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 class LoginUseCaseImpl @Inject constructor(
     private val userRepo: UserRepository,
-    @ActivityContext activity: Context
+    @ActivityContext activity: Context,
+    private val exceptionListener: ExceptionListener
 ) : LoginUseCase, LoginCallback {
 
     private val loginMap: Map<LoginType, SocialLogin> = mapOf(
@@ -31,11 +33,15 @@ class LoginUseCaseImpl @Inject constructor(
     }
 
     override fun kakaoLogin() {
-        loginMap[LoginType.Kakao]?.doLogin()
+        runCatching {
+            loginMap[LoginType.Kakao]?.doLogin()
+        }.onFailure(exceptionListener::updateException)
     }
 
     override fun googleLogin() {
-        loginMap[LoginType.Google]?.doLogin()
+        runCatching {
+            loginMap[LoginType.Google]?.doLogin()
+        }.onFailure(exceptionListener::updateException)
     }
 
     override fun logout() {

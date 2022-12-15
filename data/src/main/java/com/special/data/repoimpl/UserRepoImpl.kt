@@ -64,10 +64,11 @@ class UserRepoImpl @Inject constructor(
 
                     LoginStatus.success(response.type, token)
                 } else {
+                    exceptionListener.updateException(IllegalAccessException("소셜로그인에 실패 하였습니다."))
+
                     LoginStatus.empty()
                 }
 
-                Log.d("loginUserRepo", "isLogin == ${status.isLogin}")
                 val result = _loginStatus.tryEmit(status)
 
                 Log.d("loginUserRepo", "emit!, $result")
