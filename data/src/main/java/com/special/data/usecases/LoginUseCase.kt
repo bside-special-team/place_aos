@@ -22,7 +22,7 @@ class LoginUseCaseImpl @Inject constructor(
 ) : LoginUseCase, LoginCallback {
 
     private val loginMap: Map<LoginType, SocialLogin> = mapOf(
-        LoginType.Kakao to KakaoLogin(activity, this),
+        LoginType.Kakao to KakaoLogin(activity, this, exceptionListener),
         LoginType.Google to GoogleLogin(activity, this),
     )
 

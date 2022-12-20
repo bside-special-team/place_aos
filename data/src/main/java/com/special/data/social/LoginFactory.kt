@@ -5,6 +5,7 @@ import com.special.data.social.google.GoogleLogin
 import com.special.data.social.kakao.KakaoLogin
 import com.special.domain.entities.user.LoginType
 import com.special.domain.entities.user.SocialLoginResponse
+import com.special.domain.exception.ExceptionListener
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.CoroutineScope
@@ -22,10 +23,11 @@ interface LoginFactory {
 
 @ActivityScoped
 class LoginFactoryImpl @Inject constructor(
-    @ActivityContext activity: ComponentActivity
+    @ActivityContext activity: ComponentActivity,
+    exceptionListener: ExceptionListener
 ) : LoginFactory, LoginCallback {
     private val loginMap: Map<LoginType, SocialLogin> = mapOf(
-        LoginType.Kakao to KakaoLogin(activity, this),
+        LoginType.Kakao to KakaoLogin(activity, this, exceptionListener),
         LoginType.Google to GoogleLogin(activity, this),
     )
 

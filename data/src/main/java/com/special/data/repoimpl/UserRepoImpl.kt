@@ -10,11 +10,14 @@ import com.special.domain.entities.user.badge.Badge
 import com.special.domain.exception.ExceptionListener
 import com.special.domain.exception.RetrySocialLogin
 import com.special.domain.repositories.UserRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,15 +40,21 @@ class UserRepoImpl @Inject constructor(
         CoroutineScope(Dispatchers.Default).launch {
             runCatching {
                 if (tokenData.isLogin) {
-                    _loginStatus.emit(LoginStatus.success(tokenData.loginType, loadToken()))
+                    val token = loadToken()
+                    _loginStatus.emit(LoginStatus.success(tokenData.loginType, token))
+
+                    exceptionListener.updateMessage("loginUserRepo@token load!, $token")
+
                     withContext(Dispatchers.IO) {
                         val user = remote.checkUser()
+                        exceptionListener.updateMessage("loginUserRepo@user API!, $user")
                         _user.emit(user)
                     }
                 } else {
                     _loginStatus.emit(LoginStatus.empty())
                 }
             }.onFailure {
+                exceptionListener.updateException(it)
                 _loginStatus.emit(LoginStatus.empty())
             }
         }
@@ -59,8 +68,12 @@ class UserRepoImpl @Inject constructor(
                     tokenData.updateLoginType(response.type)
                     tokenData.updateToken(token)
 
+                    exceptionListener.updateMessage("loginUserRepo@login API!, $token")
+
                     val user = remote.checkUser()
                     _user.emit(user)
+
+                    exceptionListener.updateMessage("loginUserRepo@user API!, $user")
 
                     LoginStatus.success(response.type, token)
                 } else {
@@ -71,6 +84,7 @@ class UserRepoImpl @Inject constructor(
 
                 val result = _loginStatus.tryEmit(status)
 
+                exceptionListener.updateMessage("loginUserRepo@emit!, $result")
                 Log.d("loginUserRepo", "emit!, $result")
             }.onFailure {
                 it.printStackTrace()
