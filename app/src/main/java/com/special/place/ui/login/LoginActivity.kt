@@ -42,10 +42,10 @@ class LoginActivity : BaseActivity() {
                 if (!status.isLogin && isLoginView) {
                     FirebaseCrashlytics.getInstance().log("LoginFailed $status")
 
-                    AlertDialog.Builder(this@LoginActivity)
-                        .setTitle("로그인에 실패 하였습니다.")
-                        .setPositiveButton("확인") { _, _ -> }
-                        .create().show()
+//                    AlertDialog.Builder(this@LoginActivity)
+//                        .setTitle("로그인에 실패 하였습니다.")
+//                        .setPositiveButton("확인") { _, _ -> }
+//                        .create().show()
                 }
             }
         }
