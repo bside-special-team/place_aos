@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.special.data.utils.PrefsHelper
 import com.special.place.resource.R
 import com.special.place.ui.login.LoginActivity
 import com.special.place.ui.login.LoginViewModel
@@ -35,16 +36,21 @@ class SplashActivity : ComponentActivity() {
     }
 
     private fun initViewModel() {
-        lifecycleScope.launchWhenStarted {
-            loginVM.loginStatus.collect {
-                if (it.isLogin) {
-                    startActivity(MainActivity.newIntent(this@SplashActivity))
-                    finish()
-                } else {
-                    startActivity(LoginActivity.newIntent(this@SplashActivity))
-                    finish()
+        if (PrefsHelper(this@SplashActivity).shownOnBoarding) {
+            lifecycleScope.launchWhenStarted {
+                loginVM.loginStatus.collect {
+                    if (it.isLogin) {
+                        startActivity(MainActivity.newIntent(this@SplashActivity))
+                        finish()
+                    } else {
+                        startActivity(LoginActivity.newIntent(this@SplashActivity))
+                        finish()
+                    }
                 }
             }
+        } else {
+            startActivity(OnBoardingActivity.newIntent(this@SplashActivity))
+            finish()
         }
 
     }

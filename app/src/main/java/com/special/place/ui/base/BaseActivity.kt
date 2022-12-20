@@ -14,6 +14,7 @@ import com.special.place.ui.my.setting.PolicyActivity
 import com.special.place.ui.my.setting.nickname.modify.NicknameModifyActivity
 import com.special.place.ui.place.information.PlaceDetailActivity
 import com.special.place.ui.place.register.PlaceRegisterActivity
+import com.special.place.ui.splash.OnBoardingActivity
 import kotlinx.coroutines.launch
 
 open class BaseActivity : ComponentActivity() {
@@ -34,6 +35,7 @@ open class BaseActivity : ComponentActivity() {
                 Route.LoginPage -> startActivity(LoginActivity.newIntent(this))
                 Route.Logout -> loginVM.logout()
                 Route.ModifyNickNamePage -> startActivity(NicknameModifyActivity.newIntent(this))
+                Route.TutorialPage -> startActivity(OnBoardingActivity.newIntent(this))
                 Route.PolicyPage -> startActivity(PolicyActivity.newIntent(this))
 
                 is Route.PlaceRegisterPage -> startActivity(

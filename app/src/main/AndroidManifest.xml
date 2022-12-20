@@ -49,6 +49,7 @@
         <activity
             android:name=".ui.place.information.PlaceDetailActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.splash.OnBoardingActivity" />
 
         <activity android:name=".ui.my.setting.PolicyActivity" />
 
