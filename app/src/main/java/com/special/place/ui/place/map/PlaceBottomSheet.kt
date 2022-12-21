@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.special.domain.entities.place.Place
+import com.special.domain.entities.place.PlaceType
 import com.special.place.resource.R
 import com.special.place.ui.Route
 import com.special.place.ui.base.RouteListener
@@ -31,16 +31,21 @@ import com.special.place.ui.theme.Grey200
 import com.special.place.ui.theme.Grey600
 import com.special.place.ui.theme.Grey900
 import com.special.place.ui.theme.Purple500
+import com.special.place.ui.utils.CustomDialog
 import com.special.place.ui.widget.HashtagChip
 
 @Composable
 fun PlaceBottomSheet(
     eventListener: PlaceEventListener,
-    routeListener: RouteListener
+    routeListener: RouteListener,
+    actionListener: () -> Unit
 ) {
     val place: Place by eventListener.currentPlace.observeAsState(initial = Place.mock())
     val distanceText: String by eventListener.distanceText.observeAsState(initial = "현재 위치를 가져 올 수 없습니다.")
     val distance: Int by eventListener.distance.observeAsState(initial = Int.MAX_VALUE)
+    val visitMode by eventListener.visitMode.observeAsState("")
+    var showVisitDialog by remember { mutableStateOf(false) }
+    var showOtherPlaceVisitDialog by remember { mutableStateOf(false) }
 
     ConstraintLayout(
         modifier = Modifier
@@ -128,7 +133,14 @@ fun PlaceBottomSheet(
         Box(modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .clickable {
-                routeListener.requestRoute(Route.PlaceDetailPage(place = place))
+                // TODO 방문 인증 정보 체크 필요 (임시로 히든플레이스만 체크 )
+                if (place.placeType == PlaceType.LandMark) {
+                    routeListener.requestRoute(Route.PlaceDetailPage(place = place))
+                } else {
+                    // 방문인증 안내 팝업창
+                    showVisitDialog = true
+                }
+
             }
             .height(56.dp)
             .background(Grey200, shape = RoundedCornerShape(20.dp))
@@ -149,10 +161,16 @@ fun PlaceBottomSheet(
         Box(modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .clickable {
-                if (distance <= 50) {
+                if (distance <= 50) { // 50미터 이내 방문인증
                     eventListener.clickVisitPlace(place.id)
+                } else if (visitMode == "") { // 플레이스 방문인증 투어 시작
+                    eventListener.clickTourStart(place.id)
+                    actionListener()
                 } else {
-                    // TODO 50m 이내에 방문 인증
+                    if (visitMode != place.id) {
+                        // 새로운 플레이스 방문인증 투어 dialog
+                        showOtherPlaceVisitDialog = true
+                    }
                 }
 
             }
@@ -171,5 +189,26 @@ fun PlaceBottomSheet(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
+    }
+
+    if (showVisitDialog) {
+        CustomDialog(title = "정보가 감춰져 있어요",
+            message = "직접 방문하고 정보를 열람할까요?",
+            secondaryButtonText = "아니요",
+            primaryButtonText = "방문하기",
+            setShowDialog = { showVisitDialog = it },
+            callback = {
+                eventListener.clickTourStart(place.id)
+                actionListener()
+            }
+        )
+    }
+    if (showOtherPlaceVisitDialog) {
+        CustomDialog(title = "목적지를 바꿀까요?", secondaryButtonText = "아니요", primaryButtonText = "바꾸기",
+            setShowDialog = { showOtherPlaceVisitDialog = it },
+            callback = {
+                eventListener.clickTourStart(place.id)
+                actionListener()
+            })
     }
 }

@@ -12,6 +12,7 @@ interface PlaceEventListener {
     val currentPlace: LiveData<Place>
 
     val trackingMode: LiveData<LocationTrackingMode>
+    val visitMode: LiveData<String>
 
     val visibleCurrentLocationButton: LiveData<Boolean>
 
@@ -25,7 +26,13 @@ interface PlaceEventListener {
     val distanceText: LiveData<String>
     val distance: LiveData<Int>
 
-    fun clickTourStart()
+    val currentDistanceText: LiveData<String>
+    val currentDistance: LiveData<Int>
+
+    val tourTime: LiveData<String>
+
+    fun clickTourStart(placeId: String)
+    fun clickTourEnd()
 
     fun clickVisitPlace(placeId: String)
 

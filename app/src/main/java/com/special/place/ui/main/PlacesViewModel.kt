@@ -16,6 +16,7 @@ import com.special.place.toLatLng
 import com.special.place.ui.place.map.PlaceEventListener
 import com.special.place.util.CoilRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,9 +34,16 @@ class PlacesViewModel @Inject constructor(
     private val _trackingMode: MutableLiveData<LocationTrackingMode> = MutableLiveData()
     override val trackingMode: LiveData<LocationTrackingMode> = _trackingMode
 
+    private val _visitMode: MutableLiveData<String> = MutableLiveData()
+    override val visitMode: LiveData<String> = _visitMode
+
+
     override val visibleCurrentLocationButton: LiveData<Boolean> = _trackingMode.map {
         it != LocationTrackingMode.Follow
     }
+
+    private val _tourTime: MutableLiveData<String> = MutableLiveData()
+    override val tourTime: LiveData<String> = _tourTime
 
     override fun updateCameraPosition(camera: CameraPositionState) {
         camera.contentBounds?.toCoordinate()?.let {
@@ -49,12 +57,20 @@ class PlacesViewModel @Inject constructor(
         _currentLocation.postValue(location)
     }
 
-    override val hiddenPlaceCount: LiveData<Int> = placeRepo.placeCount.map { it.hiddenPlaceCount }.asLiveData()
-    override val landmarkCount: LiveData<Int> = placeRepo.placeCount.map { it.landmarkCount }.asLiveData()
+    override val hiddenPlaceCount: LiveData<Int> =
+        placeRepo.placeCount.map { it.hiddenPlaceCount }.asLiveData()
+    override val landmarkCount: LiveData<Int> =
+        placeRepo.placeCount.map { it.landmarkCount }.asLiveData()
 
 
-    override fun clickTourStart() {
+    override fun clickTourStart(placeId: String) {
+        _visitMode.value = placeId
+        _tourTime.value = ""
+        startTimer(System.currentTimeMillis())
+    }
 
+    override fun clickTourEnd() {
+        _visitMode.postValue("")
     }
 
     override fun clickVisitPlace(placeId: String) {
@@ -102,6 +118,46 @@ class PlacesViewModel @Inject constructor(
             currentPlace.coordinate.toLatLng().distanceTo(it).toInt()
         } ?: Int.MAX_VALUE
     }
+
+    // 방문인증 - 남은 거리
+    override val currentDistance: LiveData<Int>
+        get() = TODO("Not yet implemented")
+    override val currentDistanceText: LiveData<String>
+        get() = TODO("Not yet implemented")
+
+    /* 타이머 */
+
+    fun startTimer(time: Long) {
+        viewModelScope.launch {
+            var tempTime: String = ""
+            while (_visitMode.value!!.isNotEmpty()) {
+                tempTime =
+                    (System.currentTimeMillis() - time).displayTime()
+                delay(1000)
+                _tourTime.postValue(tempTime)
+            }
+
+        }
+    }
+
+    fun Long.displayTime(): String {
+        if (this <= 0L) {
+            return "00:00"
+        }
+
+        val m = this / 1000 % 3600 / 60
+        val s = this / 1000 % 60
+
+        return "$m:${displaySlot(s)}"
+    }
+
+    private fun displaySlot(count: Long): String {
+        return if (count / 10L > 0) {
+            "$count"
+        } else {
+            "0$count"
+        }
+    }
 }
 
 fun Location.toLatLnt(): LatLng = LatLng(latitude, longitude)
@@ -109,3 +165,4 @@ fun LatLngBounds.toCoordinate(): CoordinateBounds = CoordinateBounds(
     from = Coordinate(latitude = southEast.latitude.toString(), longitude = southEast.longitude.toString()),
     to = Coordinate(latitude = northEast.latitude.toString(), longitude = northEast.longitude.toString()),
 )
+

@@ -28,10 +28,8 @@ import com.special.place.resource.R
 import com.special.place.ui.Route
 import com.special.place.ui.base.RouteListener
 import com.special.place.ui.main.toLatLnt
-import com.special.place.ui.theme.Grey400
-import com.special.place.ui.theme.Grey500
-import com.special.place.ui.theme.Grey900
-import com.special.place.ui.theme.Purple500
+import com.special.place.ui.theme.*
+import com.special.place.ui.utils.VisitPlaceProgressBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -44,14 +42,30 @@ fun PlaceScreen(
     val myLocationVisible by eventListener.visibleCurrentLocationButton.observeAsState(false)
     val placeCount by eventListener.hiddenPlaceCount.observeAsState(initial = 0)
     val landmarkCount by eventListener.landmarkCount.observeAsState(initial = 0)
+    val visitMode by eventListener.visitMode.observeAsState(initial = "")
+    val distanceText: String by eventListener.distanceText.observeAsState(initial = "현재 위치를 가져 올 수 없습니다.")
+    val tourTime by eventListener.tourTime.observeAsState(initial = 0)
 
     val coroutineScope = rememberCoroutineScope()
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    val bottomSheetClose: () -> Unit = {
+        coroutineScope.launch {
+            if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
+                bottomSheetScaffoldState.bottomSheetState.collapse()
+            }
+        }
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
-        sheetContent = { PlaceBottomSheet(eventListener, routeListener) },
+        sheetContent = {
+            PlaceBottomSheet(
+                eventListener,
+                routeListener,
+                actionListener = bottomSheetClose
+            )
+        },
         sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
         sheetPeekHeight = 0.dp,
         sheetElevation = 5.dp
@@ -96,7 +110,7 @@ fun PlaceScreen(
             Box(modifier = Modifier
                 .clickable {
                     //TODO : 여정 시작 상태로
-                    eventListener.clickTourStart()
+//                    eventListener.clickTourStart()
 
                     coroutineScope.launch {
 
@@ -183,59 +197,132 @@ fun PlaceScreen(
                 }
             }
 
-            /* 주변 히든플레이스, 랜드마크 카운팅 */
-            Box(modifier = Modifier
-                .size(width = 116.dp, height = 40.dp)
-                .background(Grey900, shape = RoundedCornerShape(20.dp))
-                .constrainAs(placeCountRef) {
-                    linkTo(start = parent.start, end = parent.end)
-                    top.linkTo(parent.top, margin = 44.dp)
-                }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
+            if (visitMode.isEmpty()) {
+                /* 주변 히든플레이스, 랜드마크 카운팅 */
+                Box(modifier = Modifier
+                    .size(width = 116.dp, height = 40.dp)
+                    .background(Grey900, shape = RoundedCornerShape(20.dp))
+                    .constrainAs(placeCountRef) {
+                        linkTo(start = parent.start, end = parent.end)
+                        top.linkTo(parent.top, margin = 44.dp)
+                    }) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_place_count),
+                            contentDescription = null,
+                            tint = Grey500
+                        )
+                        Box(modifier = Modifier.width(4.dp))
+                        Text("$placeCount", color = Grey400, fontSize = 11.sp)
+                        Box(modifier = Modifier.width(16.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_landmark_count),
+                            contentDescription = null,
+                            tint = Grey500
+                        )
+                        Box(modifier = Modifier.width(4.dp))
+                        Text("$landmarkCount", color = Grey400, fontSize = 11.sp)
+                    }
+                }
+                /* 사용방법 버튼 */
+                Box(modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable {
+                        routeListener.requestRoute(Route.TutorialPage)
+                    }
+                    .background(Grey900, shape = CircleShape)
+                    .size(36.dp)
+                    .constrainAs(guideButton) {
+                        end.linkTo(parent.end, margin = 24.dp)
+                        linkTo(top = placeCountRef.top, bottom = placeCountRef.bottom)
+                    }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_guide_button),
+                        contentDescription = "guide",
+                        tint = Grey500,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(16.dp)
+                    )
+                }
+            } else {
+                /* 플레이스 지정 후 방문하기 모드*/
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    shape = RoundedCornerShape(28.dp),
+                    elevation = 0.dp,
+                    backgroundColor = Grey900,
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_place_count),
-                        contentDescription = null,
-                        tint = Grey500
-                    )
-                    Box(modifier = Modifier.width(4.dp))
-                    Text("$placeCount", color = Grey400, fontSize = 11.sp)
-                    Box(modifier = Modifier.width(16.dp))
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_landmark_count),
-                        contentDescription = null,
-                        tint = Grey500
-                    )
-                    Box(modifier = Modifier.width(4.dp))
-                    Text("$landmarkCount", color = Grey400, fontSize = 11.sp)
+                    Column(
+                        modifier = Modifier.padding(vertical = 20.dp, horizontal = 24.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_place_count),
+                                    contentDescription = null,
+                                    tint = Grey500
+                                )
+                                Box(modifier = Modifier.width(4.dp))
+                                Text("$placeCount", color = Grey400, fontSize = 11.sp)
+                                Box(modifier = Modifier.width(16.dp))
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_landmark_count),
+                                    contentDescription = null,
+                                    tint = Grey500
+                                )
+                                Box(modifier = Modifier.width(4.dp))
+                                Text("$landmarkCount", color = Grey400, fontSize = 11.sp)
+                            }
+                            Row {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_clock_eight_solid),
+                                    contentDescription = null,
+                                    tint = Grey500
+                                )
+                                Box(modifier = Modifier.width(4.dp))
+                                Text("$tourTime", color = Grey400, fontSize = 11.sp)
+                                Box(modifier = Modifier.width(16.dp))
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_eyes_solid),
+                                    contentDescription = null,
+                                    tint = Grey500
+                                )
+                                Box(modifier = Modifier.width(4.dp))
+                                Text("0", color = Grey400, fontSize = 11.sp)
+                            }
+
+
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = "장소 방문까지 $distanceText 남았어요!",
+                            color = Color.White,
+                            style = Subtitle2,
+                            fontSize = 16.sp
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        VisitPlaceProgressBar(
+                            progress = 0.7f,
+                            startIcon = R.drawable.ic_location_crosshairs_solid,
+                            endIcon = R.drawable.ic_place_grey
+                        )
+                    }
                 }
             }
 
-            /* 사용방법 버튼 */
-            Box(modifier = Modifier
-                .clip(CircleShape)
-                .clickable {
-                    //TODO: 가이드 화면 노출 (온보딩??)
-                    routeListener.requestRoute(Route.TutorialPage)
-                }
-                .background(Grey900, shape = CircleShape)
-                .size(36.dp)
-                .constrainAs(guideButton) {
-                    end.linkTo(parent.end, margin = 24.dp)
-                    linkTo(top = placeCountRef.top, bottom = placeCountRef.bottom)
-                }) {
-                Icon(
-                    painterResource(id = R.drawable.ic_guide_button),
-                    contentDescription = "guide",
-                    tint = Grey500,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(16.dp)
-                )
-            }
 
             if (myLocationVisible) {
                 Icon(painter = painterResource(id = R.drawable.ic_current_location_button),
