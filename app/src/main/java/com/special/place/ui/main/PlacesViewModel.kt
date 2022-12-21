@@ -16,6 +16,7 @@ import com.special.place.toLatLng
 import com.special.place.ui.place.map.PlaceEventListener
 import com.special.place.util.CoilRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -65,8 +66,7 @@ class PlacesViewModel @Inject constructor(
 
     override fun clickTourStart(placeId: String) {
         _visitMode.value = placeId
-        _tourTime.value = ""
-        startTimer(System.currentTimeMillis())
+        timerStart()
     }
 
     override fun clickTourEnd() {
@@ -126,18 +126,23 @@ class PlacesViewModel @Inject constructor(
         get() = TODO("Not yet implemented")
 
     /* 타이머 */
+    private lateinit var job: Job
+    private var interval: Long = 1000
 
-    fun startTimer(time: Long) {
-        viewModelScope.launch {
-            var tempTime: String = ""
+    private fun timerStart() {
+        if (::job.isInitialized) job.cancel()
+        job = viewModelScope.launch {
+            val time: Long = System.currentTimeMillis()
             while (_visitMode.value!!.isNotEmpty()) {
-                tempTime =
+                _tourTime.value =
                     (System.currentTimeMillis() - time).displayTime()
-                delay(1000)
-                _tourTime.postValue(tempTime)
+                delay(interval)
             }
-
         }
+    }
+
+    private fun timerStop() {
+        if (::job.isInitialized) job.cancel()
     }
 
     fun Long.displayTime(): String {
