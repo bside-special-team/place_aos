@@ -119,11 +119,34 @@ class PlacesViewModel @Inject constructor(
         } ?: Int.MAX_VALUE
     }
 
+    // 현재 방문하고 있는 플레이스
+    private val _currentVisitPlace: MutableLiveData<Place> = MutableLiveData()
+    override val currentVisitPlace: LiveData<Place> = _currentVisitPlace
+
+    override fun updateCurrentVisitPlace(place: Place) {
+        placeRepo.selectVisitPlace(place)
+        _currentVisitPlace.postValue(place)
+    }
+
     // 방문인증 - 남은 거리
-    override val currentDistance: LiveData<Int>
-        get() = TODO("Not yet implemented")
-    override val currentDistanceText: LiveData<String>
-        get() = TODO("Not yet implemented")
+    override val currentDistance: LiveData<Int> = _currentLocation.map {
+        _currentVisitPlace.value?.coordinate?.toLatLng()?.distanceTo(it.toLatLnt())?.toInt()
+            ?: Int.MAX_VALUE
+    }
+    override val currentDistanceText: LiveData<String> = _currentLocation.map {
+        val placeLatLng = _currentVisitPlace.value?.coordinate?.toLatLng()
+        if (placeLatLng == null) {
+            "-"
+        } else {
+            val distance = placeLatLng.distanceTo(it.toLatLnt()).toInt()
+
+            if (distance > 1000) {
+                "${distance / 1000} km"
+            } else {
+                "$distance m"
+            }
+        }
+    }
 
     /* 타이머 */
     private lateinit var job: Job

@@ -10,6 +10,7 @@ import com.special.domain.entities.place.Place
 interface PlaceEventListener {
     val places: LiveData<List<Place>>
     val currentPlace: LiveData<Place>
+    val currentVisitPlace: LiveData<Place>
 
     val trackingMode: LiveData<LocationTrackingMode>
     val visitMode: LiveData<String>
@@ -19,6 +20,7 @@ interface PlaceEventListener {
     fun updateCameraPosition(camera: CameraPositionState)
     fun updateCurrentLocation(location: Location)
     fun updateCurrentPlace(place: Place)
+    fun updateCurrentVisitPlace(place: Place)
 
     val hiddenPlaceCount: LiveData<Int>
     val landmarkCount: LiveData<Int>

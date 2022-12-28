@@ -13,8 +13,10 @@ interface PlaceRepository {
     val placeCount: Flow<NearPlaces>
     val pointResult: Flow<PointResult>
     val currentPlace: Flow<Place>
+    val currentVisitPlace: Flow<Place>
 
     fun selectPlace(place: Place)
+    fun selectVisitPlace(place: Place)
 
     suspend fun registerPlace(request: RequestRegisterPlace)
 

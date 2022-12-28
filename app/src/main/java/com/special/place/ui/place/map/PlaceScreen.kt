@@ -43,8 +43,8 @@ fun PlaceScreen(
     val placeCount by eventListener.hiddenPlaceCount.observeAsState(initial = 0)
     val landmarkCount by eventListener.landmarkCount.observeAsState(initial = 0)
     val visitMode by eventListener.visitMode.observeAsState(initial = "")
-    val distanceText: String by eventListener.distanceText.observeAsState(initial = "현재 위치를 가져 올 수 없습니다.")
     val tourTime by eventListener.tourTime.observeAsState(initial = 0)
+    val currentDistance by eventListener.currentDistanceText.observeAsState(initial = "현재 위치를 가져 올 수 없습니다.")
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -308,7 +308,7 @@ fun PlaceScreen(
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
-                            text = "장소 방문까지 $distanceText 남았어요!",
+                            text = "장소 방문까지 $currentDistance 남았어요!",
                             color = Color.White,
                             style = Subtitle2,
                             fontSize = 16.sp

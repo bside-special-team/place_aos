@@ -17,13 +17,25 @@ import javax.inject.Singleton
 class PlaceRepoImpl @Inject constructor(private val placeRemote: RemoteDataSource) :
     PlaceRepository {
 
-    private val _currentPlace: MutableSharedFlow<Place> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _currentPlace: MutableSharedFlow<Place> =
+        MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val currentPlace: Flow<Place>
         get() = _currentPlace
 
     override fun selectPlace(place: Place) {
         CoroutineScope(Dispatchers.Default).launch {
             _currentPlace.emit(place)
+        }
+    }
+
+    private val _currentVisitPlace: MutableSharedFlow<Place> =
+        MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    override val currentVisitPlace: Flow<Place>
+        get() = _currentPlace
+
+    override fun selectVisitPlace(place: Place) {
+        CoroutineScope(Dispatchers.Default).launch {
+            _currentVisitPlace.emit(place)
         }
     }
 

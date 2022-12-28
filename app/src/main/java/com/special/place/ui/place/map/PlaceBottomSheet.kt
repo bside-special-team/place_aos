@@ -165,6 +165,7 @@ fun PlaceBottomSheet(
                     eventListener.clickVisitPlace(place.id)
                 } else if (visitMode == "") { // 플레이스 방문인증 투어 시작
                     eventListener.clickTourStart(place.id)
+                    eventListener.updateCurrentVisitPlace(place)
                     actionListener()
                 } else {
                     if (visitMode != place.id) {
@@ -199,6 +200,7 @@ fun PlaceBottomSheet(
             setShowDialog = { showVisitDialog = it },
             callback = {
                 eventListener.clickTourStart(place.id)
+                eventListener.updateCurrentVisitPlace(place)
                 actionListener()
             }
         )
@@ -208,6 +210,7 @@ fun PlaceBottomSheet(
             setShowDialog = { showOtherPlaceVisitDialog = it },
             callback = {
                 eventListener.clickTourStart(place.id)
+                eventListener.updateCurrentVisitPlace(place)
                 actionListener()
             })
     }
