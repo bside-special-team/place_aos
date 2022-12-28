@@ -35,7 +35,7 @@ fun PreviewSettingScreen() {
 fun SettingScreen(route: RouteListener, loginVM: LoginEventListener) {
 
     // 임의 데이터
-    val nickname = "일상의 발견"
+    val nickname = loginVM.getNickname() ?: "익명"
     Column(
         modifier = Modifier
             .fillMaxSize()
