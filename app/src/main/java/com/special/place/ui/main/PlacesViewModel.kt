@@ -69,8 +69,9 @@ class PlacesViewModel @Inject constructor(
         timerStart()
     }
 
-    override fun clickTourEnd() {
+    override fun clickTourEnd(placeId: String) {
         _visitMode.postValue("")
+        timerStop()
     }
 
     override fun clickVisitPlace(placeId: String) {
@@ -136,7 +137,7 @@ class PlacesViewModel @Inject constructor(
     override val currentDistanceText: LiveData<String> = _currentLocation.map {
         val placeLatLng = _currentVisitPlace.value?.coordinate?.toLatLng()
         if (placeLatLng == null) {
-            "-"
+            " "
         } else {
             val distance = placeLatLng.distanceTo(it.toLatLnt()).toInt()
 

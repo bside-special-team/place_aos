@@ -34,7 +34,7 @@ interface PlaceEventListener {
     val tourTime: LiveData<String>
 
     fun clickTourStart(placeId: String)
-    fun clickTourEnd()
+    fun clickTourEnd(placeId: String)
 
     fun clickVisitPlace(placeId: String)
 

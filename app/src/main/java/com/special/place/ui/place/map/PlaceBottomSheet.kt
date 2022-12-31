@@ -163,6 +163,9 @@ fun PlaceBottomSheet(
             .clickable {
                 if (distance <= 50) { // 50미터 이내 방문인증
                     eventListener.clickVisitPlace(place.id)
+                    if(eventListener.currentVisitPlace.value?.id == place.id ){
+                        eventListener.clickTourEnd(place.id)
+                    }
                 } else if (visitMode == "") { // 플레이스 방문인증 투어 시작
                     eventListener.clickTourStart(place.id)
                     eventListener.updateCurrentVisitPlace(place)
